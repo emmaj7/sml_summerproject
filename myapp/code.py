@@ -1,9 +1,2 @@
-##### 
-goForward()
-turnLeft()
-##### 
-car.driveForward()
-car.turnLeft()
-##### 
-car.driveForward()
-car.turnLeft()
+car.drive_forward()
+car.turn_left()
