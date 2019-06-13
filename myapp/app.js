@@ -25,12 +25,7 @@ app.get("/level3", function(req, res){
 
 app.post("/", urlencodedParser, function(req,res){
   console.log(req.body.code);
-  fs.appendFile("code.py", "##### \n",function(error){
-    if (error) throw error;
-    console.log("Updated!")
-  });
-
-  fs.appendFile("code.py",req.body.code, function(error){
+  fs.writeFile("code.py", req.body.code + "##### \n",function(error){
     if (error) throw error;
     console.log("Updated!")
   });
