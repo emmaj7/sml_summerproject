@@ -11,8 +11,13 @@ app.set("view engine", "ejs");
 app.use("/assets", express.static("assets"));
 app.use("/node_modules/node-blockly/blockly", express.static("node_modules/node-blockly/blockly"));
 app.use("/customBlocks", express.static("customBlocks"));
+
 app.get("/", function(req, res){
-  res.render("index");
+  res.render("firstPage");
+});
+
+app.get("/level1", function(req, res){
+  res.render("level1");
 });
 
 app.get("/level2", function(req, res){

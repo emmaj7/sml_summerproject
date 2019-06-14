@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>TRIP TO MARS</title>
+    <link rel="stylesheet" type="text/css" href="../assets/style.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <style>
+      h1 {
+        font-family: courier;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      p {
+        font-family: courier;
+        text-align: center;
+      }
+
+      .btn {
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="position: fixed; z-index: -99; width: 100%; height: 100%">
+      <!-- <iframe frameborder="0" height="100%" width="100%"
+        src="https://youtube.com/embed/rpjQ9aL8PLs?autoplay=1">
+      </iframe> -->
+      <video autoplay muted loop id="myVideo">
+        <source src="./video/recording.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div style="display: inline-block;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 1000px;
+                height: 500px;
+                margin: auto;">
+      <p class="my-5"> Take a </p>
+      <h1> TRIP TO MARS </h1>
+      <p class="my-5"> with KTH Smart Mobility Lab </p>
+      <div class="start-button row justify-content-center text-center">
+        <div class="col-6">
+           <a href="/level1" >
+           <button class="cool-btn btn1 btn" id="btn1" value="GO">Start</button>
+           </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

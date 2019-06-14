@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- <link rel="stylesheet" type="text/css" href="../css/project.css"/> -->
+<html lang="en">
+  <head>
+    <title>TRIP TO MARS</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/style.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <script src="../node_modules/node-blockly/blockly/blockly_compressed.js"></script>
+    <script src="../node_modules/node-blockly/blockly/javascript_compressed.js"></script>
+    <script src="../node_modules/node-blockly/blockly/blocks_compressed.js"></script>
+    <script src="../node_modules/node-blockly/blockly/msg/js/sv.js"></script>
+    <script src="./customBlocks/customBlocks.js"></script>
+  </head>
+  <body>
+    <h1 class="text-center">[INSERT COOLT SPEL-NAMN HÄR]</h1>
+    <% include partials/nav.ejs %>
+      <div class="row">
+        <div class="text-center">
+        <div id="blocklyDiv" class="col" style="height: 600px; width: 800px;"></div>
+        <xml id="toolbox" style="display: none">
+          <!-- <block type="controls_if"></block>
+          <block type="controls_repeat_ext"></block>
+          <block type="math_number"></block>
+          <block type="turn_block"></block> -->
+          <block type="forward_block"></block>
+        </xml>
+        <button onclick="runCode()" type="button" class="btn btn-danger" id="run-btn">Kör koden!</button>
+      </div>
+    </div>
+  </body>
+  <script>
+  var workspace = Blockly.inject('blocklyDiv',
+      {toolbox: document.getElementById('toolbox'),
+        verticalLayout: true,
+        scrollbars: false,
+        theme: Blockly.Themes.HighContrast});
+
+  function sendToServer(code){
+   var xmlhttp = new XMLHttpRequest();
+   var object = JSON.stringify({code:code});
+   xmlhttp.open("POST","/level1", true);
+   // xmlhttp.onreadystatechange=function(){
+   //       if (xmlhttp.readyState==4 && xmlhttp.status==200){
+   //         var string=xmlhttp.responseText;
+   //       }
+   xmlhttp.send(object);
+  }
+
+  function runCode(){
+      // Generate JavaScript code and run it.
+      window.LoopTrap = 1000;
+      Blockly.JavaScript.INFINITE_LOOP_TRAP =
+        'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+      var code = Blockly.JavaScript.workspaceToCode(workspace);
+
+      var codeObj = {code:code};
+      $.post("/level1", codeObj, function(codeObj, status){
+        console.log(`${data} and status is ${status}`)
+      });
+
+
+      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+      try {
+        eval(code);
+      } catch (error) {
+        alert(error);
+      }
+    }
+  </script>
+</html>
