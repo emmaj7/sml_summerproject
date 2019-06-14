@@ -1,0 +1,19 @@
+<launch>
+  <!--open serial connection for controlling SVEA-->
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_node">
+      <param name="port" value="/dev/ttyACM0"/>
+      <param name="baud" value="115200"/>
+  </node>
+
+  <!--start qualisys odometry-->
+  <include file="$(find qualisys)/launch/qualisys.launch"/>
+  <include file="$(find qualisys)/launch/qualisys_odom.launch">
+      <arg name="model" value="SVEA5"/>
+  </include>
+
+    <node pkg="svea" type="SVEA_keyboard.py" name="SVEA_keyteleop" output="screen"/>
+
+    <!--key teleop-->
+    <node pkg="key_teleop" type="key_teleop.py" name="teleop" output="screen"/>
+
+</launch>

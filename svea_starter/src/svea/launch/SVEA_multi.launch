@@ -1,0 +1,8 @@
+<launch>
+
+    <!--open serial connection for controlling SVEA-->
+    <!--<node pkg="rosserial_python" type="serial_node.py" name="serial_node" args="/dev/ttyACM0" output="screen"/>-->
+
+    <node pkg="svea" type="sim_SVEA_multi.py" name="SVEA_multi" output="screen"/>
+
+</launch>
