@@ -246,6 +246,7 @@ class CarHighLevelCommands():
         angle = self.target_state[2]+math.pi/2
         self.target_state[2] = angle
         self._turn(angle)
+        
 def log_to_file(log):
     print('Starting writing log')
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -283,7 +284,6 @@ def main():
         l_var = {'car': car}
         c.execute_commands(g_var,l_var)
     else:
-        car.drive_forward()
         car.drive_forward()
         car.turn_right()
         car.drive_forward()

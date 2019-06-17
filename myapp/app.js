@@ -3,6 +3,10 @@ var fs = require("fs");
 var express = require("express");
 var bodyParser = require("body-parser");
 var Blockly = require("node-blockly");
+
+const path = require('path')
+const {spawn} = require('child_process') // For calling python scripts
+
 var app = express();
 
 var urlencodedParser = bodyParser.urlencoded({extended:false});
@@ -35,6 +39,65 @@ app.post("/", urlencodedParser, function(req,res){
     console.log("Updated!")
   });
 })
+
+/*
+###################
+PYTHON TEST PART
+###################
+*/
+
+const logOutput = (name) => (data) => console.log(`[${name}] ${data.toString()}`)
+
+function run() {
+  return new Promise((resolve, reject) => {
+    const process = spawn('python', ['./script.py', 'my', 'args']);
+
+    const out = []
+    process.stdout.on(
+      'data',
+      (data) => {
+        out.push(data.toString());
+        logOutput('stdout')(data);
+      }
+    );
+
+
+    const err = []
+    process.stderr.on(
+      'data',
+      (data) => {
+        err.push(data.toString());
+        logOutput('stderr')(data);
+      }
+    );
+
+    process.on('exit', (code, signal) => {
+      logOutput('exit')(`${code} (${signal})`)
+      if (code !== 0) {
+        reject(new Error(err.join('\n')))
+        return
+      }
+      try {
+        resolve(JSON.parse(out[0]));
+      } catch(e) {
+        reject(e);
+      }
+    });
+  });
+}
+
+(async () => {
+  try {
+    const output = await run()
+    logOutput('main')(output.message)
+    process.exit(0)
+  } catch (e) {
+    console.error('Error during script execution ', e.stack);
+    process.exit(1);
+  }
+})();
+
+
 
 app.listen(3000);
 

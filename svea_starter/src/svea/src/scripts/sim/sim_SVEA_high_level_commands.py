@@ -9,6 +9,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 import mikaels_code.line_follower as lf
 import mikaels_code.car_commands as cc
 import mikaels_code.data_log as dlog
@@ -35,29 +36,36 @@ import qualisys_localizers as ql
 
 class CarHighLevelCommands():
     """Class with high level methods intended to be called from a blockly-generated code."""
-    def __init__(self, simulation = True, vehicle_name = "SVEA0",
-                       qualisys_model_name = "SVEA0",
-                       init_state = [0, 0, 0.2, 0],
-                       target_speed = 0.6,
-                       dt = 0.01):
+    def __init__(self, simulation = True,
+                       animation = True,
+                       init_state = [0, 0, 0, 0]):
         self.simulation = simulation
+        self.show_animation = animation
+        vehicle_name = "SVEA0"
+        qualisys_model_name = 'SVEA5'
+        dt = 0.01
         if self.simulation:
             # initialize simulated model and control interface
             self.vehicle_model = SimpleBicycleState(*init_state, dt=dt)
             self.ctrl_interface = ControlInterface(vehicle_name).start()
-            rospy.sleep(0.5)
+            rospy.sleep(0.2)
             # start background simulation thread
             self.simulator = SimSVEA(vehicle_name, self.vehicle_model, dt, is_publish=True)
             self.simulator.start()
-            rospy.sleep(0.5)
+            self.target_state = [0, 0, 0.3, 0]
+            #rospy.sleep(0.5)
         else:
             # initialize odometry and control interface for real car
             self.vehicle_model = ql.QualisysSimpleOdom(qualisys_model_name).start()
             self.ctrl_interface = ControlInterface().start()
-            rospy.sleep(0.5)
+            rospy.sleep(1) # Wait till odometry updated
 
-        self.target_speed = target_speed # [m/s]
-        self.target_state = init_state # x, y, yaw, v
+            self.target_state = self.vehicle_model.get_state() # x, y, yaw, v
+
+        self.r = rospy.Rate(30) #S VEA car opearates on 30 Hz
+        self.target_speed = 0.6 # [m/s]
+        print('Starting state: ')
+        print(self.target_state)
         # object to log data in
         self.data_log = dlog.Data_log()
 
@@ -136,18 +144,22 @@ class CarHighLevelCommands():
             # log data
             data = tuple(self.vehicle_model.get_state())
             self.data_log.append_data(*data)
-            if self.simulation:
+            if self.show_animation:
                 self._animate_robot_path(steering, x0, y0, xg, yg)
 
+            #dist = np.linalg.norm([x0-x,y0-y])
             # Done if angle is close enough
-            dist = np.linalg.norm([x0-x,y0-y])
-            if abs(yaw_ref-yaw) < tol1 and dist < tol2:
+            if abs(yaw_ref-yaw) < tol1:
                 at_goal = True
+            # sleep so loop runs at 30Hz
+            #self.r.sleep()
+
+        self.ctrl_interface.send_control(0,0)
         self.target_state[0] = x
         self.target_state[1] = y
         print('Completed turn!')
 
-    def pure_pursuit(self, cx, cy, show_animation = True):
+    def pure_pursuit(self, cx, cy):
         """Make car drive along given trajectory. Uses pure pursuit algorithm."""
         # Pure pursuit params
         pure_pursuit.k = 0.4  # look forward gain
@@ -169,12 +181,14 @@ class CarHighLevelCommands():
                     self.vehicle_model.yaw, self.vehicle_model.v, self.time)
             self.data_log.append_data(*data)
             # update for animation
-            if show_animation:
+            if self.show_animation:
                 self._animate_pure_pursuit(steering,cx,cy,target_ind)
             else:
                 rospy.loginfo_throttle(1.5, self.vehicle_model)
+            # sleep so loop runs at 30Hz
+            #self.r.sleep()
 
-        if show_animation:
+        if self.show_animation:
             plt.close()
             self._animate_pure_pursuit(steering, cx, cy, target_ind)
             plt.show()
@@ -183,7 +197,7 @@ class CarHighLevelCommands():
             self._plot_trajectory(cx, cy)
             plt.show()
 
-    def drive_forward(self, show_animation = True):
+    def drive_forward(self):
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
         l = 1 # goal distance
@@ -191,8 +205,10 @@ class CarHighLevelCommands():
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
         y0 = self.target_state[1]
-        xg = x0 + l*math.cos(state[2])
-        yg = y0 + l*math.sin(state[2])
+        xg = x0 + l*math.cos(self.target_state[2])
+        yg = y0 + l*math.sin(self.target_state[2])
+        print('Goal state: ')
+        print(self.target_state)
         at_goal = False
         while not at_goal and not rospy.is_shutdown():
             state = self.vehicle_model.get_state()
@@ -206,13 +222,18 @@ class CarHighLevelCommands():
 
             data = tuple(self.vehicle_model.get_state())
             self.data_log.append_data(*data)
-            if show_animation:
+            if self.show_animation:
                 self._animate_robot_path(steering, x0, y0, xg, yg)
-
-            # done if close enough to goal.
+            else:
+                rospy.loginfo_throttle(1.5, self.vehicle_model)
+            # done if close enough to goal
             dist = np.linalg.norm([xg-x,yg-y])
+            #print('Current pos:')
+            #print(state)
             if dist < tol:
                 at_goal = True
+            # sleep so loop runs at 30Hz
+            #self.r.sleep()
         self.target_state[0] = xg
         self.target_state[1] = yg
         print('Completed drive forward!')
@@ -228,21 +249,48 @@ class CarHighLevelCommands():
         self.target_state[2] = angle
         self._turn(angle)
 
+def log_to_file(log):
+    print('Starting writing log')
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    f = open(dir_path+"/log_file.txt","w+")
+    for e in log.get_x():
+        f.write(str(e) + '\n')
+    f.write('#\n')
+    for e in log.get_y():
+        f.write(str(e) + '\n')
+    f.write('# \n')
+    for e in log.get_yaw():
+        f.write(str(e) + '\n')
+    f.write('# \n')
+    for e in log.get_v():
+        f.write(str(e) + '\n')
+    f.write('# \n')
+    f.close()
+    print('Wrote log')
+
 def main():
-    rospy.init_node('SVEA_sim_Environment')
+    rospy.init_node('SVEA_high_level')
     # Trajectory
     cx = np.arange(0, 5, 0.1)
     cy = [math.sin(ix) * ix for ix in cx]
-    car = CarHighLevelCommands()
-    from_file = True
+    from_file = False
+    simulation = True
+    animation = False
+    car = CarHighLevelCommands(simulation,animation)
     if from_file:
         # File with the code to execute
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filename = dir_path + '/../../../../../../myapp/code.py'
         c = cc.CarCommands(filename)
+
         # variables to pass on
         g_var = {'CarHighLevelCommands': CarHighLevelCommands}
         l_var = {'car': car}
         c.execute_commands(g_var,l_var)
+    else:
+        car.drive_forward()
+        car.turn_right()
+        car.drive_forward()
+    log_to_file(car.data_log)
 if __name__ == '__main__':
     main()
