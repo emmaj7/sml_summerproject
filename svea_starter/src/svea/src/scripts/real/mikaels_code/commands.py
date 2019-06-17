@@ -1,0 +1,6 @@
+print('Starting Program')
+sim = CarHighLevelCommands()
+sim.drive_forward()
+sim.turn_right()
+sim.turn_left()
+sim.drive_forward()

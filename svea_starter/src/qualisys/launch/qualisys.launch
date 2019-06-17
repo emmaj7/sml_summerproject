@@ -1,0 +1,17 @@
+<launch>
+
+  <arg name="qualisys_fps" default="100"/>
+  <arg name="max_accel" default="5.0"/>
+
+  <node pkg="qualisys"
+    type="qualisys_node"
+    name="qualisys"
+    output="screen">
+    <param name="server_address" value="11.0.0.10"/>
+    <param name="base_port" value="22222"/>
+    <param name="publish_tf" value="true"/>
+    <param name="max_accel" value="$(arg max_accel)"/>
+    <param name="qualisys_fps" value="$(arg qualisys_fps)"/>
+  </node>
+  <node pkg="tf" type="static_transform_publisher" name="world_to_qualisys_tf" args="1.4483547351 3.7716442689 -0.4114682755 0 0 0 /world /qualisys $(arg qualisys_fps)"/>
+</launch>
