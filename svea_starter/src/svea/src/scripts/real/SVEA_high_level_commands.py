@@ -50,15 +50,20 @@ class CarHighLevelCommands():
             # start background simulation thread
             self.simulator = SimSVEA(vehicle_name, self.vehicle_model, dt, is_publish=True)
             self.simulator.start()
+            self.target_state = [0, 0, 0.3, 0]
             rospy.sleep(0.5)
         else:
             # initialize odometry and control interface for real car
             self.vehicle_model = ql.QualisysSimpleOdom(qualisys_model_name).start()
             self.ctrl_interface = ControlInterface().start()
-            rospy.sleep(0.5)
+            rospy.sleep(1) # Wait till odometry updated
 
+            self.target_state = self.vehicle_model.get_state() # x, y, yaw, v
+
+        self.r = rospy.Rate(30) #S VEA car opearates on 30 Hz
         self.target_speed = target_speed # [m/s]
-        self.target_state = self.vehicle_model.get_state() # x, y, yaw, v
+        print('Starting state: ')
+        print(self.target_state)
         # object to log data in
         self.data_log = dlog.Data_log()
 
@@ -140,11 +145,14 @@ class CarHighLevelCommands():
             if self.simulation:
                 self._animate_robot_path(steering, x0, y0, xg, yg)
 
-
             #dist = np.linalg.norm([x0-x,y0-y])
             # Done if angle is close enough
             if abs(yaw_ref-yaw) < tol1:
                 at_goal = True
+            # sleep so loop runs at 30Hz
+            self.r.sleep()
+
+        self.ctrl_interface.send_control(0,0)
         self.target_state[0] = x
         self.target_state[1] = y
         print('Completed turn!')
@@ -175,6 +183,8 @@ class CarHighLevelCommands():
                 self._animate_pure_pursuit(steering,cx,cy,target_ind)
             else:
                 rospy.loginfo_throttle(1.5, self.vehicle_model)
+            # sleep so loop runs at 30Hz
+            self.r.sleep()
 
         if self.simulation:
             plt.close()
@@ -191,16 +201,12 @@ class CarHighLevelCommands():
         l = 1 # goal distance
         tol = 0.1 # ok distance to goal
         state = self.vehicle_model.get_state()
-        print('Starting State:')
-        print(state)
-
         x0 = self.target_state[0]
         y0 = self.target_state[1]
-        xg = x0 + l*math.cos(state[2])
-        yg = y0 + l*math.sin(state[2])
-
-        print('Goal:')
-        print([xg, yg])
+        xg = x0 + l*math.cos(self.target_state[2])
+        yg = y0 + l*math.sin(self.target_state[2])
+        print('Goal state: ')
+        print(self.target_state)
         at_goal = False
         while not at_goal and not rospy.is_shutdown():
             state = self.vehicle_model.get_state()
@@ -218,12 +224,14 @@ class CarHighLevelCommands():
                 self._animate_robot_path(steering, x0, y0, xg, yg)
             else:
                 rospy.loginfo_throttle(1.5, self.vehicle_model)
-            # done if close enough to goal.
+            # done if close enough to goal
             dist = np.linalg.norm([xg-x,yg-y])
             #print('Current pos:')
             #print(state)
             if dist < tol:
                 at_goal = True
+            # sleep so loop runs at 30Hz
+            self.r.sleep()
         self.target_state[0] = xg
         self.target_state[1] = yg
         print('Completed drive forward!')
@@ -238,13 +246,24 @@ class CarHighLevelCommands():
         angle = self.target_state[2]+math.pi/2
         self.target_state[2] = angle
         self._turn(angle)
-# def log_to_file(log):
-#     f = open("log_file.txt","w+")
-#     f.write(log.get_x())
-#     f.write(log.get_y())
-#     f.write(log.get_yaw())
-#     f.write(log.get_v())
-#     f.close()
+def log_to_file(log):
+    print('Starting writing log')
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    f = open(dir_path+"/log_file.txt","w+")
+    for e in log.get_x():
+        f.write(str(e) + '\n')
+    f.write('#\n')
+    for e in log.get_y():
+        f.write(str(e) + '\n')
+    f.write('# \n')
+    for e in log.get_yaw():
+        f.write(str(e) + '\n')
+    f.write('# \n')
+    for e in log.get_v():
+        f.write(str(e) + '\n')
+    f.write('# \n')
+    f.close()
+    print('Wrote log')
 def main():
     rospy.init_node('SVEA_high_level')
     # Trajectory
@@ -265,7 +284,9 @@ def main():
         c.execute_commands(g_var,l_var)
     else:
         car.drive_forward()
+        car.drive_forward()
         car.turn_right()
-    #log_to_file(car.data_log)
+        car.drive_forward()
+    log_to_file(car.data_log)
 if __name__ == '__main__':
     main()

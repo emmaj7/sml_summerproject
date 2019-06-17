@@ -37,7 +37,7 @@ class CarHighLevelCommands():
     """Class with high level methods intended to be called from a blockly-generated code."""
     def __init__(self, simulation = True, vehicle_name = "SVEA0",
                        qualisys_model_name = "SVEA0",
-                       init_state = [0, 0, 0, 0],
+                       init_state = [0, 0, 0.2, 0],
                        target_speed = 0.6,
                        dt = 0.01):
         self.simulation = simulation
@@ -57,7 +57,7 @@ class CarHighLevelCommands():
             rospy.sleep(0.5)
 
         self.target_speed = target_speed # [m/s]
-        self.target_state = [0, 0, 0, 0] # x, y, yaw, v
+        self.target_state = init_state # x, y, yaw, v
         # object to log data in
         self.data_log = dlog.Data_log()
 
@@ -187,7 +187,7 @@ class CarHighLevelCommands():
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
         l = 1 # goal distance
-        tol = 0.02 # ok distance to goal
+        tol = 0.1 # ok distance to goal
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
         y0 = self.target_state[1]
