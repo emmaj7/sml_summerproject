@@ -122,7 +122,7 @@ class CarHighLevelCommands():
         plt.pause(0.001)
 
         # Send to server using JSON:
-        data = {'x': state[0], 'y': state[1], 'yaw': state[2], 'v': state[3]}
+        data = {'x': state[0], 'y': state[1], 'yaw': state[2], 'v': state[3], 'steering': steering}
         print(json.dumps(data))
 
     def _turn(self, angle):

@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Hello World</title>
+</head>
+  <script src="../node_modules/pixi.js/dist/pixi.min.js"></script>
+<body>
+  <script type="text/javascript">
+    let type = "WebGL"
+    if(!PIXI.utils.isWebGLSupported()){
+      type = "canvas"
+    }
+
+    PIXI.utils.sayHello(type)
+
+    //Aliases
+    let Application = PIXI.Application,
+        loader = PIXI.loader,
+        resources = PIXI.loader.resources,
+        Sprite = PIXI.Sprite;
+    //Create a Pixi Application
+    let app = new Application({
+        width: 512,         // default: 800
+        height: 512,        // default: 600
+        antialias: true,    // default: false
+        transparent: false, // default: false
+        resolution: 1,      // default: 1
+        forceCanvas: false  // force to use drawng API instead of WebGL
+      }
+    );
+    app.renderer.backgroundColor = 0x061639; // Change background color
+
+    //Add the canvas that Pixi automatically created for you to the HTML document
+    document.body.appendChild(app.view);
+    //load an image and run the `setup` function when it's done
+    loader
+      .add("./images/cat.png")
+      .load(setup);
+
+    //This `setup` function will run when the image has loaded
+    function setup() {
+
+      //Create the cat sprite
+      let cat = new Sprite(resources["./images/cat.png"].texture);
+      //Change the sprite's size
+      cat.height = 64;
+      cat.width = 64;
+      // // change anchor point
+      cat.anchor.x = 0.5;
+      cat.anchor.y = 0.5;
+      // // Change the sprite's position
+      x = <%=x_var%>;
+      y = <%=y_var%>;
+      cat.position.set(x, y)
+      //
+      // // Rotate sprite
+      // cat.rotation = 1;
+      //Add the cat to the stage
+      app.stage.addChild(cat);
+    }
+  </script>
+</body>
+</html>
