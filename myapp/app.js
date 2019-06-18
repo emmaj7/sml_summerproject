@@ -46,56 +46,36 @@ PYTHON TEST PART
 ###################
 */
 
-const logOutput = (name) => (data) => console.log(`[${name}] ${data.toString()}`)
-
-function run() {
-  return new Promise((resolve, reject) => {
-    const process = spawn('python', ['./script.py', 'my', 'args']);
-
-    const out = []
-    process.stdout.on(
-      'data',
-      (data) => {
-        out.push(data.toString());
-        logOutput('stdout')(data);
-      }
-    );
-
-
-    const err = []
-    process.stderr.on(
-      'data',
-      (data) => {
-        err.push(data.toString());
-        logOutput('stderr')(data);
-      }
-    );
-
-    process.on('exit', (code, signal) => {
-      logOutput('exit')(`${code} (${signal})`)
-      if (code !== 0) {
-        reject(new Error(err.join('\n')))
-        return
-      }
-      try {
-        resolve(JSON.parse(out[0]));
-      } catch(e) {
-        reject(e);
-      }
-    });
-  });
+function runScript(){
+  return spawn('python', [
+    "-u",
+    path.join(__dirname, '/../svea_starter/src/svea/src/scripts/sim/sim_SVEA_high_level_commands.py')]);
 }
 
-(async () => {
-  try {
-    const output = await run()
-    logOutput('main')(output.message)
-    process.exit(0)
-  } catch (e) {
-    console.error('Error during script execution ', e.stack);
-    process.exit(1);
-  }
-})();
+app.get('/testpage', function(req,res){
+  const subprocess = runScript()
+
+  // print output of script
+    subprocess.stdout.on('data', (data) => {
+      try {
+        var data = JSON.parse(data);
+        console.log(data);
+      } catch(e) {
+          console.log(`error:${e}`);
+      }
+
+    });
+  subprocess.stderr.on('data', (data) => {
+    console.log(`error:${data}`);
+  });
+  subprocess.stderr.on('close', () => {
+    console.log("Closed");
+  });
+  subprocess.on("exit", exitCode => {
+  console.log("Exiting with code " + exitCode);
+  });
+});
+
 
 
 

@@ -14,6 +14,8 @@ import mikaels_code.line_follower as lf
 import mikaels_code.car_commands as cc
 import mikaels_code.data_log as dlog
 
+import json
+
 dirname = os.path.dirname(__file__)
 svea = os.path.join(dirname, '../../')
 sys.path.append(os.path.abspath(svea))
@@ -52,7 +54,7 @@ class CarHighLevelCommands():
             # start background simulation thread
             self.simulator = SimSVEA(vehicle_name, self.vehicle_model, dt, is_publish=True)
             self.simulator.start()
-            self.target_state = [0, 0, 0.3, 0]
+            self.target_state = [0, 0, 0, 0]
             #rospy.sleep(0.5)
         else:
             # initialize odometry and control interface for real car
@@ -64,8 +66,7 @@ class CarHighLevelCommands():
 
         self.r = rospy.Rate(30) #S VEA car opearates on 30 Hz
         self.target_speed = 0.6 # [m/s]
-        print('Starting state: ')
-        print(self.target_state)
+
         # object to log data in
         self.data_log = dlog.Data_log()
 
@@ -120,6 +121,10 @@ class CarHighLevelCommands():
                  steering)
         plt.pause(0.001)
 
+        # Send to server using JSON:
+        data = {'x': state[0], 'y': state[1], 'yaw': state[2], 'v': state[3]}
+        print(json.dumps(data))
+
     def _turn(self, angle):
         """Turn the car a given number of degrees relative to current orientation."""
         l = 1
@@ -152,7 +157,7 @@ class CarHighLevelCommands():
             if abs(yaw_ref-yaw) < tol1:
                 at_goal = True
             # sleep so loop runs at 30Hz
-            #self.r.sleep()
+            self.r.sleep()
 
         self.ctrl_interface.send_control(0,0)
         self.target_state[0] = x
@@ -186,7 +191,7 @@ class CarHighLevelCommands():
             else:
                 rospy.loginfo_throttle(1.5, self.vehicle_model)
             # sleep so loop runs at 30Hz
-            #self.r.sleep()
+            self.r.sleep()
 
         if self.show_animation:
             plt.close()
@@ -207,8 +212,7 @@ class CarHighLevelCommands():
         y0 = self.target_state[1]
         xg = x0 + l*math.cos(self.target_state[2])
         yg = y0 + l*math.sin(self.target_state[2])
-        print('Goal state: ')
-        print(self.target_state)
+
         at_goal = False
         while not at_goal and not rospy.is_shutdown():
             state = self.vehicle_model.get_state()
@@ -233,7 +237,7 @@ class CarHighLevelCommands():
             if dist < tol:
                 at_goal = True
             # sleep so loop runs at 30Hz
-            #self.r.sleep()
+            self.r.sleep()
         self.target_state[0] = xg
         self.target_state[1] = yg
         print('Completed drive forward!')
@@ -250,7 +254,6 @@ class CarHighLevelCommands():
         self._turn(angle)
 
 def log_to_file(log):
-    print('Starting writing log')
     dir_path = os.path.dirname(os.path.realpath(__file__))
     f = open(dir_path+"/log_file.txt","w+")
     for e in log.get_x():
@@ -266,7 +269,7 @@ def log_to_file(log):
         f.write(str(e) + '\n')
     f.write('# \n')
     f.close()
-    print('Wrote log')
+    print('Wrote log to file')
 
 def main():
     rospy.init_node('SVEA_high_level')
@@ -275,7 +278,7 @@ def main():
     cy = [math.sin(ix) * ix for ix in cx]
     from_file = False
     simulation = True
-    animation = False
+    animation = True
     car = CarHighLevelCommands(simulation,animation)
     if from_file:
         # File with the code to execute
@@ -289,8 +292,10 @@ def main():
         c.execute_commands(g_var,l_var)
     else:
         car.drive_forward()
-        car.turn_right()
-        car.drive_forward()
+        # car.turn_right()
+        # car.drive_forward()
     log_to_file(car.data_log)
+
 if __name__ == '__main__':
     main()
+    print('Done!')
