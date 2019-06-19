@@ -15,7 +15,6 @@ app.set("view engine", "ejs");
 app.use("/assets", express.static("assets"));
 app.use("/node_modules/node-blockly/blockly", express.static("node_modules/node-blockly/blockly"));
 app.use("/customBlocks", express.static("customBlocks"));
-
 app.use(express.static("views"));
 app.use("/node_modules/pixi.js", express.static("node_modules/pixi.js"));
 
@@ -43,37 +42,41 @@ app.post("/", urlencodedParser, function(req,res){
   });
 })
 
-/*
-###################
-PYTHON TEST PART
-###################
-*/
-
+// Renders the simulation window page. Not neccessary later.
+app.get('/testpage', function(req,res){
+  res.render('test2');
+});
+// This function launches the python simulation
 function runScript(){
   return spawn('python', [
     "-u",
     path.join(__dirname, '/../svea_starter/src/svea/src/scripts/sim/sim_SVEA_high_level_commands.py')]);
 }
-app.get('/test2', function(req,res){
-  var data = { name: 'Tobi', x_var: 20, y_var: 20};
-  res.render('test2',data);
-});
-
-app.get('/testpage', function(req,res){
-  // res.render('test2');
+// Responds to get request to /testpage/button
+// When called establishes a connection that wont close.
+// Does the following:
+// 1. Starts the python simulation
+// 2. Recieves coordinate steam from pthon simulation as json
+// 3. Streams coordinates to /testpage/button event stream.
+app.get('/testpage/button', function(req,res){
+  res.status(200).set({
+    'connection': 'keep-alive',
+    'cache-control': 'no-cache',
+    'content-Type': 'text/event-stream'
+  });
   const subprocess = runScript()
-  // print output of script
     subprocess.stdout.on('data', (data) => {
-      try {
+      try { // try-catch to only send data that is in JSON format
         var data = JSON.parse(data);
-        // res.render('test2',data);
+        res.write(`data: ${JSON.stringify(data)} \n\n`);
+        console.log(data);
       } catch(e) {
-          console.log(`error:${e}`);
+          console.log(`error type 1:${e}`);
       }
-
     });
+  // The code below is only for error catching.
   subprocess.stderr.on('data', (data) => {
-    console.log(`error:${data}`);
+    console.log(`error type 2:${data}`);
   });
   subprocess.stderr.on('close', () => {
     console.log("Closed");

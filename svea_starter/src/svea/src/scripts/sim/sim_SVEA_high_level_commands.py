@@ -292,8 +292,8 @@ def main():
         c.execute_commands(g_var,l_var)
     else:
         car.drive_forward()
-        # car.turn_right()
-        # car.drive_forward()
+        car.turn_left()
+        car.drive_forward()
     log_to_file(car.data_log)
 
 if __name__ == '__main__':
