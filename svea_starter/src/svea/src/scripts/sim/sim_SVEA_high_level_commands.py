@@ -8,7 +8,7 @@ import rospy
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-
+import time
 
 import mikaels_code.line_follower as lf
 import mikaels_code.car_commands as cc
@@ -70,6 +70,13 @@ class CarHighLevelCommands():
         # object to log data in
         self.data_log = dlog.Data_log()
 
+    def _send_position(self, steering):
+        # Send position to server using JSON
+        state = self.vehicle_model.get_state()
+        data = {'x': state[0], 'y': state[1], 'yaw': state[2], 'v': state[3], 'steering': steering}
+        print(json.dumps(data))
+        time.sleep(0.001)
+
     def _plot_trajectory(self, cx, cy):
         x = self.data_log.get_x()
         y = self.data_log.get_y()
@@ -121,10 +128,6 @@ class CarHighLevelCommands():
                  steering)
         plt.pause(0.001)
 
-        # Send to server using JSON:
-        data = {'x': state[0], 'y': state[1], 'yaw': state[2], 'v': state[3], 'steering': steering}
-        print(json.dumps(data))
-
     def _turn(self, angle):
         """Turn the car a given number of degrees relative to current orientation."""
         l = 1
@@ -156,9 +159,10 @@ class CarHighLevelCommands():
             # Done if angle is close enough
             if abs(yaw_ref-yaw) < tol1:
                 at_goal = True
+            # send position to server.
+            self._send_position(steering)
             # sleep so loop runs at 30Hz
             self.r.sleep()
-
         self.ctrl_interface.send_control(0,0)
         self.target_state[0] = x
         self.target_state[1] = y
@@ -188,8 +192,8 @@ class CarHighLevelCommands():
             # update for animation
             if self.show_animation:
                 self._animate_pure_pursuit(steering,cx,cy,target_ind)
-            else:
-                rospy.loginfo_throttle(1.5, self.vehicle_model)
+
+            self._send_position(steering)
             # sleep so loop runs at 30Hz
             self.r.sleep()
 
@@ -228,14 +232,14 @@ class CarHighLevelCommands():
             self.data_log.append_data(*data)
             if self.show_animation:
                 self._animate_robot_path(steering, x0, y0, xg, yg)
-            else:
-                rospy.loginfo_throttle(1.5, self.vehicle_model)
             # done if close enough to goal
             dist = np.linalg.norm([xg-x,yg-y])
             #print('Current pos:')
             #print(state)
             if dist < tol:
                 at_goal = True
+            # Send position to server.
+            self._send_position(steering)
             # sleep so loop runs at 30Hz
             self.r.sleep()
         self.target_state[0] = xg
@@ -278,7 +282,7 @@ def main():
     cy = [math.sin(ix) * ix for ix in cx]
     from_file = False
     simulation = True
-    animation = True
+    animation = False
     car = CarHighLevelCommands(simulation,animation)
     if from_file:
         # File with the code to execute
@@ -298,4 +302,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    print('Done!')
