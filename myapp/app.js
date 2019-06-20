@@ -42,13 +42,26 @@ app.post("/", urlencodedParser, function(req,res){
   });
 })
 
-// Renders the simulation window page. Not neccessary later.
-app.get('/testpage', function(req,res){
+// Test page that renders the simulation window page.
+app.get('/testpage2', function(req,res){
   res.render('test2');
 });
 
-// Launches roscore. Required to run simulation.
+// Launches roscore. REQUIRES ROS INSTALLED ON COMPUTER
+// Required to run simulation.
 shell.exec('roscore', {async:true});
+
+// Test page for button to launch car.
+app.get('/testpage3',function(req,res){
+  res.render('test3');
+});
+
+// Get request to launch car.
+app.get('/testpage3/run_on_car', function(req,res){
+  shell.exec('roslaunch svea sim_SVEA_purepursuit.launch', {async:true}); // Change to real command later
+  console.log('Launched SVEA_high_level_commands');
+  res.sendStatus(200);
+});
 
 // This function launches the python simulation
 function runScript(){
@@ -62,8 +75,8 @@ function runScript(){
 // Does the following:
 // 1. Starts the python simulation
 // 2. Recieves coordinate steam from pthon simulation as json
-// 3. Streams coordinates to /testpage/button event stream.
-app.get('/testpage/button', function(req,res){
+// 3. Streams coordinates to /testpage2/button event stream.
+app.get('/testpage2/button', function(req,res){
   res.status(200).set({
     'connection': 'keep-alive',
     'cache-control': 'no-cache',

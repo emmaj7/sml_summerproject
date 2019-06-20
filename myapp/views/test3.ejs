@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <title>Test page 3</title>
+
+    <script>
+    $(document).ready(function(){
+      $("button").click(function(){
+        $.get("run_on_car", function(data, status){
+          alert('Started car');
+          // if possible, change so that there is no pop-up window.
+          // Would be nicer if for example the button grayed out and displayed a message.
+        });
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <h1>Test page for button to start car</h1>
+    <button>Kör koden!</button>
+
+  </body>
+
+</html>

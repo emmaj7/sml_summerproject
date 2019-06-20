@@ -2,11 +2,12 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Hello World</title>
+  <title>Test page 2</title>
 </head>
   <!-- Uses pixi module for the animation -->
   <script src="../node_modules/pixi.js/dist/pixi.min.js"></script>
 <body>
+  <h1>Test page for simulation window</h1>
   <script type="text/javascript">
 
     /*----------------
@@ -87,7 +88,7 @@
 
     // listen to data stream from testpage/button
     if (!!window.EventSource) {
-      var source = new EventSource('testpage/button');
+      var source = new EventSource('testpage2/button');
     } else {
       // Result to xhr polling :(
       console.log('Error setting up event stream');
