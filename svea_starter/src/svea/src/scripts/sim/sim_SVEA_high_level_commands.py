@@ -40,11 +40,11 @@ class CarHighLevelCommands():
     """Class with high level methods intended to be called from a blockly-generated code."""
     def __init__(self, simulation = True,
                        animation = True,
+                       vehicle_name = 'SVEA0',
                        init_state = [0, 0, 0, 0]):
         self.simulation = simulation
         self.show_animation = animation
-        vehicle_name = "SVEA0"
-        qualisys_model_name = 'SVEA5'
+        qualisys_model_name = vehicle_name
         dt = 0.01
         if self.simulation:
             # initialize simulated model and control interface
@@ -74,8 +74,7 @@ class CarHighLevelCommands():
         # Send position to server using JSON
         state = self.vehicle_model.get_state()
         data = {'x': state[0], 'y': state[1], 'yaw': state[2], 'v': state[3], 'steering': steering}
-        print(json.dumps(data))
-        time.sleep(0.001)
+        sys.stdout.write(json.dumps(data))
 
     def _plot_trajectory(self, cx, cy):
         x = self.data_log.get_x()
@@ -234,8 +233,6 @@ class CarHighLevelCommands():
                 self._animate_robot_path(steering, x0, y0, xg, yg)
             # done if close enough to goal
             dist = np.linalg.norm([xg-x,yg-y])
-            #print('Current pos:')
-            #print(state)
             if dist < tol:
                 at_goal = True
             # Send position to server.
@@ -275,15 +272,14 @@ def log_to_file(log):
     f.close()
     print('Wrote log to file')
 
-def main():
-    rospy.init_node('SVEA_high_level')
-    # Trajectory
-    cx = np.arange(0, 5, 0.1)
-    cy = [math.sin(ix) * ix for ix in cx]
+def main(argv = ['SVEA0']):
+    name = argv[0] # makes it possible to have multiple copies of simulation
+    rospy.init_node('sim_SVEA_high_level_' + name)
+
     from_file = False
     simulation = True
     animation = False
-    car = CarHighLevelCommands(simulation,animation)
+    car = CarHighLevelCommands(simulation, animation, name)
     if from_file:
         # File with the code to execute
         dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -299,6 +295,7 @@ def main():
         car.turn_left()
         car.drive_forward()
     log_to_file(car.data_log)
+    rospy.signal_shutdown('Program end')
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

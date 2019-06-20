@@ -58,16 +58,21 @@ app.get('/testpage3',function(req,res){
 
 // Get request to launch car.
 app.get('/testpage3/run_on_car', function(req,res){
-  shell.exec('roslaunch svea sim_SVEA_purepursuit.launch', {async:true}); // Change to real command later
-  console.log('Launched SVEA_high_level_commands');
-  res.sendStatus(200);
+  try {
+    shell.exec('roslaunch svea sim_SVEA_purepursuit.launch', {async:true}); // Change to real command later
+    console.log('Launched SVEA_high_level_commands');
+  } catch (e) {
+    res.sendStatus(503); // send Service unavailable
+  } finally {
+    res.sendStatus(200); // send everything ok.
+  }
 });
 
 // This function launches the python simulation
 function runScript(){
-  return spawn('python', [
-    "-u",
-    path.join(__dirname, '/../svea_starter/src/svea/src/scripts/sim/sim_SVEA_high_level_commands.py')]);
+  var id = (Math.random()*Math.pow(10,17)).toString(); // Intended to give each session an unique id.
+  var pathId = path.join(__dirname, '/../svea_starter/src/svea/src/scripts/sim/sim_SVEA_high_level_commands.py');
+  return spawn('python', ["-u", pathId, id],{detached: true});
 }
 
 // Responds to get request to /testpage/button
@@ -77,6 +82,7 @@ function runScript(){
 // 2. Recieves coordinate steam from pthon simulation as json
 // 3. Streams coordinates to /testpage2/button event stream.
 app.get('/testpage2/button', function(req,res){
+  console.log('Start');
   res.status(200).set({
     'connection': 'keep-alive',
     'cache-control': 'no-cache',
@@ -85,9 +91,11 @@ app.get('/testpage2/button', function(req,res){
   const subprocess = runScript()
     subprocess.stdout.on('data', (data) => {
       try { // try-catch to only send data that is in JSON format
-        var data = JSON.parse(data);
-        res.write(`data: ${JSON.stringify(data)} \n\n`);
+        var obj = JSON.parse(data);
+        obj.close = false;
+        res.write(`data: ${JSON.stringify(obj)} \n\n`);
       } catch(e) {
+        console.log(`${data}`); // Writes data which isn't json to log.
       }
     });
   // The code below is only for error catching.
@@ -96,6 +104,8 @@ app.get('/testpage2/button', function(req,res){
   });
   subprocess.stderr.on('close', () => {
     console.log("Closed");
+    var obj = {close: true};
+    res.write(`data: ${JSON.stringify(obj)} \n\n`);
   });
   subprocess.on("exit", exitCode => {
   console.log("Exiting with code " + exitCode);

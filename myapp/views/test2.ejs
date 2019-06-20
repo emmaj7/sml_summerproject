@@ -3,13 +3,14 @@
 <head>
   <meta charset="utf-8">
   <title>Test page 2</title>
-</head>
   <!-- Uses pixi module for the animation -->
   <script src="../node_modules/pixi.js/dist/pixi.min.js"></script>
+</head>
+
 <body>
   <h1>Test page for simulation window</h1>
+  <button onclick="runCar()" type="button">Kör koden!</button>
   <script type="text/javascript">
-
     /*----------------
     THE ANIMATION PART
     ----------------*/
@@ -41,7 +42,7 @@
 
     //Add the canvas that Pixi automatically created for you to the HTML document
     document.body.appendChild(app.view);
-
+    function runCar(){
     //load an image and run the `setup` function when it's done
     loader
       .add("./images/car2.png")
@@ -96,11 +97,14 @@
     // The important part
     source.addEventListener('message', function(e) {
       var obj = JSON.parse(e.data);
-      x_cord = obj.x;
-      y_cord = obj.y;
-      yaw = obj.yaw;
-      // console.log(e.data);
-
+      if (obj.close) {
+        source.close(); // close connection when python script is done.
+        console.log('Connection closed');
+      } else {
+        x_cord = obj.x;
+        y_cord = obj.y;
+        yaw = obj.yaw;
+      }
     }, false);
     source.addEventListener('open', function(e) {
       // Connection was opened.
@@ -113,6 +117,7 @@
         console.log('Connection closed');
       }
     }, false);
+  }
   </script>
 </body>
 
