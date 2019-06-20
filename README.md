@@ -11,3 +11,28 @@ Futhermore we recommend installing [nodemon](https://www.npmjs.com/package/nodem
 	npm install -g nodemon
 
 which simplifies debuggging when you're testing out your applications.
+
+Now clone the git repository
+
+	git clone https://github.com/emmaj7/sml_summerproject.git
+
+and go to it using the terminal. Next you will have to compile and link the ROS libraries using:
+
+	cd svea_starter
+	catkin_make
+	source devel/setup.bash
+	rospack profile
+
+To make sure the libraries are linked in the future, also call:
+
+	echo "source <path-to-svea-starter>/devel/setup.bash" >> ~/.bashrc
+	source ~/.bashrc
+
+where you need to replace "<path-to-svea-starter>" with the file path to wherever you cloned "svea_starter". For example, the full path might look like "/home/user/sml_summerproject/svea_starter/devel/setup.bash".
+
+
+Finally you have to install all node.js dependencies. Go into the "myapp" folder and run:
+
+	npm install
+
+You should now be good to go.
