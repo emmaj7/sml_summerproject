@@ -6,7 +6,7 @@ The project assumes you are running ubuntu 16.04. and that you have the followin
 * [ROS](https://www.ros.org/). You can install ROS by following [this guide](http://wiki.ros.org/kinetic/Installation/Ubuntu).
 * [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/). You can install them by following [this guide](https://tecadmin.net/install-latest-nodejs-npm-on-ubuntu/).
 
-The python application requires numpy and matplotlib. Install them if you dont already have them.
+The python application requires numpy and matplotlib. Install them if you don't already have them.
 
 	pip install numpy matplotlib
 	
