@@ -1,12 +1,15 @@
-var http = require("http");
-var fs = require("fs");
-var express = require("express");
-var bodyParser = require("body-parser");
-const path = require('path')
-const {spawn} = require('child_process') // For calling python scripts
-var shell = require('shelljs'); // For running shell commands
+const fs = require("fs");
+const express = require("express");
+const bodyParser = require("body-parser");
+const path = require('path');
+const {spawn} = require('child_process'); // For calling python scripts
+const shell = require('shelljs'); // For running shell commands
+const Blockly = require('node-blockly'); // Required in frontend.
+const prependFile = require('prepend-file'); // To append to beginning of file
 
 var app = express();
+var http = require("http").createServer(app);
+var io = require('socket.io')(http); // handles two-way data streams
 
 var urlencodedParser = bodyParser.urlencoded({extended:false});
 
@@ -17,6 +20,8 @@ app.use("/node_modules/node-blockly/blockly", express.static("node_modules/node-
 app.use("/customBlocks", express.static("customBlocks"));
 app.use(express.static("views"));
 app.use("/node_modules/pixi.js", express.static("node_modules/pixi.js"));
+app.use("/node_modules/socket.io-client", express.static("node_modules/socket.io-client"));
+
 
 app.get("/", function(req, res){
   res.render("firstPage");
@@ -34,18 +39,12 @@ app.get("/level3", function(req, res){
   res.render("level3");
 });
 
-app.post("/", urlencodedParser, function(req,res){
-  console.log(req.body.code);
-  fs.writeFile("code.py", req.body.code + "##### \n",function(error){
-    if (error) throw error;
-    console.log("Updated!")
-  });
-})
 
-// Test page that renders the simulation window page.
-app.get('/testpage2', function(req,res){
-  res.render('test2');
+app.post("/postcode", urlencodedParser, function(req,res){
+  console.log(req.body.code);
+  writeCode(req.body.code,req.body.id);
 });
+
 
 // Launches roscore. REQUIRES ROS INSTALLED ON COMPUTER
 // Required to run simulation.
@@ -68,49 +67,62 @@ app.get('/testpage3/run_on_car', function(req,res){
   }
 });
 
+// Responds to request to 'button pressed'.
+// Does the following:
+// 1. recieves window id.
+// 2. Recieves coordinate stream from python simulation as json
+// 3. Sends stream to 'position sent'
+io.on('connection', function(socket){
+  socket.on('button pressed', function(msg){
+    // console.log(msg);
+    const subprocess = runScript(msg)
+    subprocess.stdout.on('data', (data) => {
+    try { // try-catch to only send data that is in JSON format
+      var obj = JSON.parse(data);
+      socket.emit('position sent', `${JSON.stringify(obj)}`);
+    } catch(e) {
+      console.log(`${data}`); // Writes data which isn't json to log.
+    }
+    });
+    // The code below is only for error catching.
+    subprocess.stderr.on('data', (data) => {
+      console.log(`error type 2:${data}`);
+    });
+    subprocess.stderr.on('close', () => {
+      console.log("Closed");
+      socket.emit('close');
+    });
+    subprocess.on("exit", exitCode => {
+    console.log("Exiting with code " + exitCode);
+    });
+  });
+});
+
 // This function launches the python simulation
-function runScript(){
-  var id = (Math.random()*Math.pow(10,17)).toString(); // Intended to give each session an unique id.
+function runScript(id){
+  id = 'USER' + id;
   var pathId = path.join(__dirname, '/../svea_starter/src/svea/src/scripts/sim/sim_SVEA_high_level_commands.py');
   return spawn('python', ["-u", pathId, id],{detached: true});
 }
 
-// Responds to get request to /testpage/button
-// When called establishes a connection that wont close.
-// Does the following:
-// 1. Starts the python simulation
-// 2. Recieves coordinate steam from pthon simulation as json
-// 3. Streams coordinates to /testpage2/button event stream.
-app.get('/testpage2/button', function(req,res){
-  console.log('Start');
-  res.status(200).set({
-    'connection': 'keep-alive',
-    'cache-control': 'no-cache',
-    'content-Type': 'text/event-stream'
+// Writes code to beginning of code file
+function writeCode(code, id){
+  data = '# ' + 'ID:' + id + '\n' + code + '#####\n';
+  prependFile('code.py', data, function(err){
+    if (err){
+      console.log(err);
+    }
   });
-  const subprocess = runScript()
-    subprocess.stdout.on('data', (data) => {
-      try { // try-catch to only send data that is in JSON format
-        var obj = JSON.parse(data);
-        obj.close = false;
-        res.write(`data: ${JSON.stringify(obj)} \n\n`);
-      } catch(e) {
-        console.log(`${data}`); // Writes data which isn't json to log.
-      }
-    });
-  // The code below is only for error catching.
-  subprocess.stderr.on('data', (data) => {
-    console.log(`error type 2:${data}`);
-  });
-  subprocess.stderr.on('close', () => {
-    console.log("Closed");
-    var obj = {close: true};
-    res.write(`data: ${JSON.stringify(obj)} \n\n`);
-  });
-  subprocess.on("exit", exitCode => {
-  console.log("Exiting with code " + exitCode);
-  });
+}
+
+// Error 404 handling.
+app.use(function(req, res, next) {
+  res.status(404);
+  var fullUrl = req.protocol +'://' + req.get('host') + req.url;
+  res.render('404page', {'message': fullUrl});
 });
 
 
-app.listen(3000);
+http.listen(3000, function(){
+  console.log('listening on *:3000')
+});

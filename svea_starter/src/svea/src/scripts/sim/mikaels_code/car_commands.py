@@ -12,20 +12,33 @@ class CarCommands:
         self.filename = filename
         self.commands = None
 
-    def _read_commands(self):
-        f = open(self.filename,"r")
-        self.commands = f.read()
-        f.close()
+    def _read_commands(self, id):
+        """Looks after code block with the given id."""
+        id = id.strip('USER')
+        code_start = False
+        self.commands = ''
+        file = open(self.filename,"r")
+        for line in file:
+            if code_start:
+                if '#####' in line:
+                    break
+                else:
+                    self.commands = self.commands + line
+            if id in line:
+                code_start = True
+        if self.commands == '':
+            print('No commands with the given id')
+        file.close()
 
-    def get_commands(self):
+    def get_commands(self, id):
         """ Returns the code as string"""
-        self._read_commands()
+        self._read_commands(id)
         return self.commands
 
-    def execute_commands(self, globals = {}, locals = {}):
+    def execute_commands(self, id, globals = {}, locals = {}):
         """ Executes the code. Necessary globals or locals
             are sent as a dictionaries"""
-        self._read_commands()
+        self._read_commands(id)
         exec(self.commands,globals,locals)
 
 def test_function():

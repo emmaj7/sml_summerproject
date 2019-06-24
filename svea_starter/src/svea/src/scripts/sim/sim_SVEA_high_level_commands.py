@@ -276,7 +276,7 @@ def main(argv = ['SVEA0']):
     name = argv[0] # makes it possible to have multiple copies of simulation
     rospy.init_node('sim_SVEA_high_level_' + name)
 
-    from_file = False
+    from_file = True
     simulation = True
     animation = False
     car = CarHighLevelCommands(simulation, animation, name)
@@ -285,11 +285,10 @@ def main(argv = ['SVEA0']):
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filename = dir_path + '/../../../../../../myapp/code.py'
         c = cc.CarCommands(filename)
-
         # variables to pass on
         g_var = {'CarHighLevelCommands': CarHighLevelCommands}
         l_var = {'car': car}
-        c.execute_commands(g_var,l_var)
+        c.execute_commands(name, g_var,l_var)
     else:
         car.drive_forward()
         car.turn_left()

@@ -15,12 +15,16 @@
     <script src="../node_modules/node-blockly/blockly/blocks_compressed.js"></script>
     <script src="../node_modules/node-blockly/blockly/msg/js/sv.js"></script>
     <script src="./customBlocks/customBlocks.js"></script>
+
   </head>
   <body>
     <h1 class="text-center">[INSERT COOLT SPEL-NAMN HÄR]</h1>
+
+    <!-- Navigation partial -->
     <% include partials/nav.ejs %>
-      <div class="row">
-        <div class="text-center">
+
+    <div class="row">
+      <div class="text-center">
         <div id="blocklyDiv" class="col" style="height: 600px; width: 800px;"></div>
         <xml id="toolbox" style="display: none">
           <!-- <block type="controls_if"></block>
@@ -32,44 +36,22 @@
         <button onclick="runCode()" type="button" class="btn btn-danger" id="run-btn">Kör koden!</button>
       </div>
     </div>
+
+  <!-- This partial has all the relevant code related to the simulation window. -->
+  <% include partials/simulationWindow.ejs %>
+
   </body>
   <script>
   var workspace = Blockly.inject('blocklyDiv',
-      {toolbox: document.getElementById('toolbox'),
-        verticalLayout: true,
-        scrollbars: false,
-        theme: Blockly.Themes.HighContrast});
+  {toolbox: document.getElementById('toolbox'),
+  verticalLayout: true,
+  scrollbars: false,
+  theme: Blockly.Themes.HighContrast});
 
-  function sendToServer(code){
-   var xmlhttp = new XMLHttpRequest();
-   var object = JSON.stringify({code:code});
-   xmlhttp.open("POST","/level1", true);
-   // xmlhttp.onreadystatechange=function(){
-   //       if (xmlhttp.readyState==4 && xmlhttp.status==200){
-   //         var string=xmlhttp.responseText;
-   //       }
-   xmlhttp.send(object);
-  }
+  // ID generated uniquely for each window.
+  var unique_id = (Math.random()*Math.pow(10,18)).toString();
 
-  function runCode(){
-      // Generate JavaScript code and run it.
-      window.LoopTrap = 1000;
-      Blockly.JavaScript.INFINITE_LOOP_TRAP =
-        'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
-      var code = Blockly.JavaScript.workspaceToCode(workspace);
-
-      var codeObj = {code:code};
-      $.post("/level1", codeObj, function(codeObj, status){
-        console.log(`${data} and status is ${status}`)
-      });
-
-
-      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-      try {
-        eval(code);
-      } catch (error) {
-        alert(error);
-      }
-    }
+  // This function is the same for all pages.
+  <% include partials/runCodeFunction.js %>
   </script>
 </html>
