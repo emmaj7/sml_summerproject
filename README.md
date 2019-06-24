@@ -4,8 +4,12 @@
 ## Setting up the invironment
 The project assumes you are running ubuntu 16.04. and that you have the following applications installed on your machine:
 * [ROS](https://www.ros.org/). You can install ROS by following [this guide](http://wiki.ros.org/kinetic/Installation/Ubuntu).
-* [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/) You can install them by following [this guide](https://tecadmin.net/install-latest-nodejs-npm-on-ubuntu/).
+* [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/). You can install them by following [this guide](https://tecadmin.net/install-latest-nodejs-npm-on-ubuntu/).
 
+The python application requires numpy and matplotlib. Install them if you dont already have them.
+
+	pip install numpy matplotlib
+	
 Futhermore we recommend installing [nodemon](https://www.npmjs.com/package/nodemon)
 
 	npm install -g nodemon
@@ -30,9 +34,10 @@ To make sure the libraries are linked in the future, also call:
 
 where you need to replace "<path-to-svea-starter>" with the file path to wherever you cloned "svea_starter". For example, the full path might look like "/home/user/sml_summerproject/svea_starter/devel/setup.bash".
 
-
-Finally you have to install all node.js dependencies. Go into the "myapp" folder and run:
+Finally you have to install all node.js app dependencies. Go into the folder called "myapp" and run:
 
 	npm install
 
-You should now be good to go.
+You should now be good to go. Start the app on a local server by running:
+
+	nodemon app.js
