@@ -49,3 +49,13 @@ text-decoration: none;
 height: 300%;
 font-size: 17px;
 }
+
+.box{
+  background-color: white;
+  width: 400px;
+  height: 600px;
+  padding: 10px;
+  margin: 20px;
+  border: 10px solid grey;
+  position: relative;
+}

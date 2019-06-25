@@ -6,18 +6,20 @@ function runCode(){
   'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
   var code = Blockly.JavaScript.workspaceToCode(workspace);
 
+  document.getElementById('code').innerHTML = code; // sends code to box on screen.
+  console.log(code);
+
   var codeObj = {code:code, id: unique_id};
   $.post("/postcode", codeObj, function(codeObj, status){
     console.log(`${codeObj.code} and status is ${status}`)
   });
   // Run simulation
-  runCar()
+  runSimulation();
+
   // Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
   // try {
   //   eval(code);
   // } catch (error) {
   //   alert(error);
   // }
-
-
 }

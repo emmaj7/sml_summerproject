@@ -13,13 +13,12 @@ Mikael Glamheden
 <script src="../node_modules/pixi.js/dist/pixi.min.js"></script>
 <script src="../node_modules/socket.io-client/dist/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<div>
+    <!-- <button onclick="runCar()" type="button">Starta simuleringen</button> -->
+    <!-- <h1>Simulation Window</h1> -->
 
-<div class="">
-  <h1>Simulation Window</h1>
-  <!-- <button onclick="runCar()" type="button">Starta simuleringen</button> -->
 </div>
-
-<div class="">
+<div>
   <script type="text/javascript">
   /*----------------
   THE ANIMATION PART
@@ -37,7 +36,7 @@ Mikael Glamheden
   Sprite = PIXI.Sprite;
 
   //Create a Pixi Application
-  var window_size = 512;
+  var window_size = 600;
   let app = new Application({
     width: window_size,         // default: 800
     height: window_size,        // default: 600
@@ -48,6 +47,11 @@ Mikael Glamheden
   });
   // Change background color
   app.renderer.backgroundColor = 0x061639;
+
+  // access style of window
+  app.renderer.view.style.position = "absolute";
+  app.renderer.view.style.left = '800px';
+  app.renderer.view.style.top = '120px';
 
   //Add the canvas that Pixi automatically created for you to the HTML document
   document.body.appendChild(app.view);
@@ -86,41 +90,44 @@ Mikael Glamheden
     // Add the cat to the stage
     app.stage.addChild(car);
   }
- // transforms between "true" coordinate system and browser window coordinates
-  function coordinate_transform(x, y, yaw){
-    var coords = {};
-    coords.x = scale_factor*x + x_offset;
-    coords.y = window_size - scale_factor*y + y_offset; // y = 0 is upper corner
-    coords.yaw = -yaw;
-    return coords;
-  }
-  function runCar(){
-    var socket = io();
-    socket.on('connect',function(){
-      console.log('Connected');
-      console.log('Session id: ' + unique_id);
-      socket.emit('button pressed', unique_id); // Unique id for each html page opened.
-    });
-    socket.on('position sent', function(msg){
-      // console.log(msg);
-      obj = JSON.parse(msg);
-      x = obj.x;
-      y = obj.y;
-      yaw = obj.yaw;
-    });
-    socket.on('close', function(){
-      // Connection was closed.
-      console.log('Connection closed');
-      socket.disconnect(true); // close connection to server.
-    });
-    app.ticker.add(delta => drive(delta));
-    // This function is run at 60 Hz. Defined by app.ticker.
-    function drive(){
-      var coords = coordinate_transform(x, y, yaw);
-      car.position.set(coords.x, coords.y);
-      car.rotation = coords.yaw;
+  </script>
+</div>
+<div>
+  <script type="text/javascript">
+    // transforms between "true" coordinate system and browser window coordinates
+    function coordinate_transform(x, y, yaw){
+      var coords = {};
+      coords.x = scale_factor*x + x_offset;
+      coords.y = window_size - scale_factor*y + y_offset; // y = 0 is upper corner
+      coords.yaw = -yaw;
+      return coords;
     }
-  }
-
+    function runSimulation(){
+      var socket = io();
+      socket.on('connect',function(){
+        console.log('Connected');
+        console.log('Session id: ' + unique_id);
+        socket.emit('button pressed', unique_id); // Unique id for each html page opened.
+      });
+      socket.on('position sent', function(msg){
+        // console.log(msg);
+        obj = JSON.parse(msg);
+        x = obj.x;
+        y = obj.y;
+        yaw = obj.yaw;
+      });
+      socket.on('close', function(){
+        // Connection was closed.
+        console.log('Connection closed');
+        socket.disconnect(true); // close connection to server.
+      });
+      app.ticker.add(delta => drive(delta));
+      // This function is run at 60 Hz. Defined by app.ticker.
+      function drive(){
+        var coords = coordinate_transform(x, y, yaw);
+        car.position.set(coords.x, coords.y);
+        car.rotation = coords.yaw;
+      }
+    }
   </script>
 </div>
