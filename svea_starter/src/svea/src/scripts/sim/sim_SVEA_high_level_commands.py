@@ -41,11 +41,13 @@ class CarHighLevelCommands():
     def __init__(self, simulation = True,
                        animation = True,
                        vehicle_name = 'SVEA0',
+                       goal = [0, 0],
                        init_state = [0, 0, 0, 0]):
         self.simulation = simulation
         self.show_animation = animation
         qualisys_model_name = vehicle_name
         dt = 0.01
+        self.goal = goal
         if self.simulation:
             # initialize simulated model and control interface
             self.vehicle_model = SimpleBicycleState(*init_state, dt=dt)
@@ -55,6 +57,7 @@ class CarHighLevelCommands():
             self.simulator = SimSVEA(vehicle_name, self.vehicle_model, dt, is_publish=True)
             self.simulator.start()
             self.target_state = [0, 0, 0, 0]
+
             #rospy.sleep(0.5)
         else:
             # initialize odometry and control interface for real car
@@ -204,7 +207,14 @@ class CarHighLevelCommands():
             # just show resulting plot if not animating
             self._plot_trajectory(cx, cy)
             plt.show()
-
+    def at_goal(self):
+        """Checks if car is close enough to goal."""
+        state = self.vehicle_model.get_state()
+        dist = np.linalg.norm(np.subtract(state[0:2],self.goal))
+        if dist < 0.1:
+            return True
+        else:
+            return False
     def drive_forward(self):
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
@@ -255,6 +265,7 @@ class CarHighLevelCommands():
         self._turn(angle)
 
 def log_to_file(log):
+    """Logs the cars path during execution to a file"""
     dir_path = os.path.dirname(os.path.realpath(__file__))
     f = open(dir_path+"/log_file.txt","w+")
     for e in log.get_x():
@@ -272,15 +283,22 @@ def log_to_file(log):
     f.close()
     print('Wrote log to file')
 
-def main(argv = ['SVEA0']):
-    name = argv[0] # makes it possible to have multiple copies of simulation
+def deploy(name, goal):
+    """Wraps the init of car commands."""
     rospy.init_node('sim_SVEA_high_level_' + name)
-
-    from_file = True
     simulation = True
     animation = False
-    car = CarHighLevelCommands(simulation, animation, name)
+    car = CarHighLevelCommands(simulation, animation, name, goal)
+    return car
+
+def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
+    name = argv[0] # makes it possible to have multiple copies of simulation
+    goal = json.loads(argv[1])
+    goal = [goal["x"], goal["y"]]
+
+    from_file = True
     if from_file:
+        car = deploy(name, goal)
         # File with the code to execute
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filename = dir_path + '/../../../../../../myapp/code.py'
@@ -290,9 +308,9 @@ def main(argv = ['SVEA0']):
         l_var = {'car': car}
         c.execute_commands(name, g_var,l_var)
     else:
-        car.drive_forward()
-        car.turn_left()
-        car.drive_forward()
+        car = deploy(name, goal)
+        while not car.at_goal():
+            car.drive_forward()
     log_to_file(car.data_log)
     rospy.signal_shutdown('Program end')
 

@@ -8,7 +8,9 @@ import rospy
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import json
 
+import demjson
 
 import mikaels_code.line_follower as lf
 import mikaels_code.car_commands as cc
@@ -36,12 +38,13 @@ import qualisys_localizers as ql
 
 class CarHighLevelCommands():
     """Class with high level methods intended to be called from a blockly-generated code."""
-    def __init__(self, simulation = True, vehicle_name = "SVEA0",
-                       qualisys_model_name = "SVEA5",
-                       init_state = [0, 0, 0, 0],
-                       target_speed = 0.6,
-                       dt = 0.01):
+    def __init__(self, simulation = True, vehicle_name = "SVEA5", goal = [0, 0],
+                       init_state = [0, 0, 0, 0]):
         self.simulation = simulation
+        self.goal = goal
+        # self.show_animation = animation
+        qualisys_model_name = vehicle_name
+        dt = 0.01
         if self.simulation:
             # initialize simulated model and control interface
             self.vehicle_model = SimpleBicycleState(*init_state, dt=dt)
@@ -61,7 +64,7 @@ class CarHighLevelCommands():
             self.target_state = self.vehicle_model.get_state() # x, y, yaw, v
 
         self.r = rospy.Rate(30) #S VEA car opearates on 30 Hz
-        self.target_speed = target_speed # [m/s]
+        self.target_speed = 0.6 # [m/s]
         print('Starting state: ')
         print(self.target_state)
         # object to log data in
@@ -195,6 +198,15 @@ class CarHighLevelCommands():
             self._plot_trajectory(cx, cy)
             plt.show()
 
+    def at_goal(self):
+        """Checks if car is close enough to goal."""
+        state = self.vehicle_model.get_state()
+        dist = np.linalg.norm(np.subtract(state[0:2],self.goal))
+        if dist < 0.1:
+            return True
+        else:
+            return False
+
     def drive_forward(self, show_animation = True):
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
@@ -205,8 +217,6 @@ class CarHighLevelCommands():
         y0 = self.target_state[1]
         xg = x0 + l*math.cos(self.target_state[2])
         yg = y0 + l*math.sin(self.target_state[2])
-        print('Goal state: ')
-        print(self.target_state)
         at_goal = False
         while not at_goal and not rospy.is_shutdown():
             state = self.vehicle_model.get_state()
@@ -246,7 +256,7 @@ class CarHighLevelCommands():
         angle = self.target_state[2]+math.pi/2
         self.target_state[2] = angle
         self._turn(angle)
-        
+
 def log_to_file(log):
     print('Starting writing log')
     dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -265,18 +275,28 @@ def log_to_file(log):
     f.write('# \n')
     f.close()
     print('Wrote log')
-def main():
-    rospy.init_node('SVEA_high_level')
-    # Trajectory
-    cx = np.arange(0, 5, 0.1)
-    cy = [math.sin(ix) * ix for ix in cx]
-    from_file = False
+
+def deploy(name, goal):
+    """Wraps the init of car commands."""
+    rospy.init_node('SVEA_high_level_' + name)
     simulation = False
-    car = CarHighLevelCommands(simulation)
+    car = CarHighLevelCommands(simulation, name, goal)
+    return car
+
+def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
+    
+    name = argv[0] # makes it possible to have multiple copies of simulation
+    goal = demjson.decode(argv[1])
+    goal = [goal["x"], goal["y"]]
+
+    from_file = True
+    simulation = False
+    car = deploy(name, goal)
+    # car = CarHighLevelCommands(simulation)
     if from_file:
         # File with the code to execute
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        filename = dir_path + '/../../../../../../myapp/code.py'
+        filename = dir_path + '/../../../../../../myapp/code_real.py'
         c = cc.CarCommands(filename)
 
         # variables to pass on
@@ -285,8 +305,9 @@ def main():
         c.execute_commands(g_var,l_var)
     else:
         car.drive_forward()
-        car.turn_right()
-        car.drive_forward()
+        # car.turn_right()
+        # car.drive_forward()
     log_to_file(car.data_log)
+    # rospy.signal_shutdown('Program end')
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

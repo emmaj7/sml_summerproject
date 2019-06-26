@@ -41,7 +41,7 @@ app.get("/level3", function(req, res){
 
 
 app.post("/postcode", urlencodedParser, function(req,res){
-  console.log(req.body.code);
+  // console.log(req.body.code);
   writeCode(req.body.code,req.body.id);
 });
 
@@ -58,7 +58,11 @@ app.get('/testpage3',function(req,res){
 // Get request to launch car.
 app.get('/testpage3/run_on_car', function(req,res){
   try {
-    shell.exec('roslaunch svea sim_SVEA_purepursuit.launch', {async:true}); // Change to real command later
+    var goal = {'x': 4, 'y': 0, 'yaw': 0};
+    console.log(JSON.stringify(goal));
+    var command = 'roslaunch svea SVEA_high_level_commands.launch ';
+    var args = 'my_args:=' + '"' + 'SVEA5 ' + JSON.stringify(goal) + '"';
+    shell.exec(command + args, {async:true}); // Change to real command later
     console.log('Launched SVEA_high_level_commands');
   } catch (e) {
     res.sendStatus(503); // send Service unavailable
@@ -74,8 +78,8 @@ app.get('/testpage3/run_on_car', function(req,res){
 // 3. Sends stream to 'position sent'
 io.on('connection', function(socket){
   socket.on('button pressed', function(msg){
-    // console.log(msg);
-    const subprocess = runScript(msg)
+    obj = JSON.parse(msg);
+    const subprocess = runScript(obj.id, obj.goal);
     subprocess.stdout.on('data', (data) => {
     try { // try-catch to only send data that is in JSON format
       var obj = JSON.parse(data);
@@ -98,11 +102,12 @@ io.on('connection', function(socket){
   });
 });
 
+
 // This function launches the python simulation
-function runScript(id){
+function runScript(id, goal){
   id = 'USER' + id;
   var pathId = path.join(__dirname, '/../svea_starter/src/svea/src/scripts/sim/sim_SVEA_high_level_commands.py');
-  return spawn('python', ["-u", pathId, id],{detached: true});
+  return spawn('python', ["-u", pathId, id, JSON.stringify(goal)],{detached: true});
 }
 
 // Writes code to beginning of code file
