@@ -209,6 +209,7 @@ class CarHighLevelCommands():
             # just show resulting plot if not animating
             self._plot_trajectory(cx, cy)
             plt.show()
+
     def at_goal(self):
         """Checks if car is close enough to goal."""
         state = self.vehicle_model.get_state()
@@ -217,6 +218,47 @@ class CarHighLevelCommands():
             return True
         else:
             return False
+
+    def drive_backwards(self):
+        """Car follows straigth trajectory of predefined length.
+            Uses line following algorithm to get to goal."""
+        l = 1 # goal distance
+        tol = 0.1 # ok distance to goal
+        state = self.vehicle_model.get_state()
+        x0 = self.target_state[0]
+        y0 = self.target_state[1]
+
+        # Reverse goal direction:
+        xg = x0 - l*math.cos(self.target_state[2])
+        yg = y0 - l*math.sin(self.target_state[2])
+
+        at_goal = False
+        while not at_goal and not rospy.is_shutdown():
+            state = self.vehicle_model.get_state()
+            x = state[0]
+            y = state[1]
+            yaw = state[2]
+            # calculate and send control to car
+            velocity, steering = lf.line_follower_reverse(x, y, yaw, x0, y0, xg, yg)
+            self.ctrl_interface.send_control(steering, velocity) # Reverse steering.
+
+            # log data
+            data = tuple(self.vehicle_model.get_state())
+            self.data_log.append_data(*data)
+            if self.show_animation:
+                self._animate_robot_path(steering, x0, y0, xg, yg)
+            # done if close enough to goal
+            dist = np.linalg.norm([xg-x,yg-y])
+            if dist < tol:
+                at_goal = True
+            # Send position to server.
+            self._send_position(steering)
+            # sleep so loop runs at 30Hz
+            self.r.sleep()
+        self.target_state[0] = xg
+        self.target_state[1] = yg
+        print('Completed drive backwards!')
+
     def drive_forward(self):
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
@@ -236,7 +278,7 @@ class CarHighLevelCommands():
             yaw = state[2]
             # calculate and send control to car
             velocity, steering = lf.line_follower(x, y, yaw, x0, y0, xg, yg)
-            self.ctrl_interface.send_control(steering,velocity)
+            self.ctrl_interface.send_control(steering, velocity)
             # log data
 
             data = tuple(self.vehicle_model.get_state())
@@ -298,6 +340,9 @@ def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
     goal = json.loads(argv[1])
     goal = [goal["x"], goal["y"]]
 
+    # name = 'SVEA0'
+    # goal = [4, 0]
+
     from_file = True
     if from_file:
         car = deploy(name, goal) # Should be part of the code later on.
@@ -311,8 +356,9 @@ def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
         c.execute_commands(name, g_var, l_var)
     else:
         car = deploy(name, goal)
-        while not car.at_goal():
-            car.drive_forward()
+        car.turn_right()
+        car.drive_backwards()
+        car.drive_backwards()
     log_to_file(car.data_log)
     rospy.signal_shutdown('Program end')
 

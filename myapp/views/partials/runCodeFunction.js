@@ -1,6 +1,7 @@
-
-
 // Runs code in simulation environment.
+// Written by: Mikael Glamheden
+// Date: 2019-06-27
+
 function runCode(){
   // Generate JavaScript code and run it.
   window.LoopTrap = 1000;

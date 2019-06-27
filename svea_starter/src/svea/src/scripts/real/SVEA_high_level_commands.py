@@ -67,10 +67,14 @@ class CarHighLevelCommands():
 
         self.r = rospy.Rate(30) #S VEA car opearates on 30 Hz
         self.target_speed = 0.6 # [m/s]
-        print('Starting state: ')
-        print(self.target_state)
         # object to log data in
         self.data_log = dlog.Data_log()
+
+    def _send_position(self, steering):
+        # Send position to server using JSON
+        state = self.vehicle_model.get_state()
+        data = {'x': state[0], 'y': state[1], 'yaw': state[2], 'v': state[3], 'steering': steering}
+        # sys.stdout.write(json.dumps(data))
 
     def _plot_trajectory(self, cx, cy):
         x = self.data_log.get_x()
@@ -154,6 +158,8 @@ class CarHighLevelCommands():
             # Done if angle is close enough
             if abs(yaw_ref-yaw) < tol1:
                 at_goal = True
+
+            self._send_position(steering)
             # sleep so loop runs at 30Hz
             self.r.sleep()
 
@@ -209,6 +215,46 @@ class CarHighLevelCommands():
         else:
             return False
 
+    def drive_backwards(self):
+        """Car follows straigth trajectory of predefined length.
+            Uses line following algorithm to get to goal."""
+        l = 1 # goal distance
+        tol = 0.1 # ok distance to goal
+        state = self.vehicle_model.get_state()
+        x0 = self.target_state[0]
+        y0 = self.target_state[1]
+
+        # Reverse goal direction:
+        xg = x0 - l*math.cos(self.target_state[2])
+        yg = y0 - l*math.sin(self.target_state[2])
+
+        at_goal = False
+        while not at_goal and not rospy.is_shutdown():
+            state = self.vehicle_model.get_state()
+            x = state[0]
+            y = state[1]
+            yaw = state[2]
+            # calculate and send control to car
+            velocity, steering = lf.line_follower_reverse(x, y, yaw, x0, y0, xg, yg)
+            self.ctrl_interface.send_control(steering, velocity) # Reverse steering.
+
+            # log data
+            data = tuple(self.vehicle_model.get_state())
+            self.data_log.append_data(*data)
+            if self.simulation:
+                self._animate_robot_path(steering, x0, y0, xg, yg)
+            # done if close enough to goal
+            dist = np.linalg.norm([xg-x,yg-y])
+            if dist < tol:
+                at_goal = True
+            # Send position to server.
+            self._send_position(steering)
+            # sleep so loop runs at 30Hz
+            self.r.sleep()
+        self.target_state[0] = xg
+        self.target_state[1] = yg
+        print('Completed drive backwards!')
+
     def drive_forward(self, show_animation = True):
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
@@ -242,6 +288,8 @@ class CarHighLevelCommands():
             #print(state)
             if dist < tol:
                 at_goal = True
+
+            self._send_position(steering)
             # sleep so loop runs at 30Hz
             self.r.sleep()
         self.target_state[0] = xg
@@ -292,7 +340,6 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
     goal = [goal["x"], goal["y"]]
 
     from_file = True
-    simulation = False
     car = deploy(name, goal) # This should be part of the code later on.
     # car = CarHighLevelCommands(simulation)
     if from_file:

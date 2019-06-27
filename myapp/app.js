@@ -1,3 +1,8 @@
+// Main file for the server application.
+// Written by: Mikael Glamheden & Emma Johansson
+// Last edited: 2019-06-27
+
+
 const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
