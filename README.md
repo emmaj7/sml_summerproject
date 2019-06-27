@@ -10,11 +10,9 @@ The python application requires numpy and matplotlib. Install them if you don't 
 
 	pip install numpy matplotlib
 	
-Futhermore we recommend installing [nodemon](https://www.npmjs.com/package/nodemon)
+Futhermore we recommend installing [nodemon](https://www.npmjs.com/package/nodemon) which simplifies debuggging when you're testing out your applications.
 
 	npm install -g nodemon
-
-which simplifies debuggging when you're testing out your applications.
 
 Now clone the git repository
 
