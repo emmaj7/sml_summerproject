@@ -1,0 +1,35 @@
+
+<!--
+Runs the code on the car itself.
+Written by: Mikael Glamheden
+Date: 2019-06-27
+-->
+
+<script src="../node_modules/socket.io-client/dist/socket.io.js"></script>
+
+<script type="text/javascript">
+  function runOnCar(){
+
+    // Generate JavaScript code and run it.
+    window.LoopTrap = 1000;
+    Blockly.JavaScript.INFINITE_LOOP_TRAP =
+    'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+    var code = Blockly.JavaScript.workspaceToCode(workspace);
+
+    var codeObj = {code:code, id: unique_id};
+    var socket = io();
+
+    //  post code to server.
+    socket.on('connect', function(){
+      socket.emit('postcode2', JSON.stringify(codeObj));
+      console.log('Code sent to server');
+    });
+
+    // if code posted run code on car.
+    socket.on('postedCode', function(){
+      //socket.emit('runCodeOnCar', JSON.stringify({id: unique_id}));
+      console.log('Running code on car');
+    });
+
+  }
+</script>

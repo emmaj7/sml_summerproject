@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+
+# High level interface to simulate the SVEA cars.
 # Written by Mikael Glamheden
 # 2019-06-04
 
@@ -298,7 +300,7 @@ def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
 
     from_file = True
     if from_file:
-        car = deploy(name, goal)
+        car = deploy(name, goal) # Should be part of the code later on.
         # File with the code to execute
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filename = dir_path + '/../../../../../../myapp/code.py'
@@ -306,7 +308,7 @@ def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
         # variables to pass on
         g_var = {'CarHighLevelCommands': CarHighLevelCommands}
         l_var = {'car': car}
-        c.execute_commands(name, g_var,l_var)
+        c.execute_commands(name, g_var, l_var)
     else:
         car = deploy(name, goal)
         while not car.at_goal():

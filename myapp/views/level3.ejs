@@ -31,6 +31,7 @@
           <block type="turn_block"></block>
         </xml>
         <button onclick="runCode()" type="button" class="btn btn-danger" id="run-btn">Kör koden!</button>
+        <button type="button" onclick="runOnCar()">Kör på bilen!</button>
         <div class="box" style="position: absolute; left: 1400px; top: 100px;">
           <h3>Python Code</h3>
           <p id = 'code'></p>
@@ -40,6 +41,9 @@
 
     <!-- This partial has all the relevant code related to the simulation window. -->
     <% include partials/simulationWindow.ejs %>
+
+    <!-- This partial has the code related to running the code on the car itself. -->
+    <% include partials/runOnCarFunction.ejs %>
 
   </body>
   <script>

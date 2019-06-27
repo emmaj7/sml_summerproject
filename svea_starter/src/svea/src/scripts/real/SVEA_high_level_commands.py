@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+
+# High level interface to run the SVEA cars.
 # Written by Mikael Glamheden
 # 2019-06-04
 
@@ -284,14 +286,14 @@ def deploy(name, goal):
     return car
 
 def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
-    
+
     name = argv[0] # makes it possible to have multiple copies of simulation
     goal = demjson.decode(argv[1])
     goal = [goal["x"], goal["y"]]
 
     from_file = True
     simulation = False
-    car = deploy(name, goal)
+    car = deploy(name, goal) # This should be part of the code later on.
     # car = CarHighLevelCommands(simulation)
     if from_file:
         # File with the code to execute
@@ -302,7 +304,7 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
         # variables to pass on
         g_var = {'CarHighLevelCommands': CarHighLevelCommands}
         l_var = {'car': car}
-        c.execute_commands(g_var,l_var)
+        c.execute_commands(name, g_var, l_var)
     else:
         car.drive_forward()
         # car.turn_right()

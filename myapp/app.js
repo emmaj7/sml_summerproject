@@ -19,32 +19,37 @@ app.use("/assets", express.static("assets"));
 app.use("/node_modules/node-blockly/blockly", express.static("node_modules/node-blockly/blockly"));
 app.use("/customBlocks", express.static("customBlocks"));
 app.use(express.static("views"));
-app.use("/node_modules/pixi.js", express.static("node_modules/pixi.js"));
+app.use("/node_modules/pixi.js", express.static("node_modules/pixi.js")); // for the simulation window.
 app.use("/node_modules/socket.io-client", express.static("node_modules/socket.io-client"));
 
 
+// renders the index page.
 app.get("/", function(req, res){
   res.render("firstPage");
 });
 
+// Renders level 1
 app.get("/level1", function(req, res){
   res.render("level1");
 });
 
+// Renders level 2
 app.get("/level2", function(req, res){
   res.render("level2");
 });
 
+// Renders level 3
 app.get("/level3", function(req, res){
   res.render("level3");
 });
 
 
+// writes post to file code.py.
 app.post("/postcode", urlencodedParser, function(req,res){
   // console.log(req.body.code);
-  writeCode(req.body.code,req.body.id);
+  var filename = 'code.py';
+  writeCode(req.body.code,req.body.id, filename);
 });
-
 
 // Launches roscore. REQUIRES ROS INSTALLED ON COMPUTER
 // Required to run simulation.
@@ -55,11 +60,11 @@ app.get('/testpage3',function(req,res){
   res.render('test3');
 });
 
-// Get request to launch car.
+// Get request to launch car. wont be needed later on.
 app.get('/testpage3/run_on_car', function(req,res){
   try {
     var goal = {'x': 4, 'y': 0, 'yaw': 0};
-    console.log(JSON.stringify(goal));
+    // console.log(JSON.stringify(goal));
     var command = 'roslaunch svea SVEA_high_level_commands.launch ';
     var args = 'my_args:=' + '"' + 'SVEA5 ' + JSON.stringify(goal) + '"';
     shell.exec(command + args, {async:true}); // Change to real command later
@@ -71,14 +76,15 @@ app.get('/testpage3/run_on_car', function(req,res){
   }
 });
 
-// Responds to request to 'button pressed'.
-// Does the following:
-// 1. recieves window id.
-// 2. Recieves coordinate stream from python simulation as json
-// 3. Sends stream to 'position sent'
 io.on('connection', function(socket){
+
+  // Responds to request to 'button pressed'.
+  // Does the following:
+  // 1. recieves window id.
+  // 2. Recieves coordinate stream from python simulation as json
+  // 3. Sends stream to 'position sent'
   socket.on('button pressed', function(msg){
-    obj = JSON.parse(msg);
+    var obj = JSON.parse(msg);
     const subprocess = runScript(obj.id, obj.goal);
     subprocess.stdout.on('data', (data) => {
     try { // try-catch to only send data that is in JSON format
@@ -100,6 +106,31 @@ io.on('connection', function(socket){
     console.log("Exiting with code " + exitCode);
     });
   });
+
+  // Saves code to file for car to use.
+  // separete file to minimize errors.
+  socket.on('postcode2',function(msg){
+    var filename = 'code_real.py';
+    var obj = JSON.parse(msg);
+    writeCode(obj.code,obj.id, filename);
+    io.emit('postedCode');
+    console.log('Saved code to file')
+  });
+
+  // Launches the car.
+  socket.on('runCodeOnCar', function(msg){
+    var obj = JSON.parse(msg);
+    var id = 'USER' + obj.id;
+    var goal = {'x': 4, 'y': 0, 'yaw': 0}; // put in message later.
+    var command = 'roslaunch svea SVEA_high_level_commands.launch ';
+    var args = 'my_args:=' + '"' + id + JSON.stringify(goal) + '"';
+    shell.exec(command + args, {async:true}, function(code, stdout, stderr){
+      console.log('Exit Code: ', code);
+      console.log('Program output:', stdout); // pass position to simulation later.
+      console.log('Program stderr:', stderr);
+    });
+    console.log('Launched SVEA_high_level_commands');
+  });
 });
 
 
@@ -111,9 +142,9 @@ function runScript(id, goal){
 }
 
 // Writes code to beginning of code file
-function writeCode(code, id){
+function writeCode(code, id, filename){
   data = '# ' + 'ID:' + id + '\n' + code + '#####\n';
-  prependFile('code.py', data, function(err){
+  prependFile(filename, data, function(err){
     if (err){
       console.log(err);
     }
