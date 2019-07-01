@@ -1,3 +1,18 @@
+# ID:861760129661123100
+car.drive_forward()
+car.drive_backwards()
+car.turn_left()
+#####
+# ID:942766369875814100
+car.drive_forward()
+car.drive_backwards()
+car.turn_left()
+#####
+# ID:655854297280534000
+for count in range(3):
+  car.drive_forward()
+  car.turn_left()
+#####
 # ID:420951734183474400
 for count in range(4):
   car.turn_left()
