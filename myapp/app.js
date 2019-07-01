@@ -12,6 +12,11 @@ const shell = require('shelljs'); // For running shell commands
 const Blockly = require('node-blockly'); // Required in frontend.
 const prependFile = require('prepend-file'); // To append to beginning of file
 
+const rosnodejs = require('rosnodejs');
+// Requires the std_msgs message package
+const std_msgs = rosnodejs.require('std_msgs').msg;
+const geometry_msgs = rosnodejs.require('geometry_msgs').msg
+
 var app = express();
 var http = require("http").createServer(app);
 var io = require('socket.io')(http); // handles two-way data streams
@@ -56,6 +61,13 @@ app.post("/postcode", urlencodedParser, function(req,res){
   writeCode(req.body.code,req.body.id, filename);
 });
 
+// writes post to file code_real.py.
+app.post("/postcode2", urlencodedParser, function(req,res){
+  // console.log(req.body.code);
+  var filename = 'code_real.py';
+  writeCode(req.body.code,req.body.id, filename);
+});
+
 // Launches roscore. REQUIRES ROS INSTALLED ON COMPUTER
 // Required to run simulation.
 shell.exec('roscore', {async:true});
@@ -82,19 +94,20 @@ app.get('/testpage3/run_on_car', function(req,res){
 });
 
 io.on('connection', function(socket){
-
+  console.log('opened connection');
   // Responds to request to 'button pressed'.
   // Does the following:
   // 1. recieves window id.
   // 2. Recieves coordinate stream from python simulation as json
   // 3. Sends stream to 'position sent'
-  socket.on('button pressed', function(msg){
+  socket.on('simulationOnly', function(msg){
     var obj = JSON.parse(msg);
     const subprocess = runScript(obj.id, obj.goal);
     subprocess.stdout.on('data', (data) => {
     try { // try-catch to only send data that is in JSON format
       var obj = JSON.parse(data);
-      socket.emit('position sent', `${JSON.stringify(obj)}`);
+      socket.emit('position-sent-sim', `${JSON.stringify(obj)}`);
+      // console.log('position sent');
     } catch(e) {
       console.log(`${data}`); // Writes data which isn't json to log.
     }
@@ -112,29 +125,29 @@ io.on('connection', function(socket){
     });
   });
 
-  // Saves code to file for car to use.
-  // separete file to minimize errors.
-  socket.on('postcode2',function(msg){
-    var filename = 'code_real.py';
-    var obj = JSON.parse(msg);
-    writeCode(obj.code,obj.id, filename);
-    io.emit('postedCode');
-    console.log('Saved code to file')
-  });
-
   // Launches the car.
   socket.on('runCodeOnCar', function(msg){
-    var obj = JSON.parse(msg);
-    var id = 'USER' + obj.id;
-    var goal = {'x': 4, 'y': 0, 'yaw': 0}; // put in message later.
-    var command = 'roslaunch svea SVEA_high_level_commands.launch ';
-    var args = 'my_args:=' + '"' + id + JSON.stringify(goal) + '"';
-    shell.exec(command + args, {async:true}, function(code, stdout, stderr){
-      console.log('Exit Code: ', code);
-      console.log('Program output:', stdout); // pass position to simulation later.
-      console.log('Program stderr:', stderr);
-    });
-    console.log('Launched SVEA_high_level_commands');
+    // var command = 'rosnode kill SVEA5 /SVEA_high_level_commands /listener_node/SVEA5 /qualisys /serial_node /world_to_qualisys_tf';
+    // // var command = 'rosnode kill /SVEA5 /listener_node/SVEA5 /qualisys /serial_node world_to_qualisys_tf'
+    // shell.exec(command, {async:false}, function(){
+    //   shell.exec('rosnode list', function(code, stdout, stderr){
+    //     console.log(stdout);
+    //   });
+    // console.log('shutting down old nodes');
+      console.log('starting car');
+      var obj = JSON.parse(msg);
+      var id = 'USER' + obj.id;
+      var goal = obj.goal;
+      var command = 'roslaunch svea SVEA_high_level_commands.launch ';
+      var args = 'my_args:=' + '"' + id + ' ' + JSON.stringify(goal) + '"';
+      shell.exec(command + args, {async:true}, function(code, stdout, stderr){
+        console.log('Exit Code: ', code);
+        console.log('Program stderr:', stderr);
+        console.log('Program output:', stdout);
+      });
+      transmitPose(socket, id);
+      console.log('Launched SVEA_high_level_commands');
+    // });
   });
 });
 
@@ -154,6 +167,32 @@ function writeCode(code, id, filename){
       console.log(err);
     }
   });
+}
+// get yaw from quaternions
+function yawFromQuaternions(qObj){
+  var yaw   =  Math.asin(2*qObj.x*qObj.y + 2*qObj.z*qObj.w);
+  return yaw;
+}
+
+// send car position to simulation window.
+function transmitPose(socket, name) {
+  // Register node with ROS master
+  console.log('starting listener')
+  rosnodejs.initNode('/listener_node/SVEA5')
+    .then((rosNode) => {
+      // Create ROS subscriber on the 'chatter' topic expecting String messages
+      let sub = rosNode.subscribe('/SVEA5/pose', geometry_msgs.PoseStamped,
+        (data) => { // define callback execution
+          var dataString = JSON.stringify(data);
+          var pos = data.pose.position;
+          var obj = {'x':pos.x, 'y': pos.y,};
+          var yaw = yawFromQuaternions(data.pose.orientation);
+          obj.yaw = yaw;
+          socket.emit('position-sent-car', JSON.stringify(obj));
+          // console.log(dataString);
+        }
+      );
+    });
 }
 
 // Error 404 handling.

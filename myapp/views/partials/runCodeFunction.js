@@ -18,9 +18,9 @@ function runCode(){
   $.post("/postcode", codeObj, function(codeObj, status){
     console.log(`${codeObj.code} and status is ${status}`)
   });
-
+  var onCar = false;
   // Run simulation. Function in simulationWindow.ejs
-  runSimulation();
+  runSimulation(onCar);
 
 
   // Blockly.JavaScript.INFINITE_LOOP_TRAP = null;

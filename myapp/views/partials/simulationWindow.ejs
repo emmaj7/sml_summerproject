@@ -70,7 +70,8 @@ TO DO:
   var xp;
   var yp;
   var obj;
-  var start = {'x': 0,'y': 0, 'yaw': 0};
+  var max = 1.5;
+  var start = {'x': -max,'y': -max, 'yaw': 0};
   var marg = 0.1;
   //load an image and run the `setup` function when it's done
   loader
@@ -107,8 +108,8 @@ TO DO:
     // transforms between "true" coordinate system and browser window coordinates
     function coordinate_transform(x, y, yaw){
       var coords = {};
-      coords.x = scale_factor*x + x_offset;
-      coords.y = window_size - scale_factor*y + y_offset; // y = 0 is upper corner
+      coords.x = scale_factor*(x + max) + x_offset;
+      coords.y = window_size - scale_factor*(y + max) + y_offset; // y = 0 is upper corner
       coords.yaw = -yaw;
       return coords;
     }
@@ -126,20 +127,36 @@ TO DO:
         return false;
       }
     }
-    function runSimulation(){
+    function runSimulation(onCar){
       var socket = io();
-      // start two-yaw communication
+      // start two-way communication
       socket.on('connect',function(){
         console.log('Connected');
         console.log('Session id: ' + unique_id); // Unique id for each html page opened.
-        socket.emit('button pressed', JSON.stringify({'id': unique_id, 'goal': goal}));
+        if (onCar){
+          socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id, 'goal': goal}));
+          console.log('Running code on car');
+        } else {
+          socket.emit('simulationOnly', JSON.stringify({'id': unique_id, 'goal': goal}));
+          console.log('starting simulation');
+        }
       });
       // recieves position. Updates car position in simulation.
-      socket.on('position sent', function(msg){
-        obj = JSON.parse(msg);
-        x = obj.x;
-        y = obj.y;
-        yaw = obj.yaw;
+      socket.on('position-sent-car', function(msg){
+        if(onCar){
+          obj = JSON.parse(msg);
+          x = obj.x;
+          y = obj.y;
+          yaw = obj.yaw;
+        }
+      });
+      socket.on('position-sent-sim', function(msg){
+        if (onCar == false){
+          obj = JSON.parse(msg);
+          x = obj.x;
+          y = obj.y;
+          yaw = obj.yaw;
+        }
       });
       socket.on('close', function(){
         console.log('Connection closed');
