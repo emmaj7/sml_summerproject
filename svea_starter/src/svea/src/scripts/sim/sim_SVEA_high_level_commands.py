@@ -44,7 +44,7 @@ class CarHighLevelCommands():
                        animation = True,
                        vehicle_name = 'SVEA0',
                        goal = [0, 0],
-                       init_state = [0, 0, 0, 0]):
+                       init_state = [-1.5, -1.5, 0, 0]):
         self.simulation = simulation
         self.show_animation = animation
         qualisys_model_name = vehicle_name
@@ -58,7 +58,7 @@ class CarHighLevelCommands():
             # start background simulation thread
             self.simulator = SimSVEA(vehicle_name, self.vehicle_model, dt, is_publish=True)
             self.simulator.start()
-            self.target_state = [0, 0, 0, 0]
+            self.target_state = init_state
 
             #rospy.sleep(0.5)
         else:
@@ -132,7 +132,7 @@ class CarHighLevelCommands():
                  steering)
         plt.pause(0.001)
 
-    def _turn(self, angle):
+    def _turn(self, angle, direction):
         """Turn the car a given number of degrees relative to current orientation."""
         l = 1
         tol1 = 1.1*math.pi/180 # angular tolerance
@@ -141,8 +141,8 @@ class CarHighLevelCommands():
         y0 = self.target_state[1]
         xg = x0 + l*math.cos(angle)
         yg = y0 + l*math.sin(angle)
-        yaw_ref = math.atan2(yg-y0,xg-x0)
-        yaw_ref = lf.normalize_angle(yaw_ref)
+
+        yaw_ref = angle
         at_goal = False
         while not at_goal and not rospy.is_shutdown():
             state = self.vehicle_model.get_state()
@@ -150,7 +150,7 @@ class CarHighLevelCommands():
             y = state[1]
             yaw = state[2]
             # calculate and send control to car
-            velocity, steering = lf.orientation_controller(x, y, yaw, x0, y0, xg, yg)
+            velocity, steering = lf.orientation_controller(x, y, yaw, yaw_ref, direction)
             self.ctrl_interface.send_control(steering,velocity)
 
             # log data
@@ -299,14 +299,19 @@ class CarHighLevelCommands():
 
     def turn_right(self):
         """Makes a full 90 degree right turn."""
-        angle = self.target_state[2]-math.pi/2
+        direction = 'R'
+        angle_add = math.pi/2
+        angle = lf.normalize_angle(self.target_state[2] - angle_add)
         self.target_state[2] = angle
-        self._turn(angle)
+        self._turn(angle, direction)
+
     def turn_left(self):
         """Makes a full 90 degree left turn."""
-        angle = self.target_state[2]+math.pi/2
+        direction = 'L'
+        angle_add = math.pi/2
+        angle = lf.normalize_angle(self.target_state[2] + angle_add)
         self.target_state[2] = angle
-        self._turn(angle)
+        self._turn(angle, direction)
 
 def log_to_file(log):
     """Logs the cars path during execution to a file"""

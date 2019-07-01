@@ -45,7 +45,7 @@ class CarHighLevelCommands():
         self.simulation = simulation
         self.goal = goal
         # self.show_animation = animation
-        qualisys_model_name = vehicle_name
+        qualisys_model_name = 'SVEA5'
         dt = 0.01
         if self.simulation:
             # initialize simulated model and control interface
@@ -219,7 +219,7 @@ class CarHighLevelCommands():
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
         l = 1 # goal distance
-        tol = 0.1 # ok distance to goal
+        tol = 0.2 # ok distance to goal
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
         y0 = self.target_state[1]
@@ -259,7 +259,7 @@ class CarHighLevelCommands():
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
         l = 1 # goal distance
-        tol = 0.1 # ok distance to goal
+        tol = 0.2 # ok distance to goal
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
         y0 = self.target_state[1]
@@ -273,7 +273,7 @@ class CarHighLevelCommands():
             yaw = state[2]
             # calculate and send control to car
             velocity, steering = lf.line_follower(x, y, yaw, x0, y0, xg, yg)
-            self.ctrl_interface.send_control(steering,velocity)
+            self.ctrl_interface.send_control(steering, velocity)
             # log data
 
             data = tuple(self.vehicle_model.get_state())
@@ -301,11 +301,13 @@ class CarHighLevelCommands():
         angle = self.target_state[2]-math.pi/2
         self.target_state[2] = angle
         self._turn(angle)
+        print(angle)
     def turn_left(self):
         """Makes a full 90 degree left turn."""
         angle = self.target_state[2]+math.pi/2
         self.target_state[2] = angle
         self._turn(angle)
+        print(angle)
 
 def log_to_file(log):
     print('Starting writing log')
@@ -335,11 +337,16 @@ def deploy(name, goal):
 
 def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
 
-    name = argv[0] # makes it possible to have multiple copies of simulation
-    goal = demjson.decode(argv[1])
-    goal = [goal["x"], goal["y"]]
+    # print('argv:')
+    # print(argv)
+    #
+    # name = argv[0] # makes it possible to have multiple copies of simulation
+    # goal = demjson.decode(argv[1])
+    # goal = [goal["x"], goal["y"]]
 
-    from_file = True
+    name = 'SVEA5'
+    goal = [4, 0]
+    from_file = False
     car = deploy(name, goal) # This should be part of the code later on.
     # car = CarHighLevelCommands(simulation)
     if from_file:
@@ -354,6 +361,7 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
         c.execute_commands(name, g_var, l_var)
     else:
         car.drive_forward()
+        car.turn_right()
         # car.turn_right()
         # car.drive_forward()
     log_to_file(car.data_log)

@@ -10,7 +10,7 @@ import math
 def normalize_angle(angle):
     if angle > math.pi:
         angle -= 2*math.pi
-    if angle < -math.pi:
+    elif angle < -math.pi:
         angle += 2*math.pi
     return angle
 def saturate(v, max):
@@ -59,18 +59,22 @@ def line_follower(x, y, yaw, x0, y0, xg, yg):
 
     return v, w
 
-def orientation_controller(x, y, yaw, x0, y0, xg, yg):
+def orientation_controller(x, y, yaw, yaw_ref, direction):
     k1 = 10 # angular velocity gain
     k2 = 1 # velocity gain
 
-    yaw_ref = math.atan2(yg-y0,xg-x0)
-    yaw_ref = normalize_angle(yaw_ref)
-
-    w = k1*(yaw_ref-yaw) # angular velocity controller
+    
+    if direction == 'L' and (yaw_ref-yaw) < 0:
+        w = -k1*(yaw_ref-yaw)
+    elif direction == 'R' and (yaw_ref-yaw) > 0:
+        w = -k1*(yaw_ref-yaw)
+    else:
+        w = k1*(yaw_ref-yaw) # angular velocity controller
     w = saturate(w,math.pi/6)
+
     # velocity controller
-    d0 = math.cos(yaw_ref)*(x0-x) + math.sin(yaw_ref)*(y0-y)
-    v = k2*d0
+    # d0 = math.cos(yaw_ref)*(x0-x) + math.sin(yaw_ref)*(y0-y)
+    # v = k2*d0
     # if v < 0:
     #     v = v - 0.05
     # if v >= 0:

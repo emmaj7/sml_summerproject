@@ -17,19 +17,15 @@ Date: 2019-06-27
     var code = Blockly.JavaScript.workspaceToCode(workspace);
 
     var codeObj = {code:code, id: unique_id};
-    var socket = io();
 
     //  post code to server.
-    socket.on('connect', function(){
-      socket.emit('postcode2', JSON.stringify(codeObj));
-      console.log('Code sent to server');
+    var codeObj = {code:code, id: unique_id};
+    $.post("/postcode2", codeObj, function(codeObj, status){
+      console.log(`${codeObj.code} and status is ${status}`)
     });
-
-    // if code posted run code on car.
-    socket.on('postedCode', function(){
-      //socket.emit('runCodeOnCar', JSON.stringify({id: unique_id}));
-      console.log('Running code on car');
-    });
+    var onCar = true;
+    
+    runSimulation(onCar)
 
   }
 </script>

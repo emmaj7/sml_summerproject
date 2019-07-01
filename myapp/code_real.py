@@ -1,3 +1,27 @@
+# ID:609614361785506000
+car.drive_forward()
+car.turn_right()
+#####
+# ID:609614361785506000
+car.drive_forward()
+car.turn_right()
+#####
+# ID:609614361785506000
+car.drive_forward()
+car.turn_right()
+#####
+# ID:609614361785506000
+car.drive_forward()
+car.turn_right()
+#####
+# ID:609614361785506000
+car.drive_forward()
+car.turn_right()
+#####
+# ID:609614361785506000
+car.drive_forward()
+car.turn_right()
+#####
 # ID:128167010280501040
 #####
 # ID:128167010280501040
