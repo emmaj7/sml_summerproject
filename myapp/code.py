@@ -1,3 +1,11 @@
+# ID:420951734183474400
+for count in range(4):
+  car.turn_left()
+#####
+# ID:420951734183474400
+for count in range(4):
+  car.turn_left()
+#####
 # ID:528482047733951200
 for count in range(3):
   car.drive_forward()
