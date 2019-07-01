@@ -12,13 +12,14 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <script src="../node_modules/node-blockly/blockly/blockly_compressed.js"></script>
     <script src="../node_modules/node-blockly/blockly/javascript_compressed.js"></script>
+    <script src="../node_modules/node-blockly/blockly/python_compressed.js"></script>
     <script src="../node_modules/node-blockly/blockly/blocks_compressed.js"></script>
     <script src="../node_modules/node-blockly/blockly/msg/js/sv.js"></script>
     <script src="./customBlocks/customBlocks.js"></script>
 
   </head>
   <body>
-    <h1 class="text-center">[INSERT COOLT SPEL-NAMN HÄR]</h1>
+    <h1 class="text-center">TRIP TO MARS</h1>
 
     <!-- Navigation partial -->
     <% include partials/nav.ejs %>
@@ -27,16 +28,14 @@
       <div class="text-center">
         <div id="blocklyDiv" class="col" style="height: 600px; width: 800px;"></div>
         <xml id="toolbox" style="display: none">
-          <!-- <block type="controls_if"></block>
-          <block type="controls_repeat_ext"></block>
-          <block type="math_number"></block>
-          <block type="turn_block"></block> -->
           <block type="forward_block"></block>
+          <block type="backward_block"></block>
+          <block type="turn_block"></block>
         </xml>
         <button onclick="runCode()" type="button" class="btn btn-danger" id="run-btn">Kör koden!</button>
         <div class="box" style="position: absolute; left: 1400px; top: 100px;">
           <h3>Python Code</h3>
-          <p id = 'code'></p>
+          <pre id= 'code'></pre>
         </div>
       </div>
     </div>
