@@ -79,7 +79,7 @@ class CarHighLevelCommands():
         # Send position to server using JSON
         state = self.vehicle_model.get_state()
         data = {'x': state[0], 'y': state[1], 'yaw': state[2], 'v': state[3], 'steering': steering}
-        sys.stdout.write(json.dumps(data))
+        # sys.stdout.write(json.dumps(data))
 
     def _plot_trajectory(self, cx, cy):
         x = self.data_log.get_x()
@@ -227,11 +227,11 @@ class CarHighLevelCommands():
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
         y0 = self.target_state[1]
-
+        print('start: ' + str([x0, y0]))
         # Reverse goal direction:
         xg = x0 - l*math.cos(self.target_state[2])
         yg = y0 - l*math.sin(self.target_state[2])
-
+        print('goal: ' + str([xg, yg]))
         at_goal = False
         while not at_goal and not rospy.is_shutdown():
             state = self.vehicle_model.get_state()
@@ -336,19 +336,19 @@ def deploy(name, goal):
     """Wraps the init of car commands."""
     rospy.init_node('sim_SVEA_high_level_' + name)
     simulation = True
-    animation = False
+    animation = True
     car = CarHighLevelCommands(simulation, animation, name, goal)
     return car
 
 def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
-    name = argv[0] # makes it possible to have multiple copies of simulation
-    goal = json.loads(argv[1])
-    goal = [goal["x"], goal["y"]]
+    # name = argv[0] # makes it possible to have multiple copies of simulation
+    # goal = json.loads(argv[1])
+    # goal = [goal["x"], goal["y"]]
 
-    # name = 'SVEA0'
-    # goal = [4, 0]
+    name = 'SVEA0'
+    goal = [4, 0]
 
-    from_file = True
+    from_file = False
     if from_file:
         car = deploy(name, goal) # Should be part of the code later on.
         # File with the code to execute
@@ -361,11 +361,12 @@ def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
         c.execute_commands(name, g_var, l_var)
     else:
         car = deploy(name, goal)
-        car.turn_right()
+        car.turn_left()
         car.drive_backwards()
         car.drive_backwards()
     log_to_file(car.data_log)
     rospy.signal_shutdown('Program end')
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    # main(sys.argv[1:])
+    main()
