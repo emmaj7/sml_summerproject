@@ -7,10 +7,11 @@ function runCode(){
   window.LoopTrap = 1000;
   Blockly.JavaScript.INFINITE_LOOP_TRAP =
   'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
-  var code = Blockly.JavaScript.workspaceToCode(workspace);
+  // var code = Blockly.JavaScript.workspaceToCode(workspace);
+  var code = Blockly.Python.workspaceToCode(workspace);
+  console.log(code);
 
   document.getElementById('code').innerHTML = code; // sends code to box on screen.
-  console.log(code);
 
   // Post code to server.
   var codeObj = {code:code, id: unique_id};
@@ -20,6 +21,7 @@ function runCode(){
 
   // Run simulation. Function in simulationWindow.ejs
   runSimulation();
+
 
   // Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
   // try {
