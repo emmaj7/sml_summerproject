@@ -19,7 +19,7 @@
 
   </head>
   <body>
-    <h1 class="text-center">TRIP TO MARS</h1>
+    <h1 class="text-center" style="font-family: courier;">TRIP TO MARS</h1>
 
     <!-- Navigation partial -->
     <% include partials/nav.ejs %>
@@ -34,8 +34,8 @@
           <block type="backward_block"></block>
           <block type="turn_block"></block>
         </xml>
-        <button onclick="runCode()" type="button" class="btn btn-danger" id="run-btn">Kör koden!</button>
-        <button type="button" onclick="runOnCar()">Kör på bilen!</button>
+        <button onclick="runCode()" type="button" class="btn btn-danger" id="run-btn">Run the Code</button>
+        <button type="button" onclick="runOnCar()">Run on Car</button>
         <div class="box" style="position: absolute; left: 1400px; top: 100px;">
           <h3>Python Code</h3>
           <pre id = 'code'></pre>

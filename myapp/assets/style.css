@@ -12,6 +12,7 @@ position: relative;
 top: 20%;
 left: 50%;
 transform: translate(-50%, -50%);
+color: white;
 }
 
 .cool-btn:enabled{
@@ -19,7 +20,9 @@ position: relative;
 font-family: courier;
 font-size: 17px;
 text-decoration: none;
-border: 2px solid #f49842;
+color: white;
+font-weight: bold;
+border: 2px solid #ff6d44;
 padding: 14px 50px;
 text-transform: uppercase;
 transition: 1s all ease;
@@ -28,7 +31,7 @@ border-radius: 50px 50px 50px 50px;
 }
 
 .cool-btn:enabled::before{
-background: #f49842;
+background: #ff6d44;
 content: "";
 position: absolute;
 top: 50%;
@@ -65,4 +68,8 @@ pre {
  font-family: monospace;
  white-space: pre;
  margin: 1em 0;
+}
+
+h1{
+  font-family: courier;
 }

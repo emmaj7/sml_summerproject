@@ -23,6 +23,8 @@ function runCode(){
   runSimulation(onCar);
 
 
+
+
   // Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
   // try {
   //   eval(code);
