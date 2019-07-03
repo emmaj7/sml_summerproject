@@ -75,13 +75,13 @@ TO DO:
   var marg = 0.1;
   //load an image and run the `setup` function when it's done
   loader
-  .add(['./images/car2.png',
+  .add(['./images/svea_car.png',
         './images/cross.png'])
   .load(setup);
   // This `setup` function will run when the image has loaded
   function setup() {
     // Create the car sprite
-    car = new Sprite(resources["./images/car2.png"].texture);
+    car = new Sprite(resources["./images/svea_car.png"].texture);
     cross = new Sprite(resources["./images/cross.png"].texture);
     // Change the sprite's size
     car.scale.x = 0.2; car.scale.y = 0.2;

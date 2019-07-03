@@ -227,11 +227,9 @@ class CarHighLevelCommands():
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
         y0 = self.target_state[1]
-
         # Reverse goal direction:
         xg = x0 - l*math.cos(self.target_state[2])
         yg = y0 - l*math.sin(self.target_state[2])
-
         at_goal = False
         while not at_goal and not rospy.is_shutdown():
             state = self.vehicle_model.get_state()
@@ -362,6 +360,8 @@ def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
     else:
         car = deploy(name, goal)
         car.turn_right()
+        car.turn_right()
+        car.turn_right()
         car.drive_backwards()
         car.drive_backwards()
     log_to_file(car.data_log)
@@ -369,3 +369,4 @@ def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
+    # main()

@@ -14,7 +14,7 @@ Date: 2019-06-27
     window.LoopTrap = 1000;
     Blockly.JavaScript.INFINITE_LOOP_TRAP =
     'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
-    var code = Blockly.JavaScript.workspaceToCode(workspace);
+    var code = Blockly.Python.workspaceToCode(workspace);
 
     var codeObj = {code:code, id: unique_id};
 
@@ -24,7 +24,7 @@ Date: 2019-06-27
       console.log(`${codeObj.code} and status is ${status}`)
     });
     var onCar = true;
-    
+
     runSimulation(onCar)
 
   }

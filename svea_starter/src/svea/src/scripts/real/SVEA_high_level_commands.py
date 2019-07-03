@@ -127,7 +127,7 @@ class CarHighLevelCommands():
                  steering)
         plt.pause(0.001)
 
-    def _turn(self, angle):
+    def _turn(self, angle, direction):
         """Turn the car a given number of degrees relative to current orientation."""
         l = 1
         tol1 = 1.1*math.pi/180 # angular tolerance
@@ -136,8 +136,8 @@ class CarHighLevelCommands():
         y0 = self.target_state[1]
         xg = x0 + l*math.cos(angle)
         yg = y0 + l*math.sin(angle)
-        yaw_ref = math.atan2(yg-y0,xg-x0)
-        yaw_ref = lf.normalize_angle(yaw_ref)
+
+        yaw_ref = angle
         at_goal = False
         while not at_goal and not rospy.is_shutdown():
             state = self.vehicle_model.get_state()
@@ -145,7 +145,7 @@ class CarHighLevelCommands():
             y = state[1]
             yaw = state[2]
             # calculate and send control to car
-            velocity, steering = lf.orientation_controller(x, y, yaw, x0, y0, xg, yg)
+            velocity, steering = lf.orientation_controller(x, y, yaw, yaw_ref, direction)
             self.ctrl_interface.send_control(steering,velocity)
 
             # log data
@@ -219,7 +219,7 @@ class CarHighLevelCommands():
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
         l = 1 # goal distance
-        tol = 0.2 # ok distance to goal
+        tol = 0.1 # ok distance to goal
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
         y0 = self.target_state[1]
@@ -259,7 +259,7 @@ class CarHighLevelCommands():
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
         l = 1 # goal distance
-        tol = 0.2 # ok distance to goal
+        tol = 0.1 # ok distance to goal
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
         y0 = self.target_state[1]
@@ -298,16 +298,21 @@ class CarHighLevelCommands():
 
     def turn_right(self):
         """Makes a full 90 degree right turn."""
-        angle = self.target_state[2]-math.pi/2
+        direction = 'R'
+        angle_add = math.pi/2
+        angle = lf.normalize_angle(self.target_state[2] - angle_add)
         self.target_state[2] = angle
-        self._turn(angle)
-        print(angle)
+        self._turn(angle, direction)
+        self.r.sleep()
+
     def turn_left(self):
         """Makes a full 90 degree left turn."""
-        angle = self.target_state[2]+math.pi/2
+        direction = 'L'
+        angle_add = math.pi/2
+        angle = lf.normalize_angle(self.target_state[2] + angle_add)
         self.target_state[2] = angle
-        self._turn(angle)
-        print(angle)
+        self._turn(angle, direction)
+        self.r.sleep()
 
 def log_to_file(log):
     print('Starting writing log')
@@ -339,14 +344,14 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
 
     # print('argv:')
     # print(argv)
-    #
-    # name = argv[0] # makes it possible to have multiple copies of simulation
-    # goal = demjson.decode(argv[1])
-    # goal = [goal["x"], goal["y"]]
 
-    name = 'SVEA5'
-    goal = [4, 0]
-    from_file = False
+    name = argv[0] # makes it possible to have multiple copies of simulation
+    goal = demjson.decode(argv[1])
+    goal = [goal["x"], goal["y"]]
+
+    # name = 'SVEA5'
+    # goal = [4, 0]
+    from_file = True
     car = deploy(name, goal) # This should be part of the code later on.
     # car = CarHighLevelCommands(simulation)
     if from_file:
