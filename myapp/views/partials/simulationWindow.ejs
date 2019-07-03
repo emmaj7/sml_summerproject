@@ -163,13 +163,43 @@ TO DO:
         socket.disconnect(true); // close connection to server.
         at_goal = atGoal(); // variable from level.
         console.log('At goal: ' + at_goal.toString());
+        document.getElementById('modal');
+
+        // Move this later!
         if (at_goal.toString() === 'true'){
-          alert("Grattis!")
+          if (level === 1){
+            var modal1 = document.getElementById('myModal1');
+            modal1.style.display = "block";
+            window.onclick = function(event) {
+              if (event.target == modal1) {
+                modal1.style.display = "none";
+              }
+            }
+          }
+          if (level === 2){
+            var modal2 = document.getElementById('myModal2');
+            modal2.style.display = "block";
+            window.onclick = function(event) {
+              if (event.target == modal2) {
+                modal2.style.display = "none";
+              }
+            }
+          }
+          if (level === 3){
+            var modal3 = document.getElementById('myModal3');
+            modal3.style.display = "block";
+            window.onclick = function(event) {
+              if (event.target == modal3) {
+                modal3.style.display = "none";
+              }
+            }
+          }
         }
         else {
           alert("Testa igen!")
         }
       });
+
       // This function is run at 60 Hz. Defined by app.ticker.
       app.ticker.add(delta => drive(delta));
     }

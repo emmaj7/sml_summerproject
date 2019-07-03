@@ -11,7 +11,7 @@ function runCode(){
   var code = Blockly.Python.workspaceToCode(workspace);
   console.log(code);
 
-  document.getElementById('code').innerHTML = code; // sends code to box on screen.
+  document.getElementById('code2').innerHTML = code; // sends code to box on screen.
 
   // Post code to server.
   var codeObj = {code:code, id: unique_id};

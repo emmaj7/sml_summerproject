@@ -20,10 +20,7 @@
   </head>
   <body>
     <h1 class="text-center" style="font-family: courier;">TRIP TO MARS</h1>
-
-    <!-- Navigation partial -->
-    <% include partials/nav.ejs %>
-
+    <h2 class="text-center" style="font-family: courier;">level 2</h1>
     <div class="row">
       <div class="text-center">
         <div id="blocklyDiv" class="col" style="height: 600px; width: 800px;"></div>
@@ -39,9 +36,17 @@
         </div>
       </div>
     </div>
+ <div>
+     <!-- This partial has all the relevant code related to the simulation window. -->
+       <% include partials/simulationWindow.ejs %>
+ </div>
+ <div>
+   <% include partials/modal2.ejs %>
+ </div>
 
-    <!-- This partial has all the relevant code related to the simulation window. -->
-    <% include partials/simulationWindow.ejs %>
+
+
+
 
   </body>
   <script>
@@ -53,7 +58,8 @@
 
   // ID generated uniquely for each window.
   var unique_id = (Math.random()*Math.pow(10,18)).toString();
-  var goal = {'x': 1.5, 'y': 1.5/2, 'yaw': 0}; // The position of the goal for level 2.
+  var goal = {'x': 0.5, 'y': -1.5, 'yaw': 0}; // The position of the goal for level 2.
+  var level = 2;
   // This function is the same for all pages.
   <% include partials/runCodeFunction.js %>
   </script>
