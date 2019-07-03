@@ -55,7 +55,7 @@ class CarHighLevelCommands():
             # start background simulation thread
             self.simulator = SimSVEA(vehicle_name, self.vehicle_model, dt, is_publish=True)
             self.simulator.start()
-            self.target_state = [0, 0, 0.3, 0]
+            self.target_state = [0, 0, 0, 0]
             rospy.sleep(0.5)
         else:
             # initialize odometry and control interface for real car
@@ -107,7 +107,7 @@ class CarHighLevelCommands():
                  steering)
         plt.pause(0.001)
 
-    def _animate_robot_path(self,steering,x0,y0,xg,yg):
+    def _animate_robot_path(self, steering, x0, y0, xg, yg):
         plt.cla()
         x = self.data_log.get_x()
         y = self.data_log.get_y()
