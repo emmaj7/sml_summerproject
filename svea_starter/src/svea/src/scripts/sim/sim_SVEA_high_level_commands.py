@@ -47,6 +47,7 @@ class CarHighLevelCommands():
                        init_state = [-1.5, -1.5, 0, 0]):
         self.simulation = simulation
         self.show_animation = animation
+        self.vehicle_name = vehicle_name
         qualisys_model_name = vehicle_name
         dt = 0.01
         self.goal = goal
@@ -170,7 +171,7 @@ class CarHighLevelCommands():
         self.ctrl_interface.send_control(0,0)
         self.target_state[0] = x
         self.target_state[1] = y
-        print('Completed turn!')
+        print('[' + self.vehicle_name + '] : ' + 'Completed turn!')
 
     def pure_pursuit(self, cx, cy):
         """Make car drive along given trajectory. Uses pure pursuit algorithm."""
@@ -255,7 +256,7 @@ class CarHighLevelCommands():
             self.r.sleep()
         self.target_state[0] = xg
         self.target_state[1] = yg
-        print('Completed drive backwards!')
+        print('[' + self.vehicle_name + '] : ' + 'Completed drive backwards!')
 
     def drive_forward(self):
         """Car follows straigth trajectory of predefined length.
@@ -293,7 +294,7 @@ class CarHighLevelCommands():
             self.r.sleep()
         self.target_state[0] = xg
         self.target_state[1] = yg
-        print('Completed drive forward!')
+        print('[' + self.vehicle_name + '] : ' + 'Completed drive forward!')
 
     def turn_right(self):
         """Makes a full 90 degree right turn."""
