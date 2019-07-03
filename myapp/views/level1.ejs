@@ -36,10 +36,11 @@
         <div>
           <% include partials/simulationWindow.ejs %>
         </div>
-        <div class="box" style="position: absolute; left: 1400px; top: 100px;">
+        <!-- Uncomment to see code for each try -->
+        <!-- <div class="box" style="position: absolute; left: 1400px; top: 100px;">
           <h3>Python Code</h3>
           <pre id= 'code' style="text-align:left;"></pre>
-        </div>
+        </div> -->
       </div>
     </div>
     <button onclick="runCode()" type="button" class="btn btn-danger" style="text-align:center;"id="run-btn">Run the Code</button>
@@ -60,7 +61,7 @@
 
   // ID generated uniquely for each window.
   var unique_id = (Math.random()*Math.pow(10,18)).toString();
-  var goal = {'x': 0.5, 'y': -1.5, 'yaw': 0}; // The position of the goal for level 1.
+  var goal = {'x': 0, 'y': -1.35, 'yaw': 0}; // The position of the goal for level 1.
   var at_goal = false;
   var level = 1;
   // This function is the same for all pages.

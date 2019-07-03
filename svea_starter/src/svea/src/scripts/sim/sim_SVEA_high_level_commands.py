@@ -44,7 +44,7 @@ class CarHighLevelCommands():
                        animation = True,
                        vehicle_name = 'SVEA0',
                        goal = [0, 0],
-                       init_state = [-1.5, -1.5, 0, 0]):
+                       init_state = [-1.35, -1.35, 0, 0]):
         self.simulation = simulation
         self.show_animation = animation
         self.vehicle_name = vehicle_name

@@ -37,51 +37,67 @@ TO DO:
   Sprite = PIXI.Sprite,
   Rectangle = PIXI.Rectangle;
   //Create a Pixi Application
-  var window_size = 600;
   let app = new Application({
-    width: window_size,         // default: 800
-    height: window_size,        // default: 600
+    width: 800,         // default: 800
+    height: 800,        // default: 600
     antialias: true,    // default: false
     transparent: false, // default: false
     resolution: 1,      // default: 1
     forceCanvas: false  // force to use drawng API instead of WebGL
   });
+
   // Change background color
   app.renderer.backgroundColor = 0x061639;
   // access style of window
   app.renderer.view.style.position = "absolute";
   app.renderer.view.style.left = '800px';
-  app.renderer.view.style.top = '120px';
+  app.renderer.view.style.top = '100px';
   //Add the canvas that Pixi automatically created for you to the HTML document
   document.body.appendChild(app.view);
   // Variables for the simulation
   let car;
   var PI = Math.PI;
-  var x_offset = 40;
-  var y_offset = -40;
-  var scale_factor = 256/2;
+  var x_offset = 0.2;
+  var y_offset = 0.15;
+  var scale_factor = 800/3;
   var x = 0;
   var y = 0;
   var yaw = 0;
   let last_yaw = 0;
   let dt = 1/30;
-  var xp;
-  var yp;
-  var obj;
-  var max = 1.5;
-  var start = {'x': -max,'y': -max, 'yaw': 0};
+  var max = 1.35;
+  var border = 1.5;
+  var start = {'x': -max ,'y': -max , 'yaw': 0};
   var marg = 0.1;
-  let text0, text1, text2, text3, text4;
+  let text0, text1, text2, text3, text4; // holds the 5 car sprites.
   let curr_sprite;
   //load an image and run the `setup` function when it's done
   loader
-  .add(['./images/svea_car.png','./images/svea_cars2.png',
+  .add(['./images/svea_car.png',
+        './images/svea_cars2.png',
+        './images/mars-background.png',
         './images/cross.png'])
   .load(setup);
   // This `setup` function will run when the image has loaded
+  function resize_image(image){
+    var imageRatio = image.width / image.height;
+    var containerRatio = app.renderer.view.width / app.renderer.view.height;
+
+    if (containerRatio > imageRatio) {
+    	image.height = image.height / (image.width / app.renderer.view.width);
+    	image.width = app.renderer.view.width;
+    	image.position.x = 0;
+    	image.position.y = (app.renderer.view.height - image.height) / 2;
+    } else {
+    	image.width = image.width / (image.height / app.renderer.view.height);
+    	image.height = app.renderer.view.height;
+    	image.position.y = 0;
+    	image.position.x = (app.renderer.view.width - image.width) / 2;
+    }
+    return image;
+  }
   function setup() {
     // Create the textures
-    cross = new Sprite(resources["./images/cross.png"].texture);
     let rectangle0 = new Rectangle(0, 288*0, 413, 288);
     text0 = new PIXI.Texture(resources["./images/svea_cars2.png"].texture, rectangle0);
     let rectangle1 = new Rectangle(0, 288*1, 413, 288);
@@ -92,12 +108,16 @@ TO DO:
     text3 = new PIXI.Texture(resources["./images/svea_cars2.png"].texture, rectangle3);
     let rectangle4 = new Rectangle(0, 288*4, 413, 288);
     text4 = new PIXI.Texture(resources["./images/svea_cars2.png"].texture, rectangle4);
-    // Create the car sprite
+    // Create the sprites
     car = new Sprite(text2);
+    cross = new Sprite(resources["./images/cross.png"].texture);
+    background = new Sprite(resources["./images/mars-background.png"].texture);
     curr_sprite = 2;
     // Change the sprite's size
     car.scale.x = 0.2; car.scale.y = 0.2;
     cross.scale.x = 0.8; cross.scale.y = 0.8;
+
+    background = resize_image(background);
     // change anchor point
     car.anchor.x = 0.5; car.anchor.y = 0.5;
     cross.anchor.x = 0.5; cross.anchor.y = 0.5;
@@ -108,6 +128,7 @@ TO DO:
     car.rotation = start.yaw;
     cross.position.set(goalPx.x,goalPx.y);
     // Add the sprites to the stage
+    app.stage.addChild(background);
     app.stage.addChild(cross);
     app.stage.addChild(car);
   }
@@ -118,8 +139,8 @@ TO DO:
     // transforms between "true" coordinate system and browser window coordinates
     function coordinate_transform(x, y, yaw){
       var coords = {};
-      coords.x = scale_factor*(x + max) + x_offset;
-      coords.y = window_size - scale_factor*(y + max) + y_offset; // y = 0 is upper corner
+      coords.x = scale_factor*(x + border);
+      coords.y = app.renderer.view.height - scale_factor*(y + border); // y = 0 is upper corner
       coords.yaw = -yaw;
       return coords;
     }
@@ -216,7 +237,7 @@ TO DO:
       // recieves position. Updates car position in simulation.
       socket.on('position-sent-car', function(msg){
         if(onCar){
-          obj = JSON.parse(msg);
+          let = JSON.parse(msg);
           x = obj.x;
           y = obj.y;
           last_yaw = yaw;
@@ -225,7 +246,7 @@ TO DO:
       });
       socket.on('position-sent-sim', function(msg){
         if (onCar == false){
-          obj = JSON.parse(msg);
+          let obj = JSON.parse(msg);
           x = obj.x;
           y = obj.y;
           last_yaw = yaw;

@@ -72,26 +72,6 @@ app.post("/postcode2", urlencodedParser, function(req,res){
 // Required to run simulation.
 shell.exec('roscore', {async:true});
 
-// Test page for button to launch car.
-app.get('/testpage3',function(req,res){
-  res.render('test3');
-});
-
-// Get request to launch car. wont be needed later on.
-app.get('/testpage3/run_on_car', function(req,res){
-  try {
-    var goal = {'x': 4, 'y': 0, 'yaw': 0};
-    // console.log(JSON.stringify(goal));
-    var command = 'roslaunch svea SVEA_high_level_commands.launch ';
-    var args = 'my_args:=' + '"' + 'SVEA5 ' + JSON.stringify(goal) + '"';
-    shell.exec(command + args, {async:true}); // Change to real command later
-    console.log('Launched SVEA_high_level_commands');
-  } catch (e) {
-    res.sendStatus(503); // send Service unavailable
-  } finally {
-    res.sendStatus(200); // send everything ok.
-  }
-});
 
 io.on('connection', function(socket){
   console.log('opened connection');
