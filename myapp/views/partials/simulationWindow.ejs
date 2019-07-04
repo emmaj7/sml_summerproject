@@ -56,21 +56,22 @@ TO DO:
   document.body.appendChild(app.view);
   // Variables for the simulation
   let car;
-  var PI = Math.PI;
-  var x_offset = 0.2;
-  var y_offset = 0.15;
-  var scale_factor = 800/3;
-  var x = 0;
-  var y = 0;
-  var yaw = 0;
+  let PI = Math.PI;
+  let x_offset = 0.2;
+  let y_offset = 0.15;
+  let scale_factor = 800/3;
   let last_yaw = 0;
   let dt = 1/30;
-  var max = 1.35;
-  var border = 1.5;
-  var start = {'x': -max ,'y': -max , 'yaw': 0};
-  var marg = 0.1;
+  let max = 1.35;
+  let border = 1.5;
+  let start = {'x': -max ,'y': -max , 'yaw': 0};
+  let x = start.x;
+  let y = start.y;
+  let yaw = start.yaw;
+  let marg = 0.1;
   let text0, text1, text2, text3, text4; // holds the 5 car sprites.
   let curr_sprite;
+  let hit = false;
   //load an image and run the `setup` function when it's done
   loader
   .add(['./images/svea_car.png',
@@ -81,8 +82,8 @@ TO DO:
   .load(setup);
   // This `setup` function will run when the image has loaded
   function resize_image(image){
-    var imageRatio = image.width / image.height;
-    var containerRatio = app.renderer.view.width / app.renderer.view.height;
+    let imageRatio = image.width / image.height;
+    let containerRatio = app.renderer.view.width / app.renderer.view.height;
 
     if (containerRatio > imageRatio) {
     	image.height = image.height / (image.width / app.renderer.view.width);
@@ -146,7 +147,7 @@ TO DO:
   <script type="text/javascript">
     // transforms between "true" coordinate system and browser window coordinates
     function coordinate_transform(x, y, yaw){
-      var coords = {};
+      let coords = {};
       coords.x = scale_factor*(x + border);
       coords.y = app.renderer.view.height - scale_factor*(y + border); // y = 0 is upper corner
       coords.yaw = -yaw;
@@ -172,7 +173,7 @@ TO DO:
     }
     // decides which sprite to display
     function new_sprite(yaw, curr_sprite){
-      var res = new Object();
+      let res = new Object();
       res.value = false;
       res.sprite = curr_sprite;
       d_yaw = (yaw-last_yaw)/dt;
@@ -206,30 +207,91 @@ TO DO:
     }
     // updates position of car.
     function drive(){
-      var coords = coordinate_transform(x, y, yaw);
+      let coords = coordinate_transform(x, y, yaw);
       car.position.set(coords.x, coords.y);
       car.rotation = coords.yaw;
-      // console.log(yaw);
+
       let response = new_sprite(yaw, curr_sprite);
       if (response.value) {
         change_sprite(response.sprite);
+      }
+      if (collision(car, crater)) {
+        hit = true;
+      } else {
+      //There's no collision
       }
     }
     // Checks if car is at goal.
     function atGoal(){
       // checks if car is at goal.
-      var dist = Math.sqrt(Math.pow(x-goal.x,2) + Math.pow(y-goal.y,2));
+      let dist = Math.sqrt(Math.pow(x-goal.x,2) + Math.pow(y-goal.y,2));
       if (dist < marg){
           return true;
       } else {
         return false;
       }
     }
+    function collision(r1, r2) {
+
+      //Define the variables we'll need to calculate
+      let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
+
+      //hit will determine whether there's a collision
+      hit = false;
+
+      //Find the center points of each sprite
+      r1.centerX = r1.x + r1.width / 2;
+      r1.centerY = r1.y + r1.height / 2;
+      r2.centerX = r2.x + r2.width / 2;
+      r2.centerY = r2.y + r2.height / 2;
+
+      //Find the half-widths and half-heights of each sprite
+      r1.halfWidth = r1.width / 2;
+      r1.halfHeight = r1.height / 2;
+      r2.halfWidth = r2.width / 2;
+      r2.halfHeight = r2.height / 2;
+
+      //Calculate the distance vector between the sprites
+      vx = r1.centerX - r2.centerX;
+      vy = r1.centerY - r2.centerY;
+
+      //Figure out the combined half-widths and half-heights
+      combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+      combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+
+      //Check for a collision on the x axis
+      if (Math.abs(vx) < combinedHalfWidths) {
+
+        //A collision might be occurring. Check for a collision on the y axis
+        if (Math.abs(vy) < combinedHalfHeights) {
+
+          //There's definitely a collision happening
+          hit = true;
+        } else {
+
+          //There's no collision on the y axis
+          hit = false;
+        }
+      } else {
+
+        //There's no collision on the x axis
+        hit = false;
+      }
+
+      //`hit` will be either `true` or `false`
+      return hit;
+    };
+
     // Called when run code button pressed.
     function runSimulation(onCar){
       app.ticker.start()
       var socket = io();
       curr_sprite = 5;
+      hit = false;
+      x = start.x;
+      y = start.y;
+      yaw = start.yaw;
+      
       // start two-way communication
       socket.on('connect',function(){
         console.log('Connected');
@@ -259,6 +321,11 @@ TO DO:
           y = obj.y;
           last_yaw = yaw;
           yaw = obj.yaw;
+
+          if (hit){
+            socket.emit('collision');
+            console.log('Collision!');
+          }
         }
       });
       socket.on('close', function(){
@@ -279,8 +346,7 @@ TO DO:
                 modal1.style.display = "none";
               }
             }
-          }
-          if (level === 2){
+          } else if (level === 2){
             var modal2 = document.getElementById('myModal2');
             modal2.style.display = "block";
             window.onclick = function(event) {
@@ -288,8 +354,7 @@ TO DO:
                 modal2.style.display = "none";
               }
             }
-          }
-          if (level === 3){
+          } else if (level === 3){
             var modal3 = document.getElementById('myModal3');
             modal3.style.display = "block";
             window.onclick = function(event) {
@@ -298,9 +363,12 @@ TO DO:
               }
             }
           }
-        }
-        else {
-          alert("Testa igen!")
+        } else if (hit) {
+          alert('You hit an obstacle. Try again!');
+
+        } else {
+          alert("Try again!");
+          // alert('Försök igen!')
         }
       });
 
