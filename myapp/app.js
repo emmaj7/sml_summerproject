@@ -81,8 +81,8 @@ io.on('connection', function(socket){
   // 2. Recieves coordinate stream from python simulation as json
   // 3. Sends stream to 'position sent'
   socket.on('simulationOnly', function(msg){
-    var obj = JSON.parse(msg);
-    const subprocess = runScript(obj.id, obj.goal);
+    var msgParsed = JSON.parse(msg);
+    const subprocess = runScript(msgParsed.id, msgParsed.goal);
     subprocess.stdout.on('data', (data) => {
     try { // try-catch to only send data that is in JSON format
       var obj = JSON.parse(data);
@@ -102,6 +102,15 @@ io.on('connection', function(socket){
     });
     subprocess.on("exit", exitCode => {
     console.log("Exiting with code " + exitCode);
+    });
+    socket.on('collision', function(){
+      socket.emit('close');
+      console.log('collsion detected');
+      subprocess.kill();
+      // var command = 'rosnode kill ' + 'sim_SVEA_high_level_' + msgParsed.id;
+      // // shell.exec(command, {async:true}, function(){
+      // //   console.log('closing because of collision');
+      // });
     });
   });
 

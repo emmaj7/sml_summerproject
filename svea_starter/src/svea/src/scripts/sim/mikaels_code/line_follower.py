@@ -80,5 +80,5 @@ def orientation_controller(x, y, yaw, yaw_ref, direction):
     #     v = v - 0.05
     # if v >= 0:
     #     v  = v + 0.05
-    v = 1 # override velocity controller.
+    v = 2 # override velocity controller.
     return v, w
