@@ -75,8 +75,9 @@ TO DO:
   loader
   .add(['./images/svea_car.png',
         './images/svea_cars2.png',
-        './images/mars-background.png',
-        './images/cross.png'])
+        './images/mars-background2.png',
+        './images/crater.png',
+        './images/base-v2.png'])
   .load(setup);
   // This `setup` function will run when the image has loaded
   function resize_image(image){
@@ -110,27 +111,34 @@ TO DO:
     text4 = new PIXI.Texture(resources["./images/svea_cars2.png"].texture, rectangle4);
     // Create the sprites
     car = new Sprite(text2);
-    cross = new Sprite(resources["./images/cross.png"].texture);
-    background = new Sprite(resources["./images/mars-background.png"].texture);
+    base = new Sprite(resources["./images/base-v2.png"].texture);
+    background = new Sprite(resources["./images/mars-background2.png"].texture);
+    crater = new Sprite(resources["./images/crater.png"].texture);
     curr_sprite = 2;
     // Change the sprite's size
-    car.scale.x = 0.2; car.scale.y = 0.2;
-    cross.scale.x = 0.8; cross.scale.y = 0.8;
-
+    // car.scale.x = 1/4.59; car.scale.y = 1/4.59;
+    car.scale.x = 3*(90/app.renderer.width); car.scale.y = 3*(90/app.renderer.height);
+    base.scale.x = 0.4; base.scale.y = 0.4;
+    crater.scale.x = 1.5; crater.scale.y = 1.5;
     background = resize_image(background);
     // change anchor point
     car.anchor.x = 0.5; car.anchor.y = 0.5;
-    cross.anchor.x = 0.5; cross.anchor.y = 0.5;
+    base.anchor.x = 0.5; base.anchor.y = 0.8;
+    crater.anchor.x = 0.5; crater.anchor.y = 0.5;
     // put in right position
     start = coordinate_transform(start.x, start.y, start.yaw);
     goalPx = coordinate_transform(goal.x, goal.y, goal.yaw);
+    craterPx = coordinate_transform(crater_coords.x, crater_coords.y, crater_coords.yaw);
     car.position.set(start.x,start.y);
     car.rotation = start.yaw;
-    cross.position.set(goalPx.x,goalPx.y);
+    base.position.set(goalPx.x,goalPx.y);
+    crater.position.set(craterPx.x, craterPx .y);
     // Add the sprites to the stage
     app.stage.addChild(background);
-    app.stage.addChild(cross);
+    app.stage.addChild(base);
+    app.stage.addChild(crater);
     app.stage.addChild(car);
+
   }
   </script>
 </div>

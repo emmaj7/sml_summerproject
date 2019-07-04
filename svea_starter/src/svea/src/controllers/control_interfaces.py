@@ -31,9 +31,9 @@ class ControlInterface():
     OPERATING_FREQ = 30 # [Hz]
 
     MAX_STEER_PERCENT = 80 # [%]
-    MAX_VELOCITY_PERCENT = 100 #[%]
+    MAX_VELOCITY_PERCENT = 200 #[%]
 
-    MAX_VELOCITY = 1 #[m/s]
+    MAX_VELOCITY = 2 #[m/s]
 
     def __init__(self, vehicle_name=""):
         # rospy.init_node(vehicle_name + '_control_interface')
