@@ -20,8 +20,7 @@ function runCode(){
   });
   var onCar = false;
   // Run simulation. Function in simulationWindow.ejs
-  runSimulation(onCar);
-
+  return runSimulation(onCar);
 
 
 

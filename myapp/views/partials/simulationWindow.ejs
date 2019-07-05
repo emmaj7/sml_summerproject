@@ -59,12 +59,12 @@ TO DO:
   let PI = Math.PI;
   let x_offset = 0.2;
   let y_offset = 0.15;
-  let scale_factor = 800/3;
+  let real_length = 3;
+  let scale_factor = app.renderer.view.height/real_length;
   let last_yaw = 0;
   let dt = 1/30;
-  let max = 1.35;
-  let border = 1.5;
-  let start = {'x': -max ,'y': -max , 'yaw': 0};
+  let max = 1.5;
+  let start = {'x': -max + 0.15 ,'y': -max + 0.15 , 'yaw': 0};
   let x = start.x;
   let y = start.y;
   let yaw = start.yaw;
@@ -72,6 +72,7 @@ TO DO:
   let text0, text1, text2, text3, text4; // holds the 5 car sprites.
   let curr_sprite;
   let hit = false;
+  let obstacles = [];
   //load an image and run the `setup` function when it's done
   loader
   .add(['./images/svea_car.png',
@@ -110,34 +111,43 @@ TO DO:
     text3 = new PIXI.Texture(resources["./images/svea_cars2.png"].texture, rectangle3);
     let rectangle4 = new Rectangle(0, 288*4, 413, 288);
     text4 = new PIXI.Texture(resources["./images/svea_cars2.png"].texture, rectangle4);
-    // Create the sprites
-    car = new Sprite(text2);
-    base = new Sprite(resources["./images/base-v2.png"].texture);
+
+
+    // Init background
     background = new Sprite(resources["./images/mars-background2.png"].texture);
-    crater = new Sprite(resources["./images/crater.png"].texture);
-    curr_sprite = 2;
-    // Change the sprite's size
-    // car.scale.x = 1/4.59; car.scale.y = 1/4.59;
-    car.scale.x = 3*(90/app.renderer.width); car.scale.y = 3*(90/app.renderer.height);
-    base.scale.x = 0.4; base.scale.y = 0.4;
-    crater.scale.x = 1.5; crater.scale.y = 1.5;
     background = resize_image(background);
-    // change anchor point
+    app.stage.addChild(background);
+
+    // init obstacles
+    for (var i = 0; i < obstacle_coords.length; i++) {
+      obstacle = new Sprite(resources["./images/crater.png"].texture);
+      obstacle.scale.x = 1.5; obstacle.scale.y = 1.5;
+      obstacle.anchor.x = 0.5; obstacle.anchor.y = 0.5;
+      obstaclePx = coordinate_transform(obstacle_coords[i].x,
+                                        obstacle_coords[i].y,
+                                        obstacle_coords[i].yaw);
+      obstacle.position.set(obstaclePx.x, obstaclePx .y);
+      obstacle.rotation = obstaclePx.yaw;
+      app.stage.addChild(obstacle);
+      obstacles.push(obstacle);
+    }
+
+    // Init goal
+    goal = new Sprite(resources["./images/base-v2.png"].texture);
+    goal.scale.x = 0.4; goal.scale.y = 0.4;
+    goal.anchor.x = 0.5; goal.anchor.y = 0.8;
+    goalPx = coordinate_transform(goal_coords.x, goal_coords.y, goal_coords.yaw);
+    goal.position.set(goalPx.x,goalPx.y);
+    app.stage.addChild(goal);
+
+    // Init car
+    curr_sprite = 2; // start sprite for car.
+    car = new Sprite(text2);
+    car.scale.x = 3*(90/app.renderer.width); car.scale.y = 3*(90/app.renderer.height);
     car.anchor.x = 0.5; car.anchor.y = 0.5;
-    base.anchor.x = 0.5; base.anchor.y = 0.8;
-    crater.anchor.x = 0.5; crater.anchor.y = 0.5;
-    // put in right position
     start = coordinate_transform(start.x, start.y, start.yaw);
-    goalPx = coordinate_transform(goal.x, goal.y, goal.yaw);
-    craterPx = coordinate_transform(crater_coords.x, crater_coords.y, crater_coords.yaw);
     car.position.set(start.x,start.y);
     car.rotation = start.yaw;
-    base.position.set(goalPx.x,goalPx.y);
-    crater.position.set(craterPx.x, craterPx .y);
-    // Add the sprites to the stage
-    app.stage.addChild(background);
-    app.stage.addChild(base);
-    app.stage.addChild(crater);
     app.stage.addChild(car);
 
   }
@@ -148,8 +158,8 @@ TO DO:
     // transforms between "true" coordinate system and browser window coordinates
     function coordinate_transform(x, y, yaw){
       let coords = {};
-      coords.x = scale_factor*(x + border);
-      coords.y = app.renderer.view.height - scale_factor*(y + border); // y = 0 is upper corner
+      coords.x = scale_factor*(x + max);
+      coords.y = app.renderer.view.height - scale_factor*(y + max); // y = 0 is upper corner
       coords.yaw = -yaw;
       return coords;
     }
@@ -215,11 +225,14 @@ TO DO:
       if (response.value) {
         change_sprite(response.sprite);
       }
-      if (collision(car, crater)) {
-        hit = true;
-      } else {
-      //There's no collision
+      for (var i = 0; i < obstacles.length; i++) {
+        if (collision(car, obstacles[i])) {
+          hit = true;
+        } else {
+        //There's no collision
+        }
       }
+
     }
     // Checks if car is at goal.
     function atGoal(){
@@ -232,52 +245,40 @@ TO DO:
       }
     }
     function collision(r1, r2) {
-
       //Define the variables we'll need to calculate
       let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
-
       //hit will determine whether there's a collision
       hit = false;
-
       //Find the center points of each sprite
       r1.centerX = r1.x + r1.width / 2;
       r1.centerY = r1.y + r1.height / 2;
       r2.centerX = r2.x + r2.width / 2;
       r2.centerY = r2.y + r2.height / 2;
-
       //Find the half-widths and half-heights of each sprite
       r1.halfWidth = r1.width / 2;
       r1.halfHeight = r1.height / 2;
       r2.halfWidth = r2.width / 2;
       r2.halfHeight = r2.height / 2;
-
       //Calculate the distance vector between the sprites
       vx = r1.centerX - r2.centerX;
       vy = r1.centerY - r2.centerY;
-
       //Figure out the combined half-widths and half-heights
       combinedHalfWidths = r1.halfWidth + r2.halfWidth;
       combinedHalfHeights = r1.halfHeight + r2.halfHeight;
-
       //Check for a collision on the x axis
       if (Math.abs(vx) < combinedHalfWidths) {
-
         //A collision might be occurring. Check for a collision on the y axis
         if (Math.abs(vy) < combinedHalfHeights) {
-
           //There's definitely a collision happening
           hit = true;
         } else {
-
           //There's no collision on the y axis
           hit = false;
         }
       } else {
-
         //There's no collision on the x axis
         hit = false;
       }
-
       //`hit` will be either `true` or `false`
       return hit;
     };
@@ -291,16 +292,16 @@ TO DO:
       x = start.x;
       y = start.y;
       yaw = start.yaw;
-      
+
       // start two-way communication
       socket.on('connect',function(){
         console.log('Connected');
         console.log('Session id: ' + unique_id); // Unique id for each html page opened.
         if (onCar){
-          socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id, 'goal': goal}));
+          socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id, 'goal': goal_coords}));
           console.log('Running code on car');
         } else {
-          socket.emit('simulationOnly', JSON.stringify({'id': unique_id, 'goal': goal}));
+          socket.emit('simulationOnly', JSON.stringify({'id': unique_id, 'goal': goal_coords}));
           console.log('starting simulation');
         }
       });
@@ -314,6 +315,7 @@ TO DO:
           yaw = obj.yaw;
         }
       });
+      // recieves position. Updates car position in simulation.
       socket.on('position-sent-sim', function(msg){
         if (onCar == false){
           let obj = JSON.parse(msg);
@@ -326,10 +328,17 @@ TO DO:
             socket.emit('collision');
             console.log('Collision!');
           }
+          if (cancel_simulation){
+            console.log('cancelling simulation');
+            socket.emit('cancel-simulation');
+            cancel_simulation = false;
+          }
         }
       });
-      socket.on('close', function(){
+      // Called when python script is closed. Either forced or not.
+      socket.on('close', function(forced_close){
         app.ticker.stop();
+        console.log()
         console.log('Connection closed');
         socket.disconnect(true); // close connection to server.
         at_goal = atGoal(); // variable from level.
@@ -365,10 +374,12 @@ TO DO:
           }
         } else if (hit) {
           alert('You hit an obstacle. Try again!');
-
         } else {
-          alert("Try again!");
-          // alert('Försök igen!')
+          if (forced_close) {
+            // Do nothing
+          } else {
+            alert("Try again!");
+          }
         }
       });
 

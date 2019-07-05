@@ -62,9 +62,14 @@
 
   // ID generated uniquely for each window.
   var unique_id = (Math.random()*Math.pow(10,18)).toString();
-  var goal = {'x': 0.5, 'y': -1.35, 'yaw': 0}; // The position of the goal for level 3.
-  var crater_coords = {'x': 0 ,'y': 0 , 'yaw': 0};
+  var goal_coords = {'x': 0.5, 'y': -1.35, 'yaw': 0}; // The position of the goal for level 3.
+  var obstacle_coords = [{x: 0, y: 0.5, yaw: 0},
+                         {x: 0.5, y: 1 , yaw: 0}]; // Position of obstacles on level 3
   var level = 3;
+  let cancel_simulation = false;
+  function cancelSimulation(){
+    cancel_simulation = true;
+  }
   // Function to save code to file.
   <% include partials/runCodeFunction.js %>
   </script>
