@@ -58,7 +58,7 @@ TO DO:
   let car; // object for car sprite
   let hitbox; // hitbox / shadow of car.
   let x_offset = 0.3;
-  let y_offset = 0.15; // starting offset of car from lower left corner.
+  let y_offset = 0.4; // starting offset of car from lower left corner.
   let real_length = 3; // length of map in meters.
   let scale_factor = app.renderer.view.height/real_length;
   let last_yaw = 0;
@@ -70,7 +70,7 @@ TO DO:
   let yaw = start_coords.yaw;
   let marg = 0.1; // margin to goal that counts as reached.
   let text0, text1, text2, text3, text4; // holds the 5 car sprite textures.
-  let curr_sprite; // current displayed texture nr for car.
+  let curr_sprite; // current displayed texture nr
   let obstacleHit = false;
   let wallHit = false;
   let obstacles = [];
@@ -81,7 +81,8 @@ TO DO:
         './images/mars-background2.png',
         './images/crater.png',
         './images/base-v2.png',
-        './images/circle.png'])
+        './images/circle.png',
+        './images/cross.png'])
   .load(setup);
   // This `setup` function will run when the image has loaded
   function resize_image(image){
@@ -137,10 +138,16 @@ TO DO:
     // Init goal
     goal = new Sprite(resources["./images/base-v2.png"].texture);
     goal.scale.x = 0.4; goal.scale.y = 0.4;
-    goal.anchor.x = 0.5; goal.anchor.y = 0.8;
+    goal.anchor.x = 0.5; goal.anchor.y = 0.6;
     goalPx = coordinateTransform(goal_coords.x, goal_coords.y, goal_coords.yaw);
     goal.position.set(goalPx.x,goalPx.y);
     app.stage.addChild(goal);
+    cross = new Sprite(resources["./images/cross.png"].texture);
+    cross.scale.x = 0.4; cross.scale.y = 0.4;
+    cross.anchor.x = 0.5; cross.anchor.y = 0.5;
+    goalPx = coordinateTransform(goal_coords.x, goal_coords.y, goal_coords.yaw);
+    cross.position.set(goalPx.x,goalPx.y);
+    app.stage.addChild(cross);
 
     // Init car and hitbox.
     curr_sprite = 2; // starting texture for car.
@@ -249,7 +256,7 @@ TO DO:
     // Checks if car is at goal.
     function atGoal(){
       // checks if car is at goal.
-      let dist = Math.sqrt(Math.pow(x-goal.x,2) + Math.pow(y-goal.y,2));
+      let dist = Math.sqrt(Math.pow(x-goal_coords.x,2) + Math.pow(y-goal_coords.y,2));
       if (dist < marg){
           return true;
       } else {

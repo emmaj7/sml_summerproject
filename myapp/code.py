@@ -1,3 +1,47 @@
+# ID:484144558828809900
+car.drive_forward()
+car.drive_forward()
+#####
+# ID:257603695280249860
+car.drive_forward()
+car.drive_forward()
+#####
+# ID:551177647913855200
+car.drive_forward()
+car.drive_forward()
+#####
+# ID:54235941766445416
+car.drive_forward()
+car.drive_forward()
+#####
+# ID:607421960945038500
+car.drive_forward()
+car.drive_forward()
+#####
+# ID:832957667239797600
+car.turn_left()
+car.turn_right()
+car.turn_right()
+car.turn_left()
+#####
+# ID:832957667239797600
+car.turn_left()
+car.turn_right()
+car.turn_left()
+car.turn_left()
+car.turn_right()
+#####
+# ID:832957667239797600
+car.turn_left()
+car.turn_right()
+car.turn_left()
+car.turn_right()
+#####
+# ID:832957667239797600
+car.turn_left()
+car.drive_forward()
+car.turn_right()
+#####
 # ID:871266374486554900
 car.drive_forward()
 car.turn_left()
