@@ -43,8 +43,8 @@ class CarHighLevelCommands():
     def __init__(self, simulation = True,
                        animation = True,
                        vehicle_name = 'SVEA0',
-                       goal = [0, 0],
-                       init_state = [-1.35, -1.35, 0, 0]):
+                       init_state = [-1.35, -1.35, 0, 0],
+                       goal = [0, 0]):
         self.simulation = simulation
         self.show_animation = animation
         self.vehicle_name = vehicle_name
@@ -331,17 +331,21 @@ def log_to_file(log):
     f.close()
     print('Wrote log to file')
 
-def deploy(name, goal):
+def deploy(name, start, goal):
     """Wraps the init of car commands."""
     rospy.init_node('sim_SVEA_high_level_' + name)
     simulation = True
     animation = False
-    car = CarHighLevelCommands(simulation, animation, name, goal)
+    car = CarHighLevelCommands(simulation, animation, name, start, goal)
     return car
 
-def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
+def main(argv = ['SVEA0',
+                 '{"x": 4, "y": 0, "yaw": 0}',
+                 '{"x": 0, "y": 0, "yaw": 0}']):
     name = argv[0] # makes it possible to have multiple copies of simulation
-    goal = json.loads(argv[1])
+    start = json.loads(argv[1])
+    start = [start['x'], start['y'], start['yaw'], 0]
+    goal = json.loads(argv[2])
     goal = [goal["x"], goal["y"]]
 
     # name = 'SVEA0'
@@ -349,7 +353,7 @@ def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
 
     from_file = True
     if from_file:
-        car = deploy(name, goal) # Should be part of the code later on.
+        car = deploy(name, start, goal) # Should be part of the code later on.
         # File with the code to execute
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filename = dir_path + '/../../../../../../myapp/code.py'
@@ -359,6 +363,7 @@ def main(argv = ['SVEA0', '{"x": 4, "y": 0, "yaw": 0}']):
         l_var = {'car': car}
         c.execute_commands(name, g_var, l_var)
     else:
+        # test code.
         car = deploy(name, goal)
         car.turn_right()
         car.turn_right()

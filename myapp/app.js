@@ -83,7 +83,7 @@ io.on('connection', function(socket){
   // 3. Sends stream to 'position sent'
   socket.on('simulationOnly', function(msg){
     var msgParsed = JSON.parse(msg);
-    const subprocess = runScript(msgParsed.id, msgParsed.goal);
+    const subprocess = runScript(msgParsed.id, msgParsed.start, msgParsed.goal);
     subprocess.stdout.on('data', (data) => {
     try { // try-catch to only send data that is in JSON format
       var obj = JSON.parse(data);
@@ -145,10 +145,14 @@ io.on('connection', function(socket){
 
 
 // This function launches the python simulation
-function runScript(id, goal){
+function runScript(id, start, goal){
   id = 'USER' + id;
   var pathId = path.join(__dirname, '/../svea_starter/src/svea/src/scripts/sim/sim_SVEA_high_level_commands.py');
-  return spawn('python', ["-u", pathId, id, JSON.stringify(goal)],{detached: true});
+  return spawn('python', ["-u",
+                          pathId,
+                          id,
+                          JSON.stringify(start),
+                          JSON.stringify(goal)], {detached: true});
 }
 
 // Writes code to beginning of code file
