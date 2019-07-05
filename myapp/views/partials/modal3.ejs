@@ -1,4 +1,30 @@
 <div id="myModal3" class="modal">
+  <div class="container-fluid">
+  <div class="modal-content" style="width: 80%;">
+      <div class="modal-header">
+        <h1 id="header" style="top-margin: 10px; margin: 0 auto;" class="text-center">CONGRATULATIONS!</h1>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 30px;">You solved level 3 with the following Python code:</p>
+        <pre style="font-family: courier; font-weight: bold; font-size: 30px;" id='code'></pre>
+        <p style="font-size: 30px;"> Are you ready to run the code on the car?</p>
+      </div>
+      <div class="modal-footer">
+        <div  style="margin: 0 auto;">
+          <div class="row">
+            <a href="/level3" ><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;">Cancel</button></a>
+            <a href="#" ><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;" onclick="runOnCar()">Run on Car</button></a>
+
+            <!-- <a href="/level1"><button type="button" style="text-decoration: none !important;" class="btn btn-secondary">Cancel</button></a>
+            <a href="/level2"><button type="button" style="text-decoration: none !important;" class="btn btn-secondary">OK</button></a> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div id="myModal3" class="modal">
   <div class="modal-content">
     <p>CONGRATULATIONS!</p>
     <pre id='code'></pre>
@@ -6,6 +32,8 @@
       <a href="/level3">
         <button type="button" name="toLevel2" class="cool-btn btn1 btn" id="btn1">CANCEL</button>
        </a>
+     <a href="#">
        <button type="button" onclick="runOnCar()">RUN ON CAR</button>
+     </a>
   </div>
-</div>
+</div> -->

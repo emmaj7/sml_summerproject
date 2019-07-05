@@ -1,23 +1,25 @@
 <div id="myModal1" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h1 style="font-family: courier; text-align: center;">CONGRATULATIONS!</h1>
-    </div>
-    <div class="modal-body">
-      <pre id='code'></pre>
-    </div>
-    <p> Continue to level 2?</p>
-    <div class="modal-footer">
-      <div class="text-center">
-      <div class="row">
-        <a href="/level1">
-          <button type="button" name="toLevel1" class="cool-btn btn1 btn" id="btn1">CANCEL</button>
-        </a>
-        <a href="/level2">
-          <button type="button" name="toLevel2" class="cool-btn btn1 btn" id="btn1">OK</button>
-         </a>
+  <div class="container-fluid">
+  <div class="modal-content" style="width: 80%;">
+      <div class="modal-header">
+        <h1 id="header" style="top-margin: 10px; margin: 0 auto;" class="text-center">CONGRATULATIONS!</h1>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 30px;">You solved level 1 with the following Python code:</p>
+        <pre style="font-family: courier; font-weight: bold; font-size: 30px;" id='code'></pre>
+        <p style="font-size: 30px;"> Continue to level 2?</p>
+      </div>
+      <div class="modal-footer">
+        <div  style="margin: 0 auto;">
+          <div class="row">
+            <a href="/level1" ><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;">Cancel</button></a>
+            <a href="/level2" ><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;">OK</button></a>
+
+            <!-- <a href="/level1"><button type="button" style="text-decoration: none !important;" class="btn btn-secondary">Cancel</button></a>
+            <a href="/level2"><button type="button" style="text-decoration: none !important;" class="btn btn-secondary">OK</button></a> -->
+          </div>
+        </div>
       </div>
       </div>
     </div>
   </div>
-</div>

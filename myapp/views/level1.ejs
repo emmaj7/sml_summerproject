@@ -6,10 +6,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/style.css" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <script src="../node_modules/node-blockly/blockly/blockly_compressed.js"></script>
     <script src="../node_modules/node-blockly/blockly/javascript_compressed.js"></script>
     <script src="../node_modules/node-blockly/blockly/python_compressed.js"></script>
@@ -21,9 +21,6 @@
   <body>
     <h1 class="text-center" style="font-family: courier;">TRIP TO MARS</h1>
     <h2 class="text-center" style="font-family: courier;">level 1</h1>
-
-
-
     <div class="row">
       <div class="text-center">
         <div id="blocklyDiv" class="col" style="height: 600px; width: 800px;"></div>
@@ -52,14 +49,13 @@
   </body>
   <script>
   var workspace = Blockly.inject('blocklyDiv',
-  {toolbox: document.getElementById('toolbox'),
-  verticalLayout: true,
-  scrollbars: false,
-  theme: Blockly.Themes.HighContrast});
-
+                  {toolbox: document.getElementById('toolbox'),
+                  verticalLayout: true,
+                  scrollbars: false,
+                  theme: Blockly.Themes.HighContrast});
   // ID generated uniquely for each window.
   var unique_id = (Math.random()*Math.pow(10,18)).toString();
-  var goal = {'x': 0.5, 'y': -1.35, 'yaw': 0}; // The position of the goal for level 1.
+  var goal = {'x': -0.35, 'y': -1.35, 'yaw': 0}; // The position of the goal for level 1.
   var crater_coords = {'x': 0 ,'y': 0.5 , 'yaw': 0};
   var at_goal = false;
   var level = 1;

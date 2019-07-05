@@ -7,18 +7,11 @@ a.button{
   margin-top: auto;
 }
 
-.start-button{
-position: relative;
-top: 20%;
-left: 50%;
-transform: translate(-50%, -50%);
-color: white;
-}
 
 .cool-btn:enabled{
 position: relative;
 font-family: courier;
-font-size: 17px;
+font-size: 30px;
 text-decoration: none;
 color: white;
 font-weight: bold;
@@ -37,7 +30,18 @@ position: absolute;
 top: 50%;
 left: 50%;
 transform: translate(-50%, -50%);
-z-index: 9;
+z-index: -1;
+transition: all 0.6s ease;
+}
+
+.cool-btn2:enabled::before{
+background: #ff6d44;
+content: "";
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+z-index: 999;
 transition: all 0.6s ease;
 }
 
@@ -51,21 +55,12 @@ text-decoration: none;
 .btn1:enabled:hover::before{
 height: 300%;
 font-size: 25px;
-}
-
-.box{
-  background-color: white;
-  width: 400px;
-  height: 600px;
-  padding: 10px;
-  margin: 20px;
-  border: 10px solid grey;
-  position: relative;
+color:white;
 }
 
 pre {
  display: block;
- font-family: monospace;
+ font-family: courier;
  white-space: pre;
  margin: 1em 0;
 }
@@ -77,59 +72,67 @@ h1{
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 10; /* Sit on top */
+  z-index: 1000; /* Sit on top */
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
+  width: 100%; /* Full width of screen */
+  height: 100%; /* Full height of screen*/
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  color: red;
 }
 
 /* Modal Content/Box */
 .modal-content {
-  color: red;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 100px solid #888;
-  width: 20%; /* Could be more or less, depending on screen size */
-  text-align: center;
+  top: 150px;
 }
 
 /* Modal Header */
 .modal-header {
- padding: 2px 16px;
+ text-align: center;
+ padding: 10px 16px;
  background-color: #242424;
  color: white;
 }
 
 /* Modal Body */
-.modal-body {padding: 2px 16px;}
+.modal-body {
+  padding: 2px 16px;
+  text-align: center;
+}
 
 /* Modal Footer */
 .modal-footer {
- padding: 2px 16px;
+ padding: 10px 16px;
  background-color: #242424;
- color: white;
+ text-align: center;
 }
 
 /* Modal Content */
 .modal-content {
+text-align: center;
  position: relative;
- background-color: #fefefe;
+ background-color: white;
+ text-align: center;
  margin: auto;
  padding: 0;
- border: 1px solid #888;
  width: 80%;
  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
  animation-name: animatetop;
- animation-duration: 0.3s
+ animation-duration: 0.5s
 }
 
 /* Add Animation */
 @keyframes animatetop {
  from {top: -300px; opacity: 0}
- to {top: 100px; opacity: 1}
+ to {top: 150px; opacity: 1}
+}
+
+p{
+  font-family: courier;
+}
+
+#header{
+  font-family: courier;
+  font-weight: bold;
 }
