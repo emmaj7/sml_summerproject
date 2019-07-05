@@ -75,6 +75,7 @@ shell.exec('roscore', {async:true});
 
 io.on('connection', function(socket){
   console.log('opened connection');
+  var forced_exit = false;
   // Responds to request to 'button pressed'.
   // Does the following:
   // 1. recieves window id.
@@ -94,23 +95,25 @@ io.on('connection', function(socket){
     });
     // The code below is only for error catching.
     subprocess.stderr.on('data', (data) => {
-      console.log(`error type 2:${data}`);
+      console.log(`[USER ${msgParsed.id}] Error type 2:${data}`);
     });
     subprocess.stderr.on('close', () => {
-      console.log("Closed");
-      socket.emit('close');
+      console.log(`[USER ${msgParsed.id}] Closed`);
+      socket.emit('close', forced_exit);
     });
     subprocess.on("exit", exitCode => {
-    console.log("Exiting with code " + exitCode);
+      console.log(`[USER ${msgParsed.id}] Exiting with code ${exitCode}`);
+      socket.disconnect(true);
     });
     socket.on('collision', function(){
       socket.emit('close');
-      console.log('collsion detected');
+      console.log(`[USER ${msgParsed.id}] Collision detected`);
       subprocess.kill();
-      // var command = 'rosnode kill ' + 'sim_SVEA_high_level_' + msgParsed.id;
-      // // shell.exec(command, {async:true}, function(){
-      // //   console.log('closing because of collision');
-      // });
+    });
+    socket.on('cancel-simulation', function(){
+        console.log(`[USER ${msgParsed.id}] Cancelled simulation`);
+        forced_exit = true;
+        subprocess.kill();
     });
   });
 

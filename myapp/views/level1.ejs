@@ -40,7 +40,8 @@
         </div> -->
       </div>
     </div>
-    <button onclick="runCode()" type="button" class="btn btn-danger" style="text-align:center;"id="run-btn">Run the Code</button>
+    <button onclick="runCode();" type="button" class="btn btn-danger" value=style="text-align:center;"id="run-btn">Run the Code</button>
+    <button type="button" onclick="cancelSimulation()"name="button">Cancel</button>
   <div>
     <% include partials/modal1.ejs %>
   </div>
@@ -55,11 +56,22 @@
                   theme: Blockly.Themes.HighContrast});
   // ID generated uniquely for each window.
   var unique_id = (Math.random()*Math.pow(10,18)).toString();
+<<<<<<< HEAD
   var goal = {'x': -0.35, 'y': -1.35, 'yaw': 0}; // The position of the goal for level 1.
   var crater_coords = {'x': 0 ,'y': 0.5 , 'yaw': 0};
+=======
+  var goal_coords = {'x': 0.5, 'y': -1.35, 'yaw': 0}; // The position of the goal for level 1.
+  var obstacle_coords = [{x: 0, y: 0.5, yaw: 0},
+                         {x: 0.5, y: 1 , yaw: 0}]; // Position of obstacles on level 1
+>>>>>>> 1d1cc7e62e091665841af3fe1a92f61664c8cb4d
   var at_goal = false;
   var level = 1;
+  let cancel_simulation = false;
+  function cancelSimulation(){
+    cancel_simulation = true;
+  }
   // This function is the same for all pages.
   <% include partials/runCodeFunction.js %>
+
   </script>
 </html>
