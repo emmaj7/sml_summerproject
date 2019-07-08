@@ -38,14 +38,11 @@
           <pre id= 'code' style="text-align:left;"></pre>
         </div> -->
         <div class="text-center" style="margin-top: 10px;">
-          <a href="#"><button class="cool-btn btn1 btn" onclick="runCode();" type="button" id="btn1">Run Code</button></a>
-          <a href="#"><button class="cool-btn btn1 btn" onclick="cancelSimulation()" type="button" id="btn1">Cancel</button></a>
+          <a href="#"><button class="cool-btn btn1 btn" onclick="runCode();" type="button"  id="runBtn">Run Code</button></a>
+          <a href="#"><button class="cool-btn btn1 btn" onclick="cancelSimulation()" type="button"  id="cancelBtn">Cancel</button></a>
             <!-- <button onclick="runCode();" type="button" class="btn btn-danger" style="text-align:center;" id="run-btn">Run the Code</button> -->
             <!-- <button type="button" onclick="cancelSimulation()"name="button">Cancel</button> -->
         </div>
-        </div>
-      </div>
-    </div>
   <div>
     <% include partials/modal1.ejs %>
   </div>
@@ -54,6 +51,12 @@
   </div>
   <div>
     <% include partials/hitModal.ejs %>
+  </div>
+  <div>
+    <% include partials/wallModal.ejs %>
+  </div>
+  <div>
+    <% include partials/whichButton.ejs %>
   </div>
 
 
@@ -66,12 +69,14 @@
                   theme: Blockly.Themes.HighContrast});
   // ID generated uniquely for each window.
   var unique_id = (Math.random()*Math.pow(10,18)).toString();
+  var goal_coords = {'x': 0.5, 'y': -0.35, 'yaw': 0}; // The position of the goal for level 1.
+  var obstacle_coords = [{x: 0.5, y: -1.35, yaw: 0},
+                         {x: 0.5, y: 1 , yaw: 0}]; // Position of obstacles on level
 
-  var goal_coords = {'x': 0.7, 'y': -1.1, 'yaw': 0}; // The position of the goal for level 1.
-  var obstacle_coords = [{x: 0, y: 0.5, yaw: 0},
-                         {x: 0.5, y: 1 , yaw: 0}]; // Position of obstacles on level 1
   var at_goal = false;
   var level = 1;
+  var runningSimulation = false;
+  whichButton();
   let cancel_simulation = false;
   function cancelSimulation(){
     cancel_simulation = true;
