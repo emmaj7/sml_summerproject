@@ -335,7 +335,7 @@ TO DO:
         }
       } else {
         //There's no collision on the x axis
-        hit = false;
+        hit = false;2
       }
       //`hit` will be either `true` or `false`
       return hit;
@@ -369,7 +369,7 @@ TO DO:
           whichButton();
           //dölj kör - visa cancel
         }
-      });
+      });2
       // recieves position. Updates car position in simulation.
       socket.on('position-sent-car', function(msg){
         if(onCar){
@@ -451,6 +451,7 @@ TO DO:
           tryAgainBtn.onclick = function() {
             hitModal.style.display = "none";
             runningSimulation = false;
+            whichButton();
           }
           window.onclick = function(event) {
             if (event.target == hitModal) {
