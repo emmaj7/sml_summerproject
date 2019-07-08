@@ -410,8 +410,7 @@ TO DO:
         console.log('At goal: ' + at_goal.toString());
         document.getElementById('modal');
 
-        // Completed level 1
-        if (at_goal.toString() === 'true'){
+        if (at_goal.toString() === 'true'){ // Completed level 1
           runningSimulation = false;
           whichButton();
           if (level === 1){
@@ -422,9 +421,7 @@ TO DO:
                 modal1.style.display = "none";
               }
             }
-          }
-          // Completed level 2
-          else if (level === 2){
+          } else if (level === 2){ // Completed level 2
             var modal2 = document.getElementById('myModal2');
             modal2.style.display = "block";
             window.onclick = function(event) {
@@ -432,8 +429,7 @@ TO DO:
                 modal2.style.display = "none";
               }
             }
-          // Completed level 3
-          } else if (level === 3){
+          } else if (level === 3){ // Completed level 3
             var modal3 = document.getElementById('myModal3');
             modal3.style.display = "block";
             window.onclick = function(event) {
@@ -442,9 +438,7 @@ TO DO:
               }
             }
           }
-        }
-        // Hit obstacle on either level
-        else if (obstacleHit) {
+        } else if (obstacleHit) { // Hit obstacle on either level
           var tryAgainBtn = document.getElementById('restartBtn');
           var hitModal = document.getElementById('myHitModal');
           hitModal.style.display = "block";
@@ -460,11 +454,7 @@ TO DO:
               whichButton();
             }
           }
-        }
-
-        // Hit wall on either level
-
-        else if (wallHit) {
+        } else if (wallHit) { // Hit wall on either level
           var tryAgainBtn = document.getElementById('restart2Btn');
           var wallModal = document.getElementById('myWallModal');
           wallModal.style.display = "block";
@@ -481,14 +471,11 @@ TO DO:
             }
           }
         } else {
-          if (forced_close) {
-            // Do nothing
-          runningSimulation = false;
+            if (forced_close) {
+              // Do nothing
+            runningSimulation = false;
           whichButton();
-          }
-
-          // Did not reach goal
-          else {
+          } else { // Did not reach goal
             var tryAgainBtn = document.getElementById('tryAgainBtn');
             var tryAgainModal = document.getElementById('myTryAgainModal');
             tryAgainModal.style.display = "block";

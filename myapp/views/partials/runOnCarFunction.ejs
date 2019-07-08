@@ -4,12 +4,8 @@ Runs the code on the car itself.
 Written by: Mikael Glamheden
 Date: 2019-06-27
 -->
-
-<script src="../node_modules/socket.io-client/dist/socket.io.js"></script>
-
 <script type="text/javascript">
-  function runOnCar(){
-
+  function postCodeToCar(){
     // Generate JavaScript code and run it.
     window.LoopTrap = 1000;
     Blockly.JavaScript.INFINITE_LOOP_TRAP =
@@ -23,9 +19,10 @@ Date: 2019-06-27
     $.post("/postcode2", codeObj, function(codeObj, status){
       console.log(`${codeObj.code} and status is ${status}`)
     });
+  }
+
+  function runOnCar(){
     var onCar = true;
-
     runSimulation(onCar)
-
   }
 </script>
