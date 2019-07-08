@@ -1,9 +1,13 @@
+body{
+  background-color: #494949 !important;
+}
+
 a.button{
   -webkit-appearance: button;
   -moz-appearance: button;
   appearance: button;
   text-decoration: none;
-  color: initial;
+  color: white;
   margin-top: auto;
 }
 
@@ -11,7 +15,7 @@ a.button{
 .cool-btn:enabled{
 position: relative;
 font-family: courier;
-font-size: 30px;
+font-size: 25px;
 text-decoration: none;
 color: white;
 font-weight: bold;

@@ -1,35 +1,44 @@
 <!DOCTYPE html>
-<!-- <link rel="stylesheet" type="text/css" href="../css/project.css"/> -->
 <html lang="en">
   <head>
     <title>TRIP TO MARS</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/assets/style.css" type="text/css">
+    <link rel="stylesheet" href="../assets/style.css" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <script src="../node_modules/node-blockly/blockly/blockly_compressed.js"></script>
     <script src="../node_modules/node-blockly/blockly/javascript_compressed.js"></script>
-        <script src="../node_modules/node-blockly/blockly/python_compressed.js"></script>
+    <script src="../node_modules/node-blockly/blockly/python_compressed.js"></script>
     <script src="../node_modules/node-blockly/blockly/blocks_compressed.js"></script>
-    <script src="../node_modules/node-blockly/blockly/msg/js/sv.js"></script>
+    <script src="../node_modules/node-blockly/blockly/msg/js/en.js"></script>
     <script src="./customBlocks/customBlocks.js"></script>
-
   </head>
+
   <body>
-    <h1 class="text-center" style="font-family: courier;">TRIP TO MARS</h1>
-    <h2 class="text-center" style="font-family: courier;">level 2</h1>
+    <div class="text-center" style="height:65px">
+      <h1 class="text-center" style="font-family: courier; margin-top: 10px; padding:0px; color:white; font-weight:bold;">TRIP TO MARS: level 2</h1>
+    </div>
     <div class="row">
       <div class="text-center">
-        <div id="blocklyDiv" class="col" style="height: 600px; width: 800px;"></div>
+        <div id="blocklyDiv" style="height: 800px; width: 800px; margin-left:120px;"></div>
         <xml id="toolbox" style="display: none">
           <block type="forward_block"></block>
           <block type="backward_block"></block>
           <block type="turn_block"></block>
         </xml>
-        <button onclick="runCode()" type="button" class="btn btn-danger" id="run-btn">Run the Code</button>
+        <!-- This partial has all the relevant code related to the simulation window. -->
+          <% include partials/simulationWindow.ejs %>
+        </div>
+
+        <div class="text-center" style="margin: 10px auto;">
+          <a href="#"><button class="cool-btn btn1 btn" onclick="runCode();" type="button" id="btn1">Run Code</button></a>
+          <a href="#"><button class="cool-btn btn1 btn" onclick="cancelSimulation()" type="button" id="btn1">Cancel</button></a>
+            <!-- <button onclick="runCode();" type="button" class="btn btn-danger" style="text-align:center;" id="run-btn">Run the Code</button> -->
+            <!-- <button type="button" onclick="cancelSimulation()"name="button">Cancel</button> -->
+        </div>
         <!-- Uncomment to see code for each try -->
         <!-- <div class="box" style="position: absolute; left: 1400px; top: 100px;">
           <h3>Python Code</h3>
@@ -38,18 +47,12 @@
       </div>
     </div>
  <div>
-     <!-- This partial has all the relevant code related to the simulation window. -->
-       <% include partials/simulationWindow.ejs %>
- </div>
- <div>
    <% include partials/modal2.ejs %>
  </div>
-
-
-
-
-
-  </body>
+ <div>
+   <% include partials/hitModal.ejs %>
+ </div>
+</body>
   <script>
   var workspace = Blockly.inject('blocklyDiv',
                                   {toolbox: document.getElementById('toolbox'),

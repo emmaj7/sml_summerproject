@@ -50,8 +50,8 @@ TO DO:
   app.renderer.backgroundColor = 0x061639;
   // access style of window
   app.renderer.view.style.position = "absolute";
-  app.renderer.view.style.left = '800px';
-  app.renderer.view.style.top = '100px';
+  app.renderer.view.style.left = '945px';
+  app.renderer.view.style.top = '75px';
   //Add the canvas that Pixi automatically created for you to the HTML document
   document.body.appendChild(app.view);
   // Variables for the simulation
@@ -355,7 +355,8 @@ TO DO:
                 modal1.style.display = "none";
               }
             }
-          } else if (level === 2){
+          }
+          else if (level === 2){
             var modal2 = document.getElementById('myModal2');
             modal2.style.display = "block";
             window.onclick = function(event) {
@@ -372,13 +373,36 @@ TO DO:
               }
             }
           }
-        } else if (hit) {
-          alert('You hit an obstacle. Try again!');
-        } else {
+        }
+        else if (hit) {
+          var tryAgainBtn = document.getElementById('restartBtn');
+          var hitModal = document.getElementById('myHitModal');
+          hitModal.style.display = "block";
+          tryAgainBtn.onclick = function() {
+            hitModal.style.display = "none";
+          }
+          window.onclick = function(event) {
+            if (event.target == hitModal) {
+              hitModal.style.display = "none";
+            }
+          }
+        }
+        else {
           if (forced_close) {
             // Do nothing
-          } else {
-            alert("Try again!");
+          }
+          else {
+            var tryAgainBtn = document.getElementById('tryAgainBtn');
+            var tryAgainModal = document.getElementById('myTryAgainModal');
+            tryAgainModal.style.display = "block";
+            tryAgainBtn.onclick = function() {
+              tryAgainModal.style.display = "none";
+            }
+            window.onclick = function(event) {
+              if (event.target == tryAgainModal) {
+                tryAgainModal.style.display = "none";
+              }
+            }
           }
         }
       });
