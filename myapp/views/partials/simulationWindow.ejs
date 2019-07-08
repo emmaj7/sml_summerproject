@@ -355,6 +355,9 @@ TO DO:
                                                         'start': start_coords,
                                                         'goal': goal_coords}));
           console.log('starting simulation');
+          runningSimulation = true;
+          whichButton();
+          //dölj kör - visa cancel
         }
       });
       // recieves position. Updates car position in simulation.
@@ -397,8 +400,10 @@ TO DO:
         console.log('At goal: ' + at_goal.toString());
         document.getElementById('modal');
 
-        // Move this later!
+        // Completed level 1
         if (at_goal.toString() === 'true'){
+          runningSimulation = false;
+          whichButton();
           if (level === 1){
             var modal1 = document.getElementById('myModal1');
             modal1.style.display = "block";
@@ -408,6 +413,7 @@ TO DO:
               }
             }
           }
+          // Completed level 2
           else if (level === 2){
             var modal2 = document.getElementById('myModal2');
             modal2.style.display = "block";
@@ -416,6 +422,7 @@ TO DO:
                 modal2.style.display = "none";
               }
             }
+          // Completed level 3
           } else if (level === 3){
             var modal3 = document.getElementById('myModal3');
             modal3.style.display = "block";
@@ -425,42 +432,65 @@ TO DO:
               }
             }
           }
-<<<<<<< HEAD
         }
-        else if (hit) {
+        // Hit obstacle on either level
+        else if (obstacleHit) {
           var tryAgainBtn = document.getElementById('restartBtn');
           var hitModal = document.getElementById('myHitModal');
           hitModal.style.display = "block";
           tryAgainBtn.onclick = function() {
             hitModal.style.display = "none";
+            runningSimulation = false;
           }
           window.onclick = function(event) {
             if (event.target == hitModal) {
               hitModal.style.display = "none";
+              runningSimulation = false;
+              whichButton();
             }
           }
         }
-        else {
-=======
-        } else if (obstacleHit) {
-          alert('You hit an obstacle! Try again.');
-        } else if (wallHit) {
-          alert('You hit the wall! Try again.'); // replace with nice alert screen.
+
+        // Hit wall on either level
+
+        else if (wallHit) {
+          var tryAgainBtn = document.getElementById('restart2Btn');
+          var wallModal = document.getElementById('myWallModal');
+          wallModal.style.display = "block";
+          tryAgainBtn.onclick = function() {
+            wallModal.style.display = "none";
+            runningSimulation = false;
+            whichButton();
+          }
+          window.onclick = function(event) {
+            if (event.target == wallModal) {
+              wallModal.style.display = "none";
+              runningSimulation = false;
+              whichButton();
+            }
+          }
         } else {
->>>>>>> 3b701095200c7abb0067f3210f7e26f5124369b1
           if (forced_close) {
             // Do nothing
+          runningSimulation = false;
+          whichButton();
           }
+
+          // Did not reach goal
           else {
             var tryAgainBtn = document.getElementById('tryAgainBtn');
             var tryAgainModal = document.getElementById('myTryAgainModal');
             tryAgainModal.style.display = "block";
             tryAgainBtn.onclick = function() {
               tryAgainModal.style.display = "none";
+              runningSimulation = false;
+              whichButton();
             }
             window.onclick = function(event) {
               if (event.target == tryAgainModal) {
                 tryAgainModal.style.display = "none";
+                runningSimulation = false;
+                whichButton();
               }
             }
           }

@@ -32,25 +32,22 @@
         <!-- This partial has all the relevant code related to the simulation window. -->
           <% include partials/simulationWindow.ejs %>
         </div>
+    </div>
 
-        <div class="text-center" style="margin: 10px auto;">
-          <a href="#"><button class="cool-btn btn1 btn" onclick="runCode();" type="button" id="btn1">Run Code</button></a>
-          <a href="#"><button class="cool-btn btn1 btn" onclick="cancelSimulation()" type="button" id="btn1">Cancel</button></a>
-            <!-- <button onclick="runCode();" type="button" class="btn btn-danger" style="text-align:center;" id="run-btn">Run the Code</button> -->
-            <!-- <button type="button" onclick="cancelSimulation()"name="button">Cancel</button> -->
-        </div>
-        <!-- Uncomment to see code for each try -->
-        <!-- <div class="box" style="position: absolute; left: 1400px; top: 100px;">
-          <h3>Python Code</h3>
-          <pre id= 'code' style="text-align:left;"></pre>
-        </div> -->
-      </div>
+    <div class="text-center" style="margin: 10px auto;">
+      <a href="#"><button class="cool-btn btn1 btn" onclick="runCode();" type="button" id="btn1">Run Code</button></a>
+      <a href="#"><button class="cool-btn btn1 btn" onclick="cancelSimulation()" type="button" id="btn1">Cancel</button></a>
+        <!-- <button onclick="runCode();" type="button" class="btn btn-danger" style="text-align:center;" id="run-btn">Run the Code</button> -->
+        <!-- <button type="button" onclick="cancelSimulation()"name="button">Cancel</button> -->
     </div>
  <div>
    <% include partials/modal2.ejs %>
  </div>
  <div>
    <% include partials/hitModal.ejs %>
+ </div>
+ <div>
+   <% include partials/wallModal.ejs %>
  </div>
 </body>
   <script>

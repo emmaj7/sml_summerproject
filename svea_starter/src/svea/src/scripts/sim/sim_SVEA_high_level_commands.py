@@ -353,14 +353,14 @@ def main(argv = ['SVEA0',
 
     from_file = True
     if from_file:
-        car = deploy(name, start, goal) # Should be part of the code later on.
+        rover = deploy(name, start, goal) # Should be part of the code later on.
         # File with the code to execute
         dir_path = os.path.dirname(os.path.realpath(__file__))
         filename = dir_path + '/../../../../../../myapp/code.py'
         c = cc.CarCommands(filename)
         # variables to pass on
         g_var = {'CarHighLevelCommands': CarHighLevelCommands}
-        l_var = {'car': car}
+        l_var = {'rover': rover}
         c.execute_commands(name, g_var, l_var)
     else:
         # test code.
@@ -370,7 +370,7 @@ def main(argv = ['SVEA0',
         car.turn_right()
         car.drive_backwards()
         car.drive_backwards()
-    log_to_file(car.data_log)
+    log_to_file(rover.data_log)
     rospy.signal_shutdown('Program end')
 
 if __name__ == '__main__':

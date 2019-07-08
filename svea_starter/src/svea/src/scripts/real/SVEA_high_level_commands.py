@@ -352,7 +352,7 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
     # name = 'SVEA5'
     # goal = [4, 0]
     from_file = True
-    car = deploy(name, goal) # This should be part of the code later on.
+    rover = deploy(name, goal) # This should be part of the code later on.
     # car = CarHighLevelCommands(simulation)
     if from_file:
         # File with the code to execute
@@ -362,14 +362,14 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
 
         # variables to pass on
         g_var = {'CarHighLevelCommands': CarHighLevelCommands}
-        l_var = {'car': car}
+        l_var = {'rover': rover}
         c.execute_commands(name, g_var, l_var)
     else:
         car.drive_forward()
         car.turn_right()
         # car.turn_right()
         # car.drive_forward()
-    log_to_file(car.data_log)
+    log_to_file(rover.data_log)
     # rospy.signal_shutdown('Program end')
 if __name__ == '__main__':
     main(sys.argv[1:])

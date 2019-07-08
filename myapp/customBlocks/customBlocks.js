@@ -1,11 +1,11 @@
 Blockly.Blocks['forward_block'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("kör framåt");
+        .appendField("drive forward");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(290);
-    this.setTooltip("Få bilen att köra framåt");
+    this.setTooltip("Makes the rover drive forward");
     this.setHelpUrl("");
   }
 };
@@ -21,7 +21,7 @@ Blockly.Blocks['forward_block'] = {
 // };
 
 Blockly.Python['forward_block'] = function(block) {
-    var code = 'car.drive_forward()\n';
+    var code = 'rover.drive_forward()\n';
     // var FileSaver = require('.//file-saver');
     // var blob = new Blob([code], {type: "text/plain;charset=utf-8"});
     // FileSaver.saveAs(blob, "forthecarlol.txt");
@@ -33,17 +33,17 @@ Blockly.Python['forward_block'] = function(block) {
 Blockly.Blocks['backward_block'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField("kör bakåt");
+        .appendField("drive backwards");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(290);
-    this.setTooltip("Få bilen att köra bakåt");
+    this.setTooltip("Makes the rover drive backwards");
     this.setHelpUrl("");
   }
 };
 
 Blockly.Python['backward_block'] = function(block) {
-    var code = 'car.drive_backwards()\n';
+    var code = 'rover.drive_backwards()\n';
     // var FileSaver = require('.//file-saver');
     // var blob = new Blob([code], {type: "text/plain;charset=utf-8"});
     // FileSaver.saveAs(blob, "forthecarlol.txt");
@@ -55,12 +55,12 @@ Blockly.Python['backward_block'] = function(block) {
 Blockly.Blocks['turn_block'] = {
 init: function() {
   this.appendDummyInput()
-      .appendField("sväng")
-      .appendField(new Blockly.FieldDropdown([["vänster","left"], ["höger","right"]]), "DIRECTION");
+      .appendField("turn")
+      .appendField(new Blockly.FieldDropdown([["left","left"], ["left","right"]]), "DIRECTION");
   this.setPreviousStatement(true, null);
   this.setNextStatement(true, null);
   this.setColour(290);
-this.setTooltip("Få bilen att svänga till höger eller vänster!");
+this.setTooltip("Makes the rover turn left or right");
 this.setHelpUrl("");
 }
 };
@@ -79,10 +79,10 @@ this.setHelpUrl("");
 Blockly.Python['turn_block'] = function (block) {
     direction = block.getFieldValue('DIRECTION');
     if (direction == 'left') {
-        var code = 'car.turn_left()\n'
+        var code = 'rover.turn_left()\n'
     }
     if (direction == 'right') {
-        var code = 'car.turn_right()\n'
+        var code = 'rover.turn_right()\n'
     }
     return code;
 };

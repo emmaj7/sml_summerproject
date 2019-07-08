@@ -7,7 +7,6 @@ a.button{
   -moz-appearance: button;
   appearance: button;
   text-decoration: none;
-  color: white;
   margin-top: auto;
 }
 
@@ -17,7 +16,7 @@ position: relative;
 font-family: courier;
 font-size: 25px;
 text-decoration: none;
-color: white;
+color: white !important;
 font-weight: bold;
 border: 2px solid #ff6d44;
 padding: 14px 50px;
@@ -59,7 +58,7 @@ text-decoration: none;
 .btn1:enabled:hover::before{
 height: 300%;
 font-size: 25px;
-color:white;
+
 }
 
 pre {
