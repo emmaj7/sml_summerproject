@@ -24,7 +24,7 @@ sys.path.append(os.path.abspath(svea))
 
 from models.bicycle_simple import SimpleBicycleState, plot_car
 from simulators.sim_SVEA_simple import SimSVEA
-from controllers.control_interfaces import ControlInterface
+from controllers.control_interfaces_sim import ControlInterface
 
 dirname = os.path.dirname(__file__)
 pure_pursuit = os.path.join(dirname,
