@@ -1,3 +1,29 @@
+# ID:28727408650888410
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:361280073914222800
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:361280073914222800
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:627406526492663000
+rover.drive_forward()
+#####
+# ID:627406526492663000
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:627406526492663000
+rover.drive_forward()
+#####
+# ID:205825611604437020
+rover.drive_forward()
+rover.drive_forward()
+#####
 # ID:933927956643038300
 rover.drive_forward()
 #####
