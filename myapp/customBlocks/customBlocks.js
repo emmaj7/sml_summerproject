@@ -56,7 +56,7 @@ Blockly.Blocks['turn_block'] = {
 init: function() {
   this.appendDummyInput()
       .appendField("turn")
-      .appendField(new Blockly.FieldDropdown([["left","left"], ["left","right"]]), "DIRECTION");
+      .appendField(new Blockly.FieldDropdown([["left","left"], ["right","right"]]), "DIRECTION");
   this.setPreviousStatement(true, null);
   this.setNextStatement(true, null);
   this.setColour(290);
