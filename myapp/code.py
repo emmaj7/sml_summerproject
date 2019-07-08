@@ -1,3 +1,79 @@
+# ID:280350186889675400
+rover.drive_forward()
+#####
+# ID:7521097899821028
+rover.drive_forward()
+#####
+# ID:7521097899821028
+rover.drive_forward()
+#####
+# ID:40475169940644040
+rover.drive_forward()
+#####
+# ID:40475169940644040
+rover.drive_forward()
+#####
+# ID:596792734603069300
+rover.drive_forward()
+#####
+# ID:41889461546048664
+rover.drive_forward()
+#####
+# ID:292365762407656300
+rover.turn_left()
+rover.drive_forward()
+#####
+# ID:168029441553374530
+rover.turn_left()
+rover.drive_forward()
+#####
+# ID:168029441553374530
+rover.turn_left()
+rover.drive_forward()
+#####
+# ID:168029441553374530
+rover.turn_left()
+rover.drive_forward()
+#####
+# ID:168029441553374530
+rover.turn_left()
+rover.drive_forward()
+#####
+# ID:35225536591018790
+rover.drive_forward()
+#####
+# ID:35225536591018790
+rover.drive_forward()
+#####
+# ID:35225536591018790
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:35225536591018790
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:35225536591018790
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:35225536591018790
+rover.drive_forward()
+#####
+# ID:423485571216086100
+rover.drive_forward()
+#####
+# ID:110374761268063780
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:110374761268063780
+rover.drive_forward()
+rover.drive_forward()
+#####
 # ID:933927956643038300
 rover.drive_forward()
 #####
