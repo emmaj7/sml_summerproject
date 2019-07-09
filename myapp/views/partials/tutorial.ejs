@@ -1,3 +1,9 @@
+<!--
+Partial containing code for help-window shown when help-button is clicked.
+Emma Johansson
+Last updated: 2019-07-09
+-->
+
 <div class="tutorial" id="myTutorial">
   <div class="tutorialContent">
       <div class="tutorialHeader">
@@ -17,16 +23,16 @@
   </div>
 </div>
 <script type="text/javascript">
-    function showTutorial(){
-    var helpBtn = document.getElementById('helpBtn');
-    var tutorial = document.getElementById('myTutorial');
-    tutorial.style.display = "block";
-    helpBtn.onclick = function() {
+  function showTutorial(){
+  var helpBtn = document.getElementById('helpBtn');
+  var tutorial = document.getElementById('myTutorial');
+  tutorial.style.display = "block";
+  helpBtn.onclick = function() {
+    tutorial.style.display = "none";
+  }
+  window.onclick = function(event) {
+    if (event.target == tutorial){
       tutorial.style.display = "none";
-    }
-    window.onclick = function(event) {
-      if (event.target == tutorial){
-        tutorial.style.display = "none";
       }
     }
   }

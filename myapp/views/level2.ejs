@@ -1,22 +1,16 @@
+<!--
+Level 2.
+Emma Johansson
+Last updated: 2019-07-09
+-->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>TRIP TO MARS</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../assets/style.css" type="text/css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
-    <script src="../node_modules/node-blockly/blockly/blockly_compressed.js"></script>
-    <script src="../node_modules/node-blockly/blockly/javascript_compressed.js"></script>
-    <script src="../node_modules/node-blockly/blockly/python_compressed.js"></script>
-    <script src="../node_modules/node-blockly/blockly/blocks_compressed.js"></script>
-    <script src="../node_modules/node-blockly/blockly/msg/js/en.js"></script>
-    <script src="./customBlocks/customBlocks.js"></script>
+    <!-- This partial contains all imports. -->
+    <% include partials/imports.ejs %>
   </head>
-
   <body>
     <div class="text-center" style="height:65px">
       <h1 class="text-center" style="font-family: courier; margin-top: 10px; padding:0px; color:white; font-weight:bold;">TRIP TO MARS: level 2</h1>
@@ -27,33 +21,30 @@
         <xml id="toolbox" style="display: none">
           <block type="forward_block"></block>
           <block type="backward_block"></block>
-          <block type="turn_block"></block>
+          <block type="turn_block_left"></block>
+          <block type="turn_block_right"></block>
         </xml>
         <!-- This partial has all the relevant code related to the simulation window. -->
           <% include partials/simulationWindow.ejs %>
         </div>
     </div>
-
-    <div class="text-center" style="margin: 10px auto;">
-      <a href="#"><button class="cool-btn btn1 btn" onclick="runCode();" type="button" id="runBtn">Run Code</button></a>
-      <a href="#"><button class="cool-btn btn1 btn" onclick="cancelSimulation()" type="button" id="cancelBtn">Cancel</button></a>
-        <!-- <button onclick="runCode();" type="button" class="btn btn-danger" style="text-align:center;" id="run-btn">Run the Code</button> -->
-        <!-- <button type="button" onclick="cancelSimulation()"name="button">Cancel</button> -->
-    </div>
+    <!-- This partial contains function which shows/hides run/cancel-buttons. -->
+    <% include partials/whichButton.ejs %>
  <div>
+  <!-- This partial contains modal shown if goal is reached. -->
    <% include partials/modal2.ejs %>
- </div>
- <div>
+
+  <!-- This partial contains modal shown if goal is not reached. -->
    <% include partials/tryAgainModal.ejs %>
- </div>
- <div>
+
+   <!-- This partial contains modal shown if obstacle is hit. -->
    <% include partials/hitModal.ejs %>
- </div>
- <div>
+
+   <!-- This partial contains modal shown if wall is hit. -->
    <% include partials/wallModal.ejs %>
- </div>
- <div>
-   <% include partials/whichButton.ejs %>
+
+   <!-- This partial contains modal shown if help-button is clicked. -->
+   <% include partials/tutorial.ejs %>
  </div>
 </body>
   <script>
@@ -64,17 +55,20 @@
                                   theme: Blockly.Themes.HighContrast});
   // ID generated uniquely for each window.
   var unique_id = (Math.random()*Math.pow(10,18)).toString();
-  var goal_coords = {'x': 0.80, 'y': 0.9, 'yaw': 0}; // The position of the goal for level 2.
+  // The position of the goal for level 2.
+  var goal_coords = {'x': 0.80, 'y': 0.9, 'yaw': 0};
+  // Position of obstacles on level 2
   var obstacle_coords = [{x: 0.65, y: 0, yaw: 0, size: 0.3},
-                         {x: -1.1, y: 1.1, yaw: 0, size: 0.1}]; // Position of obstacles on level 2
+                         {x: -1.1, y: 1.1, yaw: 0, size: 0.3}];
   var level = 2;
   var runningSimulation = false;
-  whichButton();
   let cancel_simulation = false;
   function cancelSimulation(){
     cancel_simulation = true;
   }
   // This function is the same for all pages.
   <% include partials/runCodeFunction.js %>
+  // Checking which button should be shown
+  whichButton();
   </script>
 </html>

@@ -1,90 +1,76 @@
+<!--
+Level 1.
+Emma Johansson
+Last updated: 2019-07-09
+-->
+
 <!DOCTYPE html>
-<!-- <link rel="stylesheet" type="text/css" href="../css/project.css"/> -->
 <html lang="en">
   <head>
     <title>TRIP TO MARS</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/style.css" type="text/css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery.js"></script>
-    <script src="../node_modules/node-blockly/blockly/blockly_compressed.js"></script>
-    <script src="../node_modules/node-blockly/blockly/javascript_compressed.js"></script>
-    <script src="../node_modules/node-blockly/blockly/python_compressed.js"></script>
-    <script src="../node_modules/node-blockly/blockly/blocks_compressed.js"></script>
-    <script src="../node_modules/node-blockly/blockly/msg/js/en.js"></script>
-    <script src="./customBlocks/customBlocks.js"></script>
+    <!-- This partial contains all imports. -->
+    <% include partials/imports.ejs %>
   </head>
-
   <body>
-    <div class="text-center row" style="height:65px">
+    <div class="text-center" style="height:65px">
       <h1 class="text-center" style="font-family: courier; margin-top: 10px; padding:0px; color:white; font-weight:bold;">TRIP TO MARS: level 1</h1>
     </div>
-    <div class="row">
+    <div>
         <div id="blocklyDiv" style="height: 800px; width: 800px; margin-left:120px;"></div> <!-- borde vara 100px till left? -->
         <xml id="toolbox" style="display: none">
           <block type="forward_block"></block>
           <block type="backward_block"></block>
-          <block type="turn_block"></block>
+          <block type="turn_block_left"></block>
+          <block type="turn_block_right"></block>
         </xml>
         <!-- This partial has all the relevant code related to the simulation window. -->
           <% include partials/simulationWindow.ejs %>
     </div>
-        <!-- Uncomment to see code for each try -->
-        <!-- <div class="box" style="position: absolute; left: 1400px; top: 100px;">
-          <h3>Python Code</h3>
-          <pre id= 'code' style="text-align:left;"></pre>
-        </div> -->
-        <div class="text-center" style="margin-top: 10px;">
-          <a href="#"><button class="cool-btn btn1 btn" onclick="runCode();" type="button"  id="runBtn">Run Code</button></a>
-          <a href="#"><button class="cool-btn btn1 btn" onclick="cancelSimulation()" type="button"  id="cancelBtn">Cancel</button></a>
-            <!-- <button onclick="runCode();" type="button" class="btn btn-danger" style="text-align:center;" id="run-btn">Run the Code</button> -->
-            <!-- <button type="button" onclick="cancelSimulation()"name="button">Cancel</button> -->
-        </div>
-  <div>
-    <% include partials/modal1.ejs %>
-  </div>
-  <div>
-    <% include partials/tryAgainModal.ejs %>
-  </div>
-  <div>
-    <% include partials/hitModal.ejs %>
-  </div>
-  <div>
-    <% include partials/wallModal.ejs %>
-  </div>
-  <div>
+
+    <!-- This partial contains function which shows/hides run/cancel-buttons. -->
     <% include partials/whichButton.ejs %>
-  </div>
+
   <div>
+    <!-- This partial contains modal shown if goal is reached. -->
+    <% include partials/modal1.ejs %>
+
+    <!-- This partial contains modal shown if goal is not reached. -->
+    <% include partials/tryAgainModal.ejs %>
+
+    <!-- This partial contains modal shown if obstacle is hit. -->
+    <% include partials/hitModal.ejs %>
+
+    <!-- This partial contains modal shown if wall is hit. -->
+    <% include partials/wallModal.ejs %>
+
+    <!-- This partial contains modal shown if help-button is clicked. -->
     <% include partials/tutorial.ejs %>
   </div>
 
-
   </body>
   <script>
-  var workspace = Blockly.inject('blocklyDiv',
-                  {toolbox: document.getElementById('toolbox'),
-                  verticalLayout: true,
-                  scrollbars: false,
-                  theme: Blockly.Themes.HighContrast});
-  // ID generated uniquely for each window.
-  var unique_id = (Math.random()*Math.pow(10,18)).toString();
-  var goal_coords = {'x': 0.80, 'y': 0.9, 'yaw': 0}; // The position of the goal for level 1.
-  var obstacle_coords = []; // Position of obstacles on level
-
-  var at_goal = false;
-  var level = 1;
-  var runningSimulation = false;
-  whichButton();
-  let cancel_simulation = false;
-  function cancelSimulation(){
-    cancel_simulation = true;
-  }
+    // Injecting workspace into div
+    var workspace = Blockly.inject('blocklyDiv',
+                    {toolbox: document.getElementById('toolbox'),
+                    verticalLayout: true,
+                    scrollbars: false,
+                    theme: Blockly.Themes.HighContrast});
+    // ID generated uniquely for each window.
+    var unique_id = (Math.random()*Math.pow(10,18)).toString();
+    // The position of the goal for level 1.
+    var goal_coords = {'x': 0.80, 'y': 0.9, 'yaw': 0};
+    // Position of obstacles on level
+    var obstacle_coords = [];
+    var at_goal = false;
+    var level = 1;
+    var runningSimulation = false;
+    let cancel_simulation = false;
+    function cancelSimulation(){
+      cancel_simulation = true;
+    }
     // This function is the same for all pages.
-  <% include partials/runCodeFunction.js %>
-
+    <% include partials/runCodeFunction.js %>
+    // Checking which button should be shown
+    whichButton();
   </script>
 </html>
