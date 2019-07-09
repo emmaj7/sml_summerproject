@@ -45,7 +45,7 @@ position: absolute;
 top: 50%;
 left: 50%;
 transform: translate(-50%, -50%);
-z-index: -1;
+z-index: 999;
 transition: all 0.6s ease;
 }
 
@@ -114,7 +114,7 @@ h1{
 
 /* Modal Content */
 .modal-content {
-text-align: center;
+ text-align: center;
  position: relative;
  background-color: white;
  text-align: center;
@@ -138,4 +138,53 @@ p{
 
 #header{
   font-family: courier;
+}
+
+.tutorial {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width of screen */
+  height: 100%; /* Full height of screen*/
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Tutorial Content/Box */
+.tutorialContent {
+  left: 0px;
+  width:20000px;
+}
+
+/* Tutorial Header */
+.tutorialHeader {
+ text-align: center;
+ padding: 10px 16px;
+ background-color: #242424;
+ color: white;
+}
+
+.tutorialBody {
+  padding: 2px 16px;
+}
+
+/* Tutorial Content */
+.tutorialContent {
+ position: relative;
+ background-color: white;
+ margin: auto;
+ padding: 0;
+ width: 50%;
+ box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+ animation-name: animateleft;
+ animation-duration: 0.7s
+}
+
+/* Add Animation */
+@keyframes animateleft {
+ from {left: -1000px; opacity: 0}
+ to {left: 0px; opacity: 1}
 }

@@ -19,7 +19,8 @@
   </head>
 
   <body>
-    <div class="text-center" style="height:65px">
+    <div class="text-center row" style="height:65px">
+      <button type="button" name="helpBtn" onclick="showTutorial()">Help pls</button>
       <h1 class="text-center" style="font-family: courier; margin-top: 10px; padding:0px; color:white; font-weight:bold;">TRIP TO MARS: level 1</h1>
     </div>
     <div class="row">
@@ -58,6 +59,9 @@
   <div>
     <% include partials/whichButton.ejs %>
   </div>
+  <div>
+    <% include partials/tutorial.ejs %>
+  </div>
 
 
   </body>
@@ -69,10 +73,9 @@
                   theme: Blockly.Themes.HighContrast});
   // ID generated uniquely for each window.
   var unique_id = (Math.random()*Math.pow(10,18)).toString();
-  var goal_coords = {'x': 0.7, 'y': -1.1, 'yaw': 0}; // The position of the goal for level 1.
-  // var obstacle_coords = [{x: -0.4, y: 0, yaw: 0},
-  //                        {x: 0.5, y: 1 , yaw: 0}]; // Position of obstacles on level
-  var obstacle_coords = [];
+  var goal_coords = {'x': 0.80, 'y': -0.0, 'yaw': 0}; // The position of the goal for level 1.
+  var obstacle_coords = [{x: 0.5, y: -1.35, yaw: 0},
+                         {x: 0.5, y: 1 , yaw: 0}]; // Position of obstacles on level
 
   var at_goal = false;
   var level = 1;
@@ -82,7 +85,7 @@
   function cancelSimulation(){
     cancel_simulation = true;
   }
-  // This function is the same for all pages.
+    // This function is the same for all pages.
   <% include partials/runCodeFunction.js %>
 
   </script>
