@@ -169,6 +169,7 @@ TO DO:
     car.position.set(startPx.x,startPx.y);
     car.rotation = startPx.yaw;
 
+
     hitbox = new Sprite(resources["./images/circle.png"].texture);
     hitbox.anchor.x = 0.5; hitbox.anchor.y = 0.5;
     hitbox.height = car.height - 30; hitbox.width = car.width;
@@ -244,6 +245,7 @@ TO DO:
     }
     // updates position of car.
     function drive(){
+      // console.log(hitbox.width);
       let coords = coordinateTransform(x, y, yaw);
       car.position.set(coords.x, coords.y);
       car.rotation = coords.yaw;
@@ -307,40 +309,108 @@ TO DO:
       }
       return hit;
     }
+    function getAxisNormal(ps,i){
+      // returns vecot perpendicular to side i of polygon.
+      if (i === ps.length - 1) {
+        p1 = ps[i]
+        p2 = ps[1];
+      } else {
+        let p1 = ps[i];
+        let p2 = ps[i + 1];
+      }
+      // b is unit vector perpendicular to one edge of r1 with lenght 1
+      let v = [p1[0]-p2[0], p1[1]-p1[1]];
+      v = [1, -v[0]/v[1]];
+      let b = [0,0];
+      b[0] = v[0]/Math.sqrt(Math.pow(v[0],2) + Math.pow(v[1],2));
+      b[1] = v[1]/Math.sqrt(Math.pow(v[0],2) + Math.pow(v[1],2));
+      return b;
+    }
     // checks for collision between two sprites
     function collision(r1, r2) {
-      //Define the variables we'll need to calculate
-      let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
-      //hit will determine whether there's a collision
-      hit = false;
-      //Find the half-widths and half-heights of each sprite
-      r1.halfWidth = r1.width / 2;
-      r1.halfHeight = r1.height / 2;
-      r2.halfWidth = r2.width / 2;
-      r2.halfHeight = r2.height / 2;
-      //Calculate the distance vector between the sprites
-      vx = r1.x - r2.x;
-      vy = r1.y - r2.y;
-      //Figure out the combined half-widths and half-heights
-      combinedHalfWidths = r1.halfWidth + r2.halfWidth;
-      combinedHalfHeights = r1.halfHeight + r2.halfHeight;
-      //Check for a collision on the x axis
-      if (Math.abs(vx) < combinedHalfWidths) {
-        //A collision might be occurring. Check for a collision on the y axis
-        if (Math.abs(vy) < combinedHalfHeights) {
-          //There's definitely a collision happening
-          hit = true;
-        } else {
-          //There's no collision on the y axis
-          hit = false;
+      // corner points of r1
+      w1 = r1.width; h1 = r1.height;
+      phi1 = r1.rotation;
+      p1 = [r1.x + (w1/2)*Math.cos(phi1) - (h1/2)*Math.sin(phi1),
+            r1.y + (w1/2)*Math.sin(phi1) + (h1/2)*Math.cos(phi1)];
+      p2 = [r1.x + (w1/2)*Math.cos(phi1) + (h1/2)*Math.sin(phi1),
+            r1.y + (w1/2)*Math.sin(phi1) - (h1/2)*Math.sin(phi1)];
+      p3 = [r1.x - (w1/2)*Math.cos(phi1) - (h1/2)*Math.sin(phi1),
+            r1.y - (w1/2)*Math.sin(phi1) + (h1/2)*Math.sin(phi1)];
+      p4 = [r1.x - (w1/2)*Math.cos(phi1) + (h1/2)*Math.sin(phi1),
+            r1.y - (w1/2)*Math.sin(phi1) - (h1/2)*Math.cos(phi1)];
+      corners_r1 = [p1, p2, p3, p4];
+      // corner points of r2
+      w2 = r2.width; h2 = r2.height;
+      phi2 = r2.rotation;
+      q1 = [r2.x + (w2/2)*Math.cos(phi2) - (h2/2)*Math.sin(phi2),
+            r2.y + (w2/2)*Math.sin(phi2) + (h2/2)*Math.cos(phi2)];
+      q2 = [r2.x + (w2/2)*Math.cos(phi2) + (h2/2)*Math.sin(phi2),
+            r2.y + (w2/2)*Math.sin(phi2) - (h2/2)*Math.sin(phi2)];
+      q3 = [r2.x - (w2/2)*Math.cos(phi2) - (h2/2)*Math.sin(phi2),
+            r2.y - (w2/2)*Math.sin(phi2) + (h2/2)*Math.sin(phi2)];
+      q4 = [r2.x - (w2/2)*Math.cos(phi2) + (h2/2)*Math.sin(phi2),
+            r2.y - (w2/2)*Math.sin(phi2) - (h2/2)*Math.cos(phi2)];
+      corners_r2 = [q1, q2, q3, q4];
+
+      for (var i = 0; i < corners_r1.length; i++) {
+        let b = getAxisNormal(corners_r1,i);
+
+        let proj_r1 = []; // corners of r1 projected on b
+        for (var i = 0; i < corners_r1.length; i++) {
+          let a = b[0]*corners_r1[i][0] + b[1]*corners_r1[i][1];
+          proj_r1.push(a);
         }
-      } else {
-        //There's no collision on the x axis
-        hit = false;2
+        let proj_r2 = []; // corners of r2 projected on b
+        for (var i = 0; i < corners_r2.length; i++) {
+          let a = b[0]*corners_r2[i][0] + b[1]*corners_r2[i][1];
+          proj_r2.push(a);
+        }
+        max1 = Math.max(...proj_r1);
+        min1 = Math.min(...proj_r1);
+        max2 = Math.max(...proj_r2);
+        min2 = Math.min(...proj_r2);
+        d1 = min1 - max2;
+        d2 = min2 - max1;
+        if (d1 > 0 || d2 > 0){
+          return false;
+        }
       }
-      //`hit` will be either `true` or `false`
-      return hit;
-    };
+      return true;  
+    }
+    // function collision(r1, r2) {
+    //   //Define the variables we'll need to calculate
+    //   let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
+    //   //hit will determine whether there's a collision
+    //   hit = false;
+    //   //Find the half-widths and half-heights of each sprite
+    //   r1.halfWidth = r1.width / 2;
+    //   r1.halfHeight = r1.height / 2;
+    //   r2.halfWidth = r2.width / 2;
+    //   r2.halfHeight = r2.height / 2;
+    //   //Calculate the distance vector between the sprites
+    //   vx = r1.x - r2.x;
+    //   vy = r1.y - r2.y;
+    //   //Figure out the combined half-widths and half-heights
+    //   combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+    //   combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+    //   //Check for a collision on the x axis
+    //   if (Math.abs(vx) < combinedHalfWidths) {
+    //     //A collision might be occurring. Check for a collision on the y axis
+    //     if (Math.abs(vy) < combinedHalfHeights) {
+    //       //There's definitely a collision happening
+    //       hit = true;
+    //     } else {
+    //       //There's no collision on the y axis
+    //       hit = false;
+    //     }
+    //   } else {
+    //     //There's no collision on the x axis
+    //     hit = false;2
+    //   }
+    //   //`hit` will be either `true` or `false`
+    //   return hit;
+    // };
 
     // Called when run code button pressed.
     function runSimulation(onCar){
