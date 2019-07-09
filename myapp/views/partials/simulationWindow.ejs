@@ -129,13 +129,13 @@ TO DO:
       obstacle_drawing = new Sprite(resources["./images/stone.png"].texture);
       obstacle.scale.x = 0.3; obstacle.scale.y = 0.3;
       obstacle.anchor.x = 0.5; obstacle.anchor.y = 0.5;
-      obstacle_drawing.scale.x = 0.3; obstacle_drawing.scale.y = 0.3;
+      obstacle_drawing.scale.x = obstacle_coords.size;
+      obstacle_drawing.scale.y = obstacle_coords.size;
       obstacle_drawing.anchor.x = 0.5; obstacle_drawing.anchor.y = 0.5;
       obstaclePx = coordinateTransform(obstacle_coords[i].x,
                                         obstacle_coords[i].y,
                                         obstacle_coords[i].yaw);
       obstacle.position.set(obstaclePx.x, obstaclePx .y);
-      obstacle.rotation = obstaclePx.yaw;
       obstacle_drawing.position.set(obstaclePx.x, obstaclePx .y);
       obstacle_drawing.rotation = obstaclePx.yaw;
 
