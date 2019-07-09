@@ -65,8 +65,8 @@
   // ID generated uniquely for each window.
   var unique_id = (Math.random()*Math.pow(10,18)).toString();
   var goal_coords = {'x': 0.80, 'y': 0.9, 'yaw': 0}; // The position of the goal for level 2.
-  var obstacle_coords = [{x: 0.65, y: 0, yaw: 0},
-                         {x: -1.1, y: 1.1, yaw: 0}]; // Position of obstacles on level 2
+  var obstacle_coords = [{x: 0.65, y: 0, yaw: 0, size: 0.3},
+                         {x: -1.1, y: 1.1, yaw: 0, size: 0.1}]; // Position of obstacles on level 2
   var level = 2;
   var runningSimulation = false;
   whichButton();
