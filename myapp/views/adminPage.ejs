@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <script src="../node_modules/socket.io-client/dist/socket.io.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/style.css" type="text/css">
+    <title>Admin Page</title>
+  </head>
+  <body>
+    <% include partials/runOnCarFunction.ejs %>
+    <a href="#"><button class="cool-btn btn1 btn" onclick="runOnCar()" type="button"  id="cancelBtn">Run on Car</button></a>
+    <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCode()" id="cancelBtn">Clear code.py</button></a>
+    <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCodeReal()" id="cancelBtn">Clear code_real.py</button></a>
+    <a href="#"><button class="cool-btn btn1 btn" type="button" onclick='inspectCode()' id="cancelBtn">Inspect Code</button></a>
+    <script type="text/javascript">
+      function inspectCode(){
+        var socket = io();
+        socket.on('connect', function(){
+          socket.emit('inspectCode', function(){
+          });
+          socket.on('inspectCodeRes', function(msg){
+            alert(msg);
+          });
+        });
+      }
+      function clearCode(){
+        var socket = io();
+        socket.on('connect', function(){
+          socket.emit('clearCode', function(){
+          });
+          socket.on('clearCodeRes', function(msg){
+            alert(msg);
+          });
+        });
+      }
+      function clearCodeReal(){
+        var socket = io();
+        socket.on('connect', function(){
+          socket.emit('clearCodeReal', function(){
+          });
+          socket.on('clearCodeRealRes', function(msg){
+            alert(msg);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

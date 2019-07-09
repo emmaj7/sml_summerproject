@@ -82,7 +82,9 @@ TO DO:
         './images/crater.png',
         './images/base-v2.png',
         './images/circle.png',
-        './images/cross.png'])
+        './images/cross.png',
+        './images/stone.png',
+        './images/rectangle.png'])
   .load(setup);
   // This `setup` function will run when the image has loaded
   function resize_image(image){
@@ -123,15 +125,23 @@ TO DO:
 
     // init obstacles
     for (var i = 0; i < obstacle_coords.length; i++) {
-      obstacle = new Sprite(resources["./images/crater.png"].texture);
-      obstacle.scale.x = 1.5; obstacle.scale.y = 1.5;
+      obstacle = new Sprite(resources["./images/rectangle.png"].texture);
+      obstacle_drawing = new Sprite(resources["./images/stone.png"].texture);
+      obstacle.scale.x = 0.3; obstacle.scale.y = 0.3;
       obstacle.anchor.x = 0.5; obstacle.anchor.y = 0.5;
+      obstacle_drawing.scale.x = 0.3; obstacle_drawing.scale.y = 0.3;
+      obstacle_drawing.anchor.x = 0.5; obstacle_drawing.anchor.y = 0.5;
       obstaclePx = coordinateTransform(obstacle_coords[i].x,
                                         obstacle_coords[i].y,
                                         obstacle_coords[i].yaw);
       obstacle.position.set(obstaclePx.x, obstaclePx .y);
       obstacle.rotation = obstaclePx.yaw;
+      obstacle_drawing.position.set(obstaclePx.x, obstaclePx .y);
+      obstacle_drawing.rotation = obstaclePx.yaw;
+
+      obstacle.visible = false;
       app.stage.addChild(obstacle);
+      app.stage.addChild(obstacle_drawing);
       obstacles.push(obstacle);
     }
 
@@ -325,7 +335,7 @@ TO DO:
         }
       } else {
         //There's no collision on the x axis
-        hit = false;
+        hit = false;2
       }
       //`hit` will be either `true` or `false`
       return hit;
@@ -359,7 +369,7 @@ TO DO:
           whichButton();
           //dölj kör - visa cancel
         }
-      });
+      });2
       // recieves position. Updates car position in simulation.
       socket.on('position-sent-car', function(msg){
         if(onCar){
@@ -400,8 +410,7 @@ TO DO:
         console.log('At goal: ' + at_goal.toString());
         document.getElementById('modal');
 
-        // Completed level 1
-        if (at_goal.toString() === 'true'){
+        if (at_goal.toString() === 'true'){ // Completed level 1
           runningSimulation = false;
           whichButton();
           if (level === 1){
@@ -412,9 +421,7 @@ TO DO:
                 modal1.style.display = "none";
               }
             }
-          }
-          // Completed level 2
-          else if (level === 2){
+          } else if (level === 2){ // Completed level 2
             var modal2 = document.getElementById('myModal2');
             modal2.style.display = "block";
             window.onclick = function(event) {
@@ -422,8 +429,7 @@ TO DO:
                 modal2.style.display = "none";
               }
             }
-          // Completed level 3
-          } else if (level === 3){
+          } else if (level === 3){ // Completed level 3
             var modal3 = document.getElementById('myModal3');
             modal3.style.display = "block";
             window.onclick = function(event) {
@@ -432,15 +438,14 @@ TO DO:
               }
             }
           }
-        }
-        // Hit obstacle on either level
-        else if (obstacleHit) {
+        } else if (obstacleHit) { // Hit obstacle on either level
           var tryAgainBtn = document.getElementById('restartBtn');
           var hitModal = document.getElementById('myHitModal');
           hitModal.style.display = "block";
           tryAgainBtn.onclick = function() {
             hitModal.style.display = "none";
             runningSimulation = false;
+            whichButton();
           }
           window.onclick = function(event) {
             if (event.target == hitModal) {
@@ -449,10 +454,7 @@ TO DO:
               whichButton();
             }
           }
-        }
-
-        // Hit wall on either level
-        else if (wallHit) {
+        } else if (wallHit) { // Hit wall on either level
           var tryAgainBtn = document.getElementById('restart2Btn');
           var wallModal = document.getElementById('myWallModal');
           wallModal.style.display = "block";
@@ -468,18 +470,12 @@ TO DO:
               whichButton();
             }
           }
-        }
-
-        // Forced close
-        else {
-          if (forced_close) {
-            // Do nothing
-          runningSimulation = false;
+        } else {
+            if (forced_close) {
+              // Do nothing
+            runningSimulation = false;
           whichButton();
-          }
-
-          // Did not reach goal
-          else {
+          } else { // Did not reach goal
             var tryAgainBtn = document.getElementById('tryAgainBtn');
             var tryAgainModal = document.getElementById('myTryAgainModal');
             tryAgainModal.style.display = "block";

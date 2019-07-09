@@ -11,9 +11,10 @@ const {spawn} = require('child_process'); // For calling python scripts
 const shell = require('shelljs'); // For running shell commands
 const Blockly = require('node-blockly'); // Required in frontend.
 const prependFile = require('prepend-file'); // To append to beginning of file
+const lineReader = require('line-reader');
 
+// ros-related packages
 const rosnodejs = require('rosnodejs');
-// Requires the std_msgs message package
 const std_msgs = rosnodejs.require('std_msgs').msg;
 const geometry_msgs = rosnodejs.require('geometry_msgs').msg
 
@@ -53,6 +54,9 @@ app.get("/level3", function(req, res){
   res.render("level3");
 });
 
+app.get('/adminPage', function(req, res){
+  res.render('adminPage');
+});
 
 // writes post to file code.py.
 app.post("/postcode", urlencodedParser, function(req,res){
@@ -141,6 +145,40 @@ io.on('connection', function(socket){
       console.log('Launched SVEA_high_level_commands');
     // });
   });
+
+  socket.on('inspectCode', function(){
+    var outputString = '';
+    var startSaving = false;
+    lineReader.eachLine('code_real.py', function(line) {
+        if (line.includes('# ID:')) {
+            startSaving = true;
+        } else if (line.includes('#####')) {
+            socket.emit('inspectCodeRes', outputString);
+            console.log(outputString);
+        } else if (startSaving) {
+            outputString = outputString + line;
+        }
+    });
+  });
+  socket.on('clearCode', function(){
+    const data = '';
+    const message = 'code.py has been cleared';
+    fs.writeFile('code.py', data, (err) => {
+      if (err) throw err;
+      console.log(message);
+    });
+    socket.emit('clearCodeRes', message);
+  });
+  socket.on('clearCodeReal', function(){
+    const data = '';
+    const message = 'code_real.py has been cleared';
+    fs.writeFile('code_real.py', data, (err) => {
+      if (err) throw err;
+      console.log(message);
+    });
+    socket.emit('clearCodeRealRes', message);
+  });
+
 });
 
 
