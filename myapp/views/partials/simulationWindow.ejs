@@ -127,10 +127,11 @@ TO DO:
     for (var i = 0; i < obstacle_coords.length; i++) {
       obstacle = new Sprite(resources["./images/rectangle.png"].texture);
       obstacle_drawing = new Sprite(resources["./images/stone.png"].texture);
-      obstacle.scale.x = 0.3; obstacle.scale.y = 0.3;
+      obstacle.scale.x = obstacle_coords.size;
+      obstacle.scale.y = obstacle_coords.size;
       obstacle.anchor.x = 0.5; obstacle.anchor.y = 0.5;
       obstacle_drawing.scale.x = obstacle_coords.size;
-      obstacle_drawing.scale.y = obstacle_coords.size;
+      obstacle_drawing.scale.y =  obstacle_coords.size;
       obstacle_drawing.anchor.x = 0.5; obstacle_drawing.anchor.y = 0.5;
       obstaclePx = coordinateTransform(obstacle_coords[i].x,
                                         obstacle_coords[i].y,
@@ -139,7 +140,7 @@ TO DO:
       obstacle_drawing.position.set(obstaclePx.x, obstaclePx .y);
       obstacle_drawing.rotation = obstaclePx.yaw;
 
-      obstacle.visible = false;
+      obstacle.visible = true;
       app.stage.addChild(obstacle);
       app.stage.addChild(obstacle_drawing);
       obstacles.push(obstacle);
