@@ -26,6 +26,7 @@ var urlencodedParser = bodyParser.urlencoded({extended:false});
 
 app.set("view engine", "ejs");
 
+// allows access to the folders listed
 app.use("/assets", express.static("assets"));
 app.use("/node_modules/node-blockly/blockly", express.static("node_modules/node-blockly/blockly"));
 app.use("/customBlocks", express.static("customBlocks"));
@@ -54,10 +55,12 @@ app.get("/level3", function(req, res){
   res.render("level3");
 });
 
+// Renders tutorial
 app.get('/helpPage', function(req, res){
   res.render('helpPage');
 });
 
+// renders admin page. Not accessable through UI.
 app.get('/adminPage', function(req, res){
   res.render('adminPage');
 });
@@ -149,7 +152,7 @@ io.on('connection', function(socket){
       console.log('Launched SVEA_high_level_commands');
     // });
   });
-
+  // button on admin page. Shows latest code snipped posted to code_real.py
   socket.on('inspectCode', function(){
     var outputString = '';
     var startSaving = false;
@@ -164,6 +167,7 @@ io.on('connection', function(socket){
         }
     });
   });
+  // Button on admin page. Clears code in code.py
   socket.on('clearCode', function(){
     const data = '';
     const message = 'code.py has been cleared';
@@ -173,6 +177,7 @@ io.on('connection', function(socket){
     });
     socket.emit('clearCodeRes', message);
   });
+  // Button on admin page. Clears code in code_real.py
   socket.on('clearCodeReal', function(){
     const data = '';
     const message = 'code_real.py has been cleared';

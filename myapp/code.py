@@ -1,4 +1,17 @@
 # ID:104715571885735550
+rover.turn_left()
+rover.drive_forward()
+rover.turn_right()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:104715571885735550
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+#####
+# ID:104715571885735550
 rover.drive_forward()
 rover.drive_forward()
 rover.turn_left()

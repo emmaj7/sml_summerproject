@@ -48,6 +48,7 @@ Mikael Glamheden
   app.renderer.view.style.top = '75px';
   //Add the canvas that Pixi automatically created for you to the HTML document
   document.body.appendChild(app.view);
+
   // Variables for the simulation
   let car; // object for car sprite
   let hitbox; // hitbox / shadow of car.
@@ -70,10 +71,8 @@ Mikael Glamheden
   let obstacles = [];
   //load an image and run the `setup` function when it's done
   loader
-  .add(['./images/svea_car.png',
-        './images/svea_cars2.png',
+  .add(['./images/svea_cars2.png',
         './images/mars-background2.png',
-        './images/crater.png',
         './images/base-v2.png',
         './images/circle.png',
         './images/cross.png',
@@ -163,7 +162,6 @@ Mikael Glamheden
     car.position.set(startPx.x,startPx.y);
     car.rotation = startPx.yaw;
 
-
     hitbox = new Sprite(resources["./images/circle.png"].texture);
     hitbox.anchor.x = 0.5; hitbox.anchor.y = 0.5;
     hitbox.height = car.height - 30; hitbox.width = car.width;
@@ -185,6 +183,7 @@ Mikael Glamheden
       coords.yaw = -yaw;
       return coords;
     }
+    // transform between window coordinates and "real" coordinates
     function transformReversed(x, y, yaw){
       let coords = {};
       coords.x = x/scale_factor - max;
@@ -192,7 +191,7 @@ Mikael Glamheden
       coords.yaw = -yaw;
       return coords;
     };
-    // swithc wich sprite to display.
+    // switch wich sprite to display.
     function changeSprite(i){
       if (i === 0) {
         car.texture = text0;
@@ -252,6 +251,8 @@ Mikael Glamheden
       car.rotation = coords.yaw;
       hitbox.position.set(coords.x, coords.y);
       hitbox.rotation = coords.yaw;
+
+      // changes sprite to display depending on how much car is turning.
       let response = newSprite(yaw, curr_sprite);
       if (response.value) {
         changeSprite(response.sprite);
@@ -310,8 +311,8 @@ Mikael Glamheden
       }
       return hit;
     }
+    // returns vector perpendicular to side i of polygon.
     function getAxisNormal(ps,i){
-      // returns vecot perpendicular to side i of polygon.
       if (i === ps.length - 1) {
         p1 = ps[i]
         p2 = ps[1];
@@ -327,39 +328,40 @@ Mikael Glamheden
       b[1] = v[1]/Math.sqrt(Math.pow(v[0],2) + Math.pow(v[1],2));
       return b;
     }
-    // checks for collision between two sprites
+    function getCorners(c, w, h){
+      let w_cos = (w/2)*Math.cos(c.yaw);
+      let w_sin = (w/2)*Math.sin(c.yaw);
+      let h_cos = (h/2)*Math.cos(c.yaw);
+      let h_sin = (h/2)*Math.sin(c.yaw);
+      let p1 = [c.x + w_cos - h_sin,
+                c.y + w_sin + h_cos];
+      let p2 = [c.x + w_cos + h_sin),
+                c.y + w_sin - h_cos]
+      let p3 = [c.x - w_cos - h_sin,
+                c.y - w_sin + h_cos];
+      let p4 = [c.x - w_cos + h_sin,
+                c.y - w_sin - h_cos];
+      return [p1, p2, p3, p4];
+    }
+    // checks for collision between two rectangles (sprites)
+    // Uses SAT - separating axis theorem.
     function collision(r1, r2) {
       let realc1 = transformReversed(r1.x, r1.y, r1.rotation);
       let realc2 = transformReversed(r2.x, r2.y, r2.rotation);
+      let w1 = r1.width/scale_factor;
+      let h1 = r1.height/scale_factor;
+      let w2 = r2.width/scale_factor;
+      let h2 = r2.height/scale_factor;
 
       // corner points of r1
-      w1 = r1.width/scale_factor; h1 = r1.height/scale_factor;
-      phi1 = realc1.yaw;
-      p1 = [realc1.x + (w1/2)*Math.cos(phi1) - (h1/2)*Math.sin(phi1),
-            realc1.y + (w1/2)*Math.sin(phi1) + (h1/2)*Math.cos(phi1)];
-      p2 = [realc1.x + (w1/2)*Math.cos(phi1) + (h1/2)*Math.sin(phi1),
-            realc1.y + (w1/2)*Math.sin(phi1) - (h1/2)*Math.cos(phi1)];
-      p3 = [realc1.x - (w1/2)*Math.cos(phi1) - (h1/2)*Math.sin(phi1),
-            realc1.y - (w1/2)*Math.sin(phi1) + (h1/2)*Math.cos(phi1)];
-      p4 = [realc1.x - (w1/2)*Math.cos(phi1) + (h1/2)*Math.sin(phi1),
-            realc1.y - (w1/2)*Math.sin(phi1) - (h1/2)*Math.cos(phi1)];
-      corners_r1 = [p1, p2, p3, p4];
+      corners_r1 = getCorners(realc1, w1, h1);
 
       // corner points of r2
-      w2 = r2.width/scale_factor; h2 = r2.height/scale_factor;
-      phi2 = realc2.yaw;
-      q1 = [realc2.x + (w2/2)*Math.cos(phi2) - (h2/2)*Math.sin(phi2),
-            realc2.y + (w2/2)*Math.sin(phi2) + (h2/2)*Math.cos(phi2)];
-      q2 = [realc2.x + (w2/2)*Math.cos(phi2) + (h2/2)*Math.sin(phi2),
-            realc2.y + (w2/2)*Math.sin(phi2) - (h2/2)*Math.cos(phi2)];
-      q3 = [realc2.x - (w2/2)*Math.cos(phi2) - (h2/2)*Math.sin(phi2),
-            realc2.y - (w2/2)*Math.sin(phi2) + (h2/2)*Math.cos(phi2)];
-      q4 = [realc2.x - (w2/2)*Math.cos(phi2) + (h2/2)*Math.sin(phi2),
-            realc2.y - (w2/2)*Math.sin(phi2) - (h2/2)*Math.cos(phi2)];
-      corners_r2 = [q1, q2, q3, q4];
+      corners_r2 = getCorners(realc2, w2, h2);
+
       for (var i = 0; i < corners_r1.length; i++) {
         let b = getAxisNormal(corners_r1,i);
-        // console.log('b', b);
+
         let proj_r1 = []; // corners of r1 projected on b
         for (var j = 0; j < corners_r1.length; j++) {
           let a = b[0]*corners_r1[j][0] + b[1]*corners_r1[j][1];
@@ -380,13 +382,12 @@ Mikael Glamheden
         d1 = min1 - max2;
         d2 = min2 - max1;
         if (d1 > 0 || d2 > 0){
-          //  console.log('false');
           return false;
         }
       }
-      // console.log('true');
       return true;
     }
+
     function collisionOld(r1, r2) {
       //Define the variables we'll need to calculate
       let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
