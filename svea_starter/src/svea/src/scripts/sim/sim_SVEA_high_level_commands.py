@@ -223,7 +223,7 @@ class CarHighLevelCommands():
     def drive_backwards(self):
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
-        l = 1 # goal distance
+        l = 0.5 # goal distance
         tol = 0.1 # ok distance to goal
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
@@ -257,11 +257,12 @@ class CarHighLevelCommands():
         self.target_state[0] = xg
         self.target_state[1] = yg
         print('[' + self.vehicle_name + '] : ' + 'Completed drive backwards!')
+        print('State:'  + str(self.vehicle_model.get_state))
 
     def drive_forward(self):
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
-        l = 1 # goal distance
+        l = 0.5 # goal distance
         tol = 0.1 # ok distance to goal
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
@@ -295,6 +296,7 @@ class CarHighLevelCommands():
         self.target_state[0] = xg
         self.target_state[1] = yg
         print('[' + self.vehicle_name + '] : ' + 'Completed drive forward!')
+        print('State:'  + str(self.vehicle_model.get_state))
 
     def turn_right(self):
         """Makes a full 90 degree right turn."""
@@ -303,6 +305,7 @@ class CarHighLevelCommands():
         angle = lf.normalize_angle(self.target_state[2] - angle_add)
         self.target_state[2] = angle
         self._turn(angle, direction)
+        print('State:'  + str(self.vehicle_model.get_state))
 
     def turn_left(self):
         """Makes a full 90 degree left turn."""
@@ -311,6 +314,7 @@ class CarHighLevelCommands():
         angle = lf.normalize_angle(self.target_state[2] + angle_add)
         self.target_state[2] = angle
         self._turn(angle, direction)
+        print('State:'  + str(self.vehicle_model.get_state))
 
 def log_to_file(log):
     """Logs the cars path during execution to a file"""
