@@ -1,21 +1,25 @@
+<!--
+Partial containing run/cancel-buttons and function that shows/hides these depending on simulation.
+Emma Johansson
+Last updated: 2019-07-09
+-->
+<div class="text-center" style="margin-top: 10px;">
+  <a href="#"><button class="cool-btn btn1 btn" onclick="runCode();" type="button"  id="runBtn">Run Code</button></a>
+  <a href="#"><button class="cool-btn btn1 btn" onclick="cancelSimulation()" type="button"  id="cancelBtn" style="display:none;">Cancel</button></a>
+</div>
+
 <script src="https://code.jquery.com/jquery.js"></script>
 <script type="text/javascript">
   function whichButton(){
+      // If the simulation is running the cancel-button will be shown and run-button will be hidden.
       if (runningSimulation === true){
         $("#cancelBtn").show();
         $("#runBtn").hide();
-        // cancelBtn.style.display = "block";
-        // runBtn.style.display = "none";
       }
+      // If tnot, the cancel-button will be hidden and run-button will be shown.
       else {
         $("#cancelBtn").hide();
-        console.log("döljer cancel");
         $("#runBtn").show();
-        console.log("visar run");
-        // cancelBtn.style.display = "none";
-        // console.log("dolt cancel");
-        // runBtn.style.display = "block";
-        // console.log("visar run");
       }
   }
 

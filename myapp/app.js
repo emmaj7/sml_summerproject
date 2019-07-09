@@ -54,6 +54,10 @@ app.get("/level3", function(req, res){
   res.render("level3");
 });
 
+app.get('/helpPage', function(req, res){
+  res.render('helpPage');
+});
+
 app.get('/adminPage', function(req, res){
   res.render('adminPage');
 });
