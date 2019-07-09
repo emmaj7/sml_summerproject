@@ -1,3 +1,90 @@
+# ID:93661083374187890
+rover.drive_forward()
+#####
+# ID:93661083374187890
+rover.drive_forward()
+#####
+# ID:786757351895744900
+rover.drive_forward()
+#####
+# ID:786757351895744900
+rover.drive_forward()
+#####
+# ID:566151563645103200
+rover.drive_forward()
+#####
+# ID:756406278820406100
+rover.turn_left()
+rover.turn_right()
+rover.drive_forward()
+#####
+# ID:722466126211227000
+rover.turn_left()
+rover.turn_right()
+rover.drive_forward()
+#####
+# ID:227663679782873820
+rover.turn_left()
+rover.turn_right()
+rover.drive_forward()
+#####
+# ID:227663679782873820
+rover.turn_left()
+rover.turn_right()
+#####
+# ID:653787807723947600
+rover.turn_left()
+rover.turn_right()
+#####
+# ID:653787807723947600
+rover.turn_left()
+rover.drive_forward()
+#####
+# ID:653787807723947600
+rover.drive_forward()
+#####
+# ID:310382688761606900
+rover.drive_forward()
+#####
+# ID:310382688761606900
+rover.drive_forward()
+#####
+# ID:903657915220023200
+rover.drive_forward()
+#####
+# ID:903657915220023200
+rover.drive_forward()
+#####
+# ID:903657915220023200
+rover.drive_forward()
+#####
+# ID:760023268581574900
+rover.drive_forward()
+#####
+# ID:821749029594982800
+rover.drive_forward()
+#####
+# ID:821749029594982800
+rover.drive_forward()
+#####
+# ID:821749029594982800
+rover.drive_forward()
+#####
+# ID:821749029594982800
+rover.drive_forward()
+#####
+# ID:821749029594982800
+rover.drive_forward()
+#####
+# ID:821749029594982800
+rover.drive_forward()
+#####
+# ID:821749029594982800
+rover.drive_forward()
+#####
+# ID:821749029594982800
+rover.drive_forward()
+#####
 # ID:280350186889675400
 rover.drive_forward()
 #####

@@ -452,7 +452,6 @@ TO DO:
         }
 
         // Hit wall on either level
-
         else if (wallHit) {
           var tryAgainBtn = document.getElementById('restart2Btn');
           var wallModal = document.getElementById('myWallModal');
@@ -469,7 +468,10 @@ TO DO:
               whichButton();
             }
           }
-        } else {
+        }
+
+        // Forced close
+        else {
           if (forced_close) {
             // Do nothing
           runningSimulation = false;
