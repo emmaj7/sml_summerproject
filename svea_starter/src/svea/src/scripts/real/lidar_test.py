@@ -23,8 +23,8 @@ def main():
     r = rospy.Rate(30)
     lidar = RPLidar()
     rospy.sleep(2)
-    lidar.start()
-    lidar.start_motor()
+    # lidar.start()
+    # lidar.start_motor()
     while not rospy.is_shutdown():
         print(RPlidar.get_raw_scan())
         r.sleep()
