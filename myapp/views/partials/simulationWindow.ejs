@@ -1,7 +1,10 @@
 <!--
 Code for the simulation window.
-Mikael Glamheden
-2019-06-24
+Created by: Mikael Glamheden
+Date: 2019-06-24
+
+Last edited by: Mikael Glamheden & Emma Johansson
+Date: 2019-07-10
 -->
 
 <!-- Uses pixi module for the animation. Socket for the communication with server. -->
@@ -328,6 +331,7 @@ Mikael Glamheden
       b[1] = v[1]/Math.sqrt(Math.pow(v[0],2) + Math.pow(v[1],2));
       return b;
     }
+    // get the corners of a rectangle given center point, yaw, width and height.
     function getCorners(c, w, h){
       let w_cos = (w/2)*Math.cos(c.yaw);
       let w_sin = (w/2)*Math.sin(c.yaw);
@@ -450,7 +454,8 @@ Mikael Glamheden
           whichButton();
           //dölj kör - visa cancel
         }
-      });2
+      });
+
       // recieves position. Updates car position in simulation.
       socket.on('position-sent-car', function(msg){
         if(onCar){
@@ -459,8 +464,18 @@ Mikael Glamheden
           y = obj.y;
           last_yaw = yaw;
           yaw = obj.yaw;
+          if (obstacleHit || wallHit){
+            socket.emit('collision');
+            console.log('Collision!');
+          }
+          if (cancel_simulation){
+            console.log('cancelling');
+            socket.emit('kill-process');
+            cancel_simulation = false;
+          }
         }
       });
+
       // recieves position. Updates car position in simulation.
       socket.on('position-sent-sim', function(msg){
         if (onCar == false){
@@ -553,9 +568,8 @@ Mikael Glamheden
           }
         } else {
             if (forced_close) {
-              // Do nothing
-            runningSimulation = false;
-          whichButton();
+              runningSimulation = false;
+              whichButton();
           } else { // Did not reach goal
             var tryAgainBtn = document.getElementById('tryAgainBtn');
             var tryAgainModal = document.getElementById('myTryAgainModal');

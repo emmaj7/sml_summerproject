@@ -218,7 +218,7 @@ class CarHighLevelCommands():
     def drive_backwards(self):
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
-        l = 1 # goal distance
+        l = 0.5 # goal distance
         tol = 0.1 # ok distance to goal
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
@@ -258,7 +258,7 @@ class CarHighLevelCommands():
     def drive_forward(self, show_animation = True):
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
-        l = 1 # goal distance
+        l = 0.5 # goal distance
         tol = 0.1 # ok distance to goal
         state = self.vehicle_model.get_state()
         x0 = self.target_state[0]
