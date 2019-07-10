@@ -45,7 +45,7 @@ where you need to replace "<path-to-svea-starter>" with the file path to whereve
 
 Finally you have to install all node.js app dependencies. Go into the folder called "myapp" and run
 
-	npm install
+	sudo npm install
 
 You should now be good to go. Start the app on a local server by running:
 
