@@ -23,6 +23,15 @@ and go to it using the terminal. Next you will have to compile and link the ROS 
 
 Now run
 
+	apt-get install libbullet-dev
+	
+then run
+
+	sudo apt-get install libsdl-image1.2-dev
+	sudo apt-get install libsdl-dev
+	
+Finally run
+
 	catkin_make
 	source devel/setup.bash
 	rospack profile
