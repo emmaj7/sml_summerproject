@@ -1,6 +1,5 @@
 # sml_summerproject
-
-
+This project uses [blockly](https://developers.google.com/blockly/) which lets the user code a simple program to control a driver-less RC vehicle (KTH's SVEA cars). The user simulates the vehicle's path in the browser before trying it out for real. The project is mainly written in JavaScript, HTML and Python.
 ## Setting up the invironment
 The project assumes you are running ubuntu 16.04. and that you have the following applications installed on your machine:
 * [ROS](https://www.ros.org/). You can install ROS by following [this guide](http://wiki.ros.org/kinetic/Installation/Ubuntu).
