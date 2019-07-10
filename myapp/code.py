@@ -1,3 +1,6 @@
+# ID:666648998216722700
+rover.drive_forward()
+#####
 # ID:104715571885735550
 rover.turn_left()
 rover.drive_forward()
