@@ -18,7 +18,8 @@ Last updated: 2019-07-09
       <div class="modal-footer">
         <div  style="margin: 0 auto;">
           <div class="row">
-            <a href="/level3" ><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;">Cancel</button></a>
+            <span id="runOnRoverBtn"></span>
+            <!-- <a href=`/level3/?id=${unique_id}`><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;">Cancel</button></a> -->
             <a href="#" ><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;" onclick="postCodeToCar()">Run on Car</button></a>
           </div>
         </div>
@@ -26,3 +27,8 @@ Last updated: 2019-07-09
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  buttonStr = `<a href=/level3/?id=${unique_id}><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;">Cancel</button></a>`;
+  $('#runOnRoverBtn').html(buttonStr);
+</script>
