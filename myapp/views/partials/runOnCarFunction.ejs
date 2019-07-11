@@ -15,9 +15,9 @@ Date: 2019-06-27
     var codeObj = {code:code, id: unique_id};
 
     //  post code to server.
-    var codeObj = {code:code, id: unique_id};
-    $.post("/postcode2", codeObj, function(codeObj, status){
-      console.log(`${codeObj.code} and status is ${status}`)
+    var codeObj = {code: code, id: unique_id};
+    $.post("/postcode2", codeObj, function(data, status){
+      console.log(`${data} and status is ${status}`)
     });
   }
 

@@ -67,19 +67,21 @@ app.get('/adminPage', function(req, res){
   res.render('adminPage');
 });
 
-app.get('/lastPage/:id', function(req, res){
-  res.render('lastPage', {id: id});
+app.get('/lastPage', function(req, res){
+  console.log('loading last page');
+  console.log('id: ', req.query.id);
+  res.render('lastPage', {id: req.query.id});
 });
 
 // writes post to file code.py.
-app.post("/postcode", urlencodedParser, function(req,res){
+app.post("/postcode", urlencodedParser, function(req, res){
   // console.log(req.body.code);
   var filename = 'code.py';
   writeCode(req.body.code,req.body.id, filename);
 });
 
 // writes post to file code_real.py.
-app.post("/postcode2", urlencodedParser, function(req,res){
+app.post("/postcode2", urlencodedParser, function(req, res){
   // console.log(req.body.code);
   var filename = 'code_real.py';
   writeCode(req.body.code,req.body.id, filename);
