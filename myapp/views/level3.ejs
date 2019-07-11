@@ -61,7 +61,8 @@ Last updated: 2019-07-09
                                 scrollbars: false,
                                 theme: Blockly.Themes.HighContrast});
   // ID generated uniquely for each window.
-  var unique_id = (Math.random()*Math.pow(10,18)).toString();
+  var unique_id = <%= id %>
+  console.log('Window id: ', unique_id);
   // The position of the goal for level 3.
   var goal_coords = {'x': 1.1, 'y': -1, 'yaw': 0};
   // Position of obstacles on level 3

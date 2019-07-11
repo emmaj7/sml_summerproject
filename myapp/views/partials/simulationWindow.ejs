@@ -316,12 +316,13 @@ Date: 2019-07-10
     }
     // returns vector perpendicular to side i of polygon.
     function getAxisNormal(ps,i){
+      let p1, p2;
       if (i === ps.length - 1) {
         p1 = ps[i]
         p2 = ps[1];
       } else {
-        let p1 = ps[i];
-        let p2 = ps[i + 1];
+        p1 = ps[i];
+        p2 = ps[i + 1];
       }
       // b is unit vector perpendicular to one edge of r1 with lenght 1
       let v = [p1[0]-p2[0], p1[1]-p2[1]];
