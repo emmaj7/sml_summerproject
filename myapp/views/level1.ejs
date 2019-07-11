@@ -12,8 +12,8 @@ Last updated: 2019-07-09
     <% include partials/imports.ejs %>
   </head>
   <body>
-    <div class="text-center" style="height:65px">
-      <h1 class="text-center" style="font-family: courier; margin-top: 10px; padding:0px; color:white; font-weight:bold;">TRIP TO MARS: level 1</h1>
+    <div id="headerThings" style="height:65px">
+      <h1 style="font-family: courier; margin-top: 10px; padding:0px; color:white; font-weight:bold; text-align:center;">TRIP TO MARS: level 1</h1>
     </div>
     <div>
         <div id="blocklyDiv" style="height: 800px; width: 800px; margin-left:120px;"></div> <!-- borde vara 100px till left? -->
@@ -26,11 +26,12 @@ Last updated: 2019-07-09
         <!-- This partial has all the relevant code related to the simulation window. -->
           <% include partials/simulationWindow.ejs %>
     </div>
-
     <!-- This partial contains function which shows/hides run/cancel-buttons. -->
     <% include partials/whichButton.ejs %>
-
   <div>
+    <!-- This partial contains the help-tab.  -->
+    <% include partials/helpTab.ejs %>
+
     <!-- This partial contains modal shown if goal is reached. -->
     <% include partials/modal1.ejs %>
 
