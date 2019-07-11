@@ -12,6 +12,7 @@ const shell = require('shelljs'); // For running shell commands
 const Blockly = require('node-blockly'); // Required in frontend.
 const prependFile = require('prepend-file'); // To append to beginning of file
 const lineReader = require('line-reader');
+const url = require("url");
 
 // ros-related packages
 const rosnodejs = require('rosnodejs');
@@ -67,8 +68,14 @@ app.get('/adminPage', function(req, res){
   res.render('adminPage');
 });
 
-app.get('/lastPage/:id', function(req, res){
+app.get('/lastPage', function(req, res){
+  var current_url = req.url;
+  var fullUrl = req.protocol + "://" + req.get('host') + current_url;;
+  current_url_obj = new URL(fullUrl);
+  const search_params = current_url_obj.searchParams;
+  const id = search_params.get('id');
   res.render('lastPage', {id: id});
+
 });
 
 // writes post to file code.py.
