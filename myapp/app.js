@@ -50,9 +50,11 @@ app.get("/level2", function(req, res){
   res.render("level2");
 });
 
+var computerNumber = 0; // generates a number for
 // Renders level 3
 app.get("/level3", function(req, res){
-  res.render("level3");
+  computerNumber = computerNumber + 1;
+  res.render("level3", {id: computerNumber});
 });
 
 // Renders tutorial
@@ -63,6 +65,10 @@ app.get('/helpPage', function(req, res){
 // renders admin page. Not accessable through UI.
 app.get('/adminPage', function(req, res){
   res.render('adminPage');
+});
+
+app.get('/lastPage/:id', function(req, res){
+  res.render('lastPage', {id: id});
 });
 
 // writes post to file code.py.
