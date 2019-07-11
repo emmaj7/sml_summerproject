@@ -1,4 +1,8 @@
 # ID:1
+for count in range(5):
+  rover.drive_forward()
+#####
+# ID:1
 <<<<<<< HEAD
 for count in range(5):
   rover.drive_forward()
