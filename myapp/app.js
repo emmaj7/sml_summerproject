@@ -26,6 +26,7 @@ var urlencodedParser = bodyParser.urlencoded({extended:false});
 
 app.set("view engine", "ejs");
 
+// allows access to the folders listed
 app.use("/assets", express.static("assets"));
 app.use("/node_modules/node-blockly/blockly", express.static("node_modules/node-blockly/blockly"));
 app.use("/customBlocks", express.static("customBlocks"));
@@ -54,10 +55,12 @@ app.get("/level3", function(req, res){
   res.render("level3");
 });
 
+// Renders tutorial
 app.get('/helpPage', function(req, res){
   res.render('helpPage');
 });
 
+// renders admin page. Not accessable through UI.
 app.get('/adminPage', function(req, res){
   res.render('adminPage');
 });
@@ -127,29 +130,40 @@ io.on('connection', function(socket){
 
   // Launches the car.
   socket.on('runCodeOnCar', function(msg){
-    // var command = 'rosnode kill SVEA5 /SVEA_high_level_commands /listener_node/SVEA5 /qualisys /serial_node /world_to_qualisys_tf';
-    // // var command = 'rosnode kill /SVEA5 /listener_node/SVEA5 /qualisys /serial_node world_to_qualisys_tf'
-    // shell.exec(command, {async:false}, function(){
-    //   shell.exec('rosnode list', function(code, stdout, stderr){
-    //     console.log(stdout);
-    //   });
-    // console.log('shutting down old nodes');
-      console.log('starting car');
-      var obj = JSON.parse(msg);
-      var id = 'USER' + obj.id;
-      var goal = obj.goal;
-      var command = 'roslaunch svea SVEA_high_level_commands.launch ';
-      var args = 'my_args:=' + '"' + id + ' ' + JSON.stringify(goal) + '"';
-      shell.exec(command + args, {async:true}, function(code, stdout, stderr){
+    console.log('starting car');
+    var obj = JSON.parse(msg);
+    var id = 'USER' + obj.id;
+    var goal = obj.goal;
+    var command = 'roslaunch svea SVEA_high_level_commands.launch ';
+    var args = 'my_args:=' + '"' + id + ' ' + JSON.stringify(goal) + '"';
+    shell.exec(command + args, {async:true}, function(code, stdout, stderr){
+      console.log('Exit Code: ', code);
+      console.log('Program stderr: ', stderr);
+      console.log('Program output: ', stdout);
+    });
+    transmitPose(socket, id);
+    console.log('Launched SVEA_high_level_commands');
+    socket.on('collision', function(){
+      console.log('Collision detected');
+      const command = 'rosnode kill SVEA5 /SVEA_high_level_commands /listener_node/SVEA5 /qualisys /serial_node /world_to_qualisys_tf';
+      shell.exec(command, {async:true}, function(code, stdout, stderr){
         console.log('Exit Code: ', code);
-        console.log('Program stderr:', stderr);
-        console.log('Program output:', stdout);
+        console.log('Program stderr: ', stderr);
+        console.log('Program output: ', stdout);
       });
-      transmitPose(socket, id);
-      console.log('Launched SVEA_high_level_commands');
-    // });
+    });
+    // kill all processes if stuff is canceled.
+    socket.on('kill-process', function(){
+      console.log('killing all processes');
+      const command = 'rosnode kill SVEA5 /SVEA_high_level_commands /listener_node/SVEA5 /qualisys /serial_node /world_to_qualisys_tf';
+      shell.exec(command, {async:true}, function(code, stdout, stderr){
+        console.log('Exit Code: ', code);
+        console.log('Program stderr: ', stderr);
+        console.log('Program output: ', stdout);
+      });
+    });
   });
-
+  // button on admin page. Shows latest code snipped posted to code_real.py
   socket.on('inspectCode', function(){
     var outputString = '';
     var startSaving = false;
@@ -164,6 +178,7 @@ io.on('connection', function(socket){
         }
     });
   });
+  // Button on admin page. Clears code in code.py
   socket.on('clearCode', function(){
     const data = '';
     const message = 'code.py has been cleared';
@@ -173,6 +188,7 @@ io.on('connection', function(socket){
     });
     socket.emit('clearCodeRes', message);
   });
+  // Button on admin page. Clears code in code_real.py
   socket.on('clearCodeReal', function(){
     const data = '';
     const message = 'code_real.py has been cleared';
@@ -184,7 +200,6 @@ io.on('connection', function(socket){
   });
 
 });
-
 
 // This function launches the python simulation
 function runScript(id, start, goal){
@@ -206,6 +221,7 @@ function writeCode(code, id, filename){
     }
   });
 }
+
 // get yaw from quaternions
 function yawFromQuaternions(qObj){
   var yaw   =  Math.asin(2*qObj.x*qObj.y + 2*qObj.z*qObj.w);

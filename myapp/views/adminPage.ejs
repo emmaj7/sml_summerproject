@@ -9,12 +9,15 @@
     <title>Admin Page</title>
   </head>
   <body>
+    <h1>Admin Page</h1>
     <% include partials/runOnCarFunction.ejs %>
-    <a href="#"><button class="cool-btn btn1 btn" onclick="runOnCar()" type="button"  id="cancelBtn">Run on Car</button></a>
+    <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="runOnCar()" id="cancelBtn">Run on Car</button></a>
     <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCode()" id="cancelBtn">Clear code.py</button></a>
     <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCodeReal()" id="cancelBtn">Clear code_real.py</button></a>
     <a href="#"><button class="cool-btn btn1 btn" type="button" onclick='inspectCode()' id="cancelBtn">Inspect Code</button></a>
+
     <script type="text/javascript">
+      var unique_id = 'adminId';
       function inspectCode(){
         var socket = io();
         socket.on('connect', function(){

@@ -1,7 +1,10 @@
 <!--
 Code for the simulation window.
-Mikael Glamheden
-2019-06-24
+Created by: Mikael Glamheden
+Date: 2019-06-24
+
+Last edited by: Mikael Glamheden & Emma Johansson
+Date: 2019-07-10
 -->
 
 <!-- Uses pixi module for the animation. Socket for the communication with server. -->
@@ -48,6 +51,7 @@ Mikael Glamheden
   app.renderer.view.style.top = '75px';
   //Add the canvas that Pixi automatically created for you to the HTML document
   document.body.appendChild(app.view);
+
   // Variables for the simulation
   let car; // object for car sprite
   let hitbox; // hitbox / shadow of car.
@@ -70,10 +74,8 @@ Mikael Glamheden
   let obstacles = [];
   //load an image and run the `setup` function when it's done
   loader
-  .add(['./images/svea_car.png',
-        './images/svea_cars2.png',
+  .add(['./images/svea_cars2.png',
         './images/mars-background2.png',
-        './images/crater.png',
         './images/base-v2.png',
         './images/circle.png',
         './images/cross.png',
@@ -184,7 +186,15 @@ Mikael Glamheden
       coords.yaw = -yaw;
       return coords;
     }
-    // swithc wich sprite to display.
+    // transform between window coordinates and "real" coordinates
+    function transformReversed(x, y, yaw){
+      let coords = {};
+      coords.x = x/scale_factor - max;
+      coords.y = -(y - app.renderer.view.height)/scale_factor - max;
+      coords.yaw = -yaw;
+      return coords;
+    };
+    // switch wich sprite to display.
     function changeSprite(i){
       if (i === 0) {
         car.texture = text0;
@@ -238,11 +248,14 @@ Mikael Glamheden
     }
     // updates position of car.
     function drive(){
+      // console.log(hitbox.width);
       let coords = coordinateTransform(x, y, yaw);
       car.position.set(coords.x, coords.y);
       car.rotation = coords.yaw;
       hitbox.position.set(coords.x, coords.y);
       hitbox.rotation = coords.yaw;
+
+      // changes sprite to display depending on how much car is turning.
       let response = newSprite(yaw, curr_sprite);
       if (response.value) {
         changeSprite(response.sprite);
@@ -301,8 +314,85 @@ Mikael Glamheden
       }
       return hit;
     }
-    // checks for collision between two sprites
+    // returns vector perpendicular to side i of polygon.
+    function getAxisNormal(ps,i){
+      if (i === ps.length - 1) {
+        p1 = ps[i]
+        p2 = ps[1];
+      } else {
+        let p1 = ps[i];
+        let p2 = ps[i + 1];
+      }
+      // b is unit vector perpendicular to one edge of r1 with lenght 1
+      let v = [p1[0]-p2[0], p1[1]-p2[1]];
+      v = [1, -v[0]/v[1]];
+      let b = [0,0];
+      b[0] = v[0]/Math.sqrt(Math.pow(v[0],2) + Math.pow(v[1],2));
+      b[1] = v[1]/Math.sqrt(Math.pow(v[0],2) + Math.pow(v[1],2));
+      return b;
+    }
+    // get the corners of a rectangle given center point, yaw, width and height.
+    function getCorners(c, w, h){
+      let w_cos = (w/2)*Math.cos(c.yaw);
+      let w_sin = (w/2)*Math.sin(c.yaw);
+      let h_cos = (h/2)*Math.cos(c.yaw);
+      let h_sin = (h/2)*Math.sin(c.yaw);
+      let p1 = [c.x + w_cos - h_sin,
+                c.y + w_sin + h_cos];
+      let p2 = [c.x + w_cos + h_sin,
+                c.y + w_sin - h_cos]
+      let p3 = [c.x - w_cos - h_sin,
+                c.y - w_sin + h_cos];
+      let p4 = [c.x - w_cos + h_sin,
+                c.y - w_sin - h_cos];
+      return [p1, p2, p3, p4];
+    }
+    // checks for collision between two rectangles (sprites)
+    // Uses SAT - separating axis theorem.
     function collision(r1, r2) {
+      let realc1 = transformReversed(r1.x, r1.y, r1.rotation);
+      let realc2 = transformReversed(r2.x, r2.y, r2.rotation);
+      let w1 = r1.width/scale_factor;
+      let h1 = r1.height/scale_factor;
+      let w2 = r2.width/scale_factor;
+      let h2 = r2.height/scale_factor;
+
+      // corner points of r1
+      corners_r1 = getCorners(realc1, w1, h1);
+
+      // corner points of r2
+      corners_r2 = getCorners(realc2, w2, h2);
+
+      for (var i = 0; i < corners_r1.length; i++) {
+        let b = getAxisNormal(corners_r1,i);
+
+        let proj_r1 = []; // corners of r1 projected on b
+        for (var j = 0; j < corners_r1.length; j++) {
+          let a = b[0]*corners_r1[j][0] + b[1]*corners_r1[j][1];
+          proj_r1.push(a);
+        }
+
+        let proj_r2 = []; // corners of r2 projected on b
+        for (var j = 0; j < corners_r2.length; j++) {
+          let a = b[0]*corners_r2[j][0] + b[1]*corners_r2[j][1];
+          proj_r2.push(a);
+        }
+
+        max1 = Math.max(...proj_r1);
+        min1 = Math.min(...proj_r1);
+        max2 = Math.max(...proj_r2);
+        min2 = Math.min(...proj_r2);
+
+        d1 = min1 - max2;
+        d2 = min2 - max1;
+        if (d1 > 0 || d2 > 0){
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function collisionOld(r1, r2) {
       //Define the variables we'll need to calculate
       let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
       //hit will determine whether there's a collision
@@ -364,7 +454,8 @@ Mikael Glamheden
           whichButton();
           //dölj kör - visa cancel
         }
-      });2
+      });
+
       // recieves position. Updates car position in simulation.
       socket.on('position-sent-car', function(msg){
         if(onCar){
@@ -373,8 +464,18 @@ Mikael Glamheden
           y = obj.y;
           last_yaw = yaw;
           yaw = obj.yaw;
+          if (obstacleHit || wallHit){
+            socket.emit('collision');
+            console.log('Collision!');
+          }
+          if (cancel_simulation){
+            console.log('cancelling');
+            socket.emit('kill-process');
+            cancel_simulation = false;
+          }
         }
       });
+
       // recieves position. Updates car position in simulation.
       socket.on('position-sent-sim', function(msg){
         if (onCar == false){
@@ -467,9 +568,8 @@ Mikael Glamheden
           }
         } else {
             if (forced_close) {
-              // Do nothing
-            runningSimulation = false;
-          whichButton();
+              runningSimulation = false;
+              whichButton();
           } else { // Did not reach goal
             var tryAgainBtn = document.getElementById('tryAgainBtn');
             var tryAgainModal = document.getElementById('myTryAgainModal');

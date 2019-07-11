@@ -1,6 +1,5 @@
 # sml_summerproject
-
-
+This project uses [blockly](https://developers.google.com/blockly/) which lets the user code a simple program to control a driver-less RC vehicle (KTH's SVEA cars). The user simulates the vehicle's path in the browser before trying it out for real. The project is mainly written in JavaScript, HTML and Python.
 ## Setting up the invironment
 The project assumes you are running ubuntu 16.04. and that you have the following applications installed on your machine:
 * [ROS](https://www.ros.org/). You can install ROS by following [this guide](http://wiki.ros.org/kinetic/Installation/Ubuntu).
@@ -24,6 +23,15 @@ and go to it using the terminal. Next you will have to compile and link the ROS 
 
 Now run
 
+	apt-get install libbullet-dev
+	
+then run
+
+	sudo apt-get install libsdl-image1.2-dev
+	sudo apt-get install libsdl-dev
+	
+Finally run
+
 	catkin_make
 	source devel/setup.bash
 	rospack profile
@@ -37,7 +45,7 @@ where you need to replace "<path-to-svea-starter>" with the file path to whereve
 
 Finally you have to install all node.js app dependencies. Go into the folder called "myapp" and run
 
-	npm install
+	sudo npm install
 
 You should now be good to go. Start the app on a local server by running:
 
