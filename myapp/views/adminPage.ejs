@@ -48,6 +48,16 @@
           });
         });
       }
+      function checkAvailableId(){
+        var socket io();
+        socket.on('connect', function(){
+          socket.emit('checkAvailableId', function(){
+          });
+          socket.on('checkAvailableIdRes', function(msg){
+            alert(msg);
+          });
+        });
+      }
     </script>
   </body>
 </html>

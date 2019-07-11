@@ -68,6 +68,7 @@ app.get('/adminPage', function(req, res){
   res.render('adminPage');
 });
 
+
 app.get('/lastPage', function(req, res){
   var current_url = req.url;
   var fullUrl = req.protocol + "://" + req.get('host') + current_url;;
@@ -77,7 +78,6 @@ app.get('/lastPage', function(req, res){
   const rawData = fs.readFileSync('teamNames.json');
   const teamNames = JSON.parse(rawData);
   res.render('lastPage', {teamName: teamNames.teamList[id-1]});
-
 });
 
 // writes post to file code.py.
@@ -213,6 +213,7 @@ io.on('connection', function(socket){
     });
     socket.emit('clearCodeRealRes', message);
   });
+  socket.on()
 
 });
 
