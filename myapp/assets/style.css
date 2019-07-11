@@ -25,7 +25,7 @@ overflow: hidden;
 border-radius: 50px 50px 50px 50px;
 }
 
-.cool-btn2:enabled{
+/* .cool-btn2:enabled{
 position: relative;
 font-family: courier;
 font-size: 25px;
@@ -38,7 +38,7 @@ text-transform: uppercase;
 transition: 1s all ease;
 overflow: hidden;
 border-radius: 50px 50px 50px 50px;
-}
+} */
 
 .cool-btn:enabled::before{
 background: #ff6d44;
@@ -51,7 +51,7 @@ z-index: -1;
 transition: all 0.6s ease;
 }
 
-.cool-btn2:enabled::before{
+/* .cool-btn2:enabled::before{
 background: #ff6d44;
 content: "";
 position: absolute;
@@ -60,7 +60,7 @@ left: 50%;
 transform: translate(-50%, -50%);
 z-index: 999;
 transition: all 0.6s ease;
-}
+} */
 
 .btn1:enabled::before{
 width: 100%;

@@ -36,7 +36,7 @@ Last updated: 2019-07-09
     <div>
       <!-- This partial contains the help-tab.  -->
       <% include partials/helpTab.ejs %>
-      
+
       <!-- This partial contains modal shown if goal is reached. -->
       <% include partials/modal3.ejs %>
 
@@ -66,6 +66,11 @@ Last updated: 2019-07-09
   // ID generated uniquely for each window.
   var unique_id = <%= id %>
   console.log('Window id: ', unique_id);
+
+  // Generates html for button redirecting to the last page, and passing along id in the URL
+  var buttonStr = `<a href="/lastPage/?id=${unique_id}"><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;" onclick="postCodeToCar()">Run on Car</button></a>`;
+  document.getElementById("runOnRoverBtn").innerHTML = buttonStr;
+
   // The position of the goal for level 3.
   var goal_coords = {'x': 1.1, 'y': -1, 'yaw': 0};
   // Position of obstacles on level 3
