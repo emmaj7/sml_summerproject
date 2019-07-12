@@ -68,25 +68,27 @@ app.get('/adminPage', function(req, res){
   res.render('adminPage');
 });
 
+
 app.get('/lastPage', function(req, res){
   var current_url = req.url;
   var fullUrl = req.protocol + "://" + req.get('host') + current_url;;
   current_url_obj = new URL(fullUrl);
   const search_params = current_url_obj.searchParams;
   const id = search_params.get('id');
-  res.render('lastPage', {id: id});
-
+  const rawData = fs.readFileSync('teamNames.json');
+  const teamNames = JSON.parse(rawData);
+  res.render('lastPage', {teamName: teamNames.teamList[id-1]});
 });
 
 // writes post to file code.py.
-app.post("/postcode", urlencodedParser, function(req,res){
+app.post("/postcode", urlencodedParser, function(req, res){
   // console.log(req.body.code);
   var filename = 'code.py';
   writeCode(req.body.code,req.body.id, filename);
 });
 
 // writes post to file code_real.py.
-app.post("/postcode2", urlencodedParser, function(req,res){
+app.post("/postcode2", urlencodedParser, function(req, res){
   // console.log(req.body.code);
   var filename = 'code_real.py';
   writeCode(req.body.code,req.body.id, filename);
@@ -176,21 +178,6 @@ io.on('connection', function(socket){
       });
     });
   });
-  // button on admin page. Shows latest code snipped posted to code_real.py
-  socket.on('inspectCode', function(){
-    var outputString = '';
-    var startSaving = false;
-    lineReader.eachLine('code_real.py', function(line) {
-        if (line.includes('# ID:')) {
-            startSaving = true;
-        } else if (line.includes('#####')) {
-            socket.emit('inspectCodeRes', outputString);
-            console.log(outputString);
-        } else if (startSaving) {
-            outputString = outputString + line;
-        }
-    });
-  });
   // Button on admin page. Clears code in code.py
   socket.on('clearCode', function(){
     const data = '';
@@ -212,8 +199,42 @@ io.on('connection', function(socket){
     socket.emit('clearCodeRealRes', message);
   });
 
-});
+  socket.on('checkAvailableId', function(){
+    const filename = 'code_real.py';
+    var idList = getIdList(filename);
+    if (idList != null){
+      nameList = idNumberToName(idList);
+      socket.emit('checkAvailableIdRes', nameList);
+    } else {
+      socket.emit('checkAvailableIdRes', 'No avaiable id:s');
+    }
 
+  });
+
+});
+function idNumberToName(numberList){
+  const rawData = fs.readFileSync('teamNames.json');
+  const nameList = JSON.parse(rawData).teamList;
+  var availableNames = [];
+  for (var i = 0; i < numberList.length; i++) {
+    var index = numberList[i];
+    availableNames.push(nameList[index]);
+  }
+  return availableNames;
+}
+function getIdList(filename){
+  var lines = fs.readFileSync(filename, 'utf-8').split('\n')
+  lines = lines.filter(function(line){
+    if (line.includes('# ID:')) {
+      return line;
+    }
+  });
+  numbers = [];
+  for (var i = 0; i < lines.length; i++) {
+    numbers.push(parseInt(lines[i].replace(/\D/g,'')));
+  }
+  return  [... new Set(numbers)].sort();
+}
 // This function launches the python simulation
 function runScript(id, start, goal){
   id = 'USER' + id;

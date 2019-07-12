@@ -14,20 +14,10 @@
     <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="runOnCar()" id="cancelBtn">Run on Car</button></a>
     <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCode()" id="cancelBtn">Clear code.py</button></a>
     <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCodeReal()" id="cancelBtn">Clear code_real.py</button></a>
-    <a href="#"><button class="cool-btn btn1 btn" type="button" onclick='inspectCode()' id="cancelBtn">Inspect Code</button></a>
+    <a href="#"><button class="cool-btn btn1 btn" type="button" onclick='checkAvailableId()' id="cancelBtn">checkAvailableId</button></a>
 
     <script type="text/javascript">
       var unique_id = 'adminId';
-      function inspectCode(){
-        var socket = io();
-        socket.on('connect', function(){
-          socket.emit('inspectCode', function(){
-          });
-          socket.on('inspectCodeRes', function(msg){
-            alert(msg);
-          });
-        });
-      }
       function clearCode(){
         var socket = io();
         socket.on('connect', function(){
@@ -45,6 +35,18 @@
           });
           socket.on('clearCodeRealRes', function(msg){
             alert(msg);
+          });
+        });
+      }
+      function checkAvailableId(){
+        var socket = io();
+        socket.on('connect', function(){
+          socket.emit('checkAvailableId', function(){
+          });
+          socket.on('checkAvailableIdRes', function(msg){
+            console.log(msg);
+            alert(msg);
+            socket.close();
           });
         });
       }
