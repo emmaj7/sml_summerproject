@@ -20,9 +20,18 @@ Date: 2019-06-27
       console.log(`${data} and status is ${status}`)
     });
   }
-
   function runOnCar(){
+    getShortestCode();
     var onCar = true;
-    runSimulation(onCar)
+    // runSimulation(onCar);
+    socket.on('connect',function(){
+      console.log('Connected');
+      console.log('Session id: ' + unique_id); // Unique id for each html page opened.
+      if (onCar){
+        socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id,
+                                                    'goal': goal_coords}));
+        console.log('Running code on car');
+      }
+    });
   }
 </script>

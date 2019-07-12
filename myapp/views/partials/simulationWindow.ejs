@@ -360,7 +360,6 @@ Date: 2019-07-10
 
       // corner points of r1
       corners_r1 = getCorners(realc1, w1, h1);
-
       // corner points of r2
       corners_r2 = getCorners(realc2, w2, h2);
 
@@ -571,24 +570,24 @@ Date: 2019-07-10
             if (forced_close) {
               runningSimulation = false;
               whichButton();
-          } else { // Did not reach goal
-            var tryAgainBtn = document.getElementById('tryAgainBtn');
-            var tryAgainModal = document.getElementById('myTryAgainModal');
-            tryAgainModal.style.display = "block";
-            tryAgainBtn.onclick = function() {
-              tryAgainModal.style.display = "none";
-              runningSimulation = false;
-              whichButton();
-            }
-            window.onclick = function(event) {
-              if (event.target == tryAgainModal) {
-                tryAgainModal.style.display = "none";
-                runningSimulation = false;
-                whichButton();
+            } else { // Did not reach goal
+                var tryAgainBtn = document.getElementById('tryAgainBtn');
+                var tryAgainModal = document.getElementById('myTryAgainModal');
+                tryAgainModal.style.display = "block";
+                tryAgainBtn.onclick = function() {
+                  tryAgainModal.style.display = "none";
+                  runningSimulation = false;
+                  whichButton();
+                }
+                window.onclick = function(event) {
+                  if (event.target == tryAgainModal) {
+                    tryAgainModal.style.display = "none";
+                    runningSimulation = false;
+                    whichButton();
+                    }
+                  }
               }
             }
-          }
-        }
       });
 
       // This function is run at 60 Hz. Defined by app.ticker.

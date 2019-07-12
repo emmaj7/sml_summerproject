@@ -178,6 +178,7 @@ io.on('connection', function(socket){
       });
     });
   });
+
   // Button on admin page. Clears code in code.py
   socket.on('clearCode', function(){
     const data = '';
@@ -208,10 +209,44 @@ io.on('connection', function(socket){
     } else {
       socket.emit('checkAvailableIdRes', 'No avaiable id:s');
     }
-
   });
 
+  socket.on('getShortestCode', function(){
+    var filename = 'code_real.py';
+    var shortest = getShortestCode(filename);
+    if (shortest != null) {
+      nameList = idNumberToName([shortest.id]);
+      socket.emit('getShortestCodeRes', {id: shortest.id,
+                                         idName: nameList[0],
+                                         length: shortest.length});
+    } else {
+      socket.emit('checkAvailableIdRes', "Couldn't find code");
+    }
+
+  });
 });
+
+function getShortestCode(filename){
+  var textLines = fs.readFileSync(filename, 'utf-8').split('\n');
+  var shortestL = 1000;
+  var currentId, currentL, idShortest;
+
+  for (var i = 0; i < textLines.length; i++) {
+    if (textLines[i].includes('# ID:')) {
+      currentId = parseInt(textLines[i].replace(/\D/g,''));
+      currentL = 0;
+    } else if (textLines[i].includes('####')) {
+      if (currentL < shortestL) {
+        shortestL = currentL;
+        idShortest = currentId;
+      }
+    } else {
+      currentL = currentL + 1;
+    }
+  }
+  return {id: idShortest, length: shortestL};
+}
+
 function idNumberToName(numberList){
   const rawData = fs.readFileSync('teamNames.json');
   const nameList = JSON.parse(rawData).teamList;
@@ -222,6 +257,7 @@ function idNumberToName(numberList){
   }
   return availableNames;
 }
+
 function getIdList(filename){
   var lines = fs.readFileSync(filename, 'utf-8').split('\n')
   lines = lines.filter(function(line){

@@ -15,9 +15,10 @@
     <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCode()" id="cancelBtn">Clear code.py</button></a>
     <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCodeReal()" id="cancelBtn">Clear code_real.py</button></a>
     <a href="#"><button class="cool-btn btn1 btn" type="button" onclick='checkAvailableId()' id="cancelBtn">checkAvailableId</button></a>
-
     <script type="text/javascript">
       var unique_id = 'adminId';
+      var goal_coords = {'x': 1.1, 'y': -1, 'yaw': 0};
+      
       function clearCode(){
         var socket = io();
         socket.on('connect', function(){
@@ -46,6 +47,19 @@
           socket.on('checkAvailableIdRes', function(msg){
             console.log(msg);
             alert(msg);
+            socket.close();
+          });
+        });
+      }
+      function getShortestCode(){
+        var socket = io();
+        socket.on('connect', function(){
+          socket.emit('getShortestCode', function(){
+          });
+          socket.on('getShortestCodeRes', function(msg){
+            console.log(msg.id);
+            alert(`The shortest code is ${msg.length} lines long and is written by ${msg.idName}`);
+            unique_id = msg.id;
             socket.close();
           });
         });
