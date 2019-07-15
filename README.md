@@ -51,6 +51,6 @@ You should now be good to go. Start the app on a local server by running:
 
 	nodemon app.js
 
-You can view the application by going into a browser and access
+You can view the application by going into a browser and accessing
 
 	localhost:3000
