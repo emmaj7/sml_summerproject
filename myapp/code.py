@@ -1,5 +1,10 @@
 # ID:1
 rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:1
+rover.drive_forward()
 rover.turn_left()
 for count in range(2):
   rover.drive_forward()
