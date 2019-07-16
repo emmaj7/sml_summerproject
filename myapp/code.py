@@ -1,3 +1,37 @@
+# ID:4
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:3
+rover.turn_right()
+#####
+# ID:2
+rover.drive_forward()
+#####
+# ID:1
+for count in range(2):
+  rover.turn_left()
+  rover.turn_right()
+rover.drive_backwards()
+rover.turn_right()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:979050888139760800
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:1
+rover.drive_forward()
+rover.turn_left()
+#####
 # ID:1
 rover.drive_forward()
 rover.drive_forward()
