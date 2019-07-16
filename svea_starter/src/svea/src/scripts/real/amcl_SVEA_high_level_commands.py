@@ -40,34 +40,21 @@ import qualisys_localizers as ql
 
 class CarHighLevelCommands():
     """Class with high level methods intended to be called from a blockly-generated code."""
-    def __init__(self, simulation = True, vehicle_name = "SVEA5", goal = [0, 0],
+    def __init__(self, vehicle_name = "SVEA5", goal = [0, 0],
                        init_state = [0, 0, 0, 0]):
-        self.simulation = simulation
-        self.goal = goal
-        # self.show_animation = animation
-        qualisys_model_name = 'SVEA5'
-        dt = 0.01
-        if self.simulation:
-            # initialize simulated model and control interface
-            self.vehicle_model = SimpleBicycleState(*init_state, dt=dt)
-            self.ctrl_interface = ControlInterface(vehicle_name).start()
-            rospy.sleep(0.5)
-            # start background simulation thread
-            self.simulator = SimSVEA(vehicle_name, self.vehicle_model, dt, is_publish=True)
-            self.simulator.start()
-            self.target_state = [0, 0, 0, 0]
-            rospy.sleep(0.5)
-        else:
-            # initialize odometry and control interface for real car
-            # self.vehicle_model = ql.QualisysSimpleOdom(qualisys_model_name).start()
-            self.odom_publisher = OdomPublisher().start()
-            self.simulator = SimSVEA(vehicle_name, self.vehicle_model, dt, is_publish=True)
-            self.simulator.start()
+        dt = 1/30
+        # initialize odometry and control interface for real car
+        # self.vehicle_model = ql.QualisysSimpleOdom(qualisys_model_name).start()
+        self.vehicle_model = SimpleBicycleState(*init_state, dt=dt)
+        self.odom_publisher = OdomPublisher().start()
+        state = self.vehicle_model.get_state()
 
-            self.ctrl_interface = ControlInterface().start()
-            rospy.sleep(1) # Wait till odometry updated
+        self.odom_publisher.send_odometry(state, 0)
 
-            self.target_state = self.vehicle_model.get_state() # x, y, yaw, v
+        self.ctrl_interface = ControlInterface().start()
+        rospy.sleep(1) # Wait till odometry updated
+
+        self.target_state = self.vehicle_model.get_state() # x, y, yaw, v
 
         self.r = rospy.Rate(30) #S VEA car opearates on 30 Hz
         self.target_speed = 0.6 # [m/s]
@@ -131,6 +118,15 @@ class CarHighLevelCommands():
                  steering)
         plt.pause(0.001)
 
+    def at_goal(self):
+        """Checks if car is close enough to goal."""
+        state = self.vehicle_model.get_state()
+        dist = np.linalg.norm(np.subtract(state[0:2],self.goal))
+        if dist < 0.1:
+            return True
+        else:
+            return False
+
     def _turn(self, angle, direction):
         """Turn the car a given number of degrees relative to current orientation."""
         l = 1
@@ -148,15 +144,17 @@ class CarHighLevelCommands():
             x = state[0]
             y = state[1]
             yaw = state[2]
+
             # calculate and send control to car
             velocity, steering = lf.orientation_controller(x, y, yaw, yaw_ref, direction)
             self.ctrl_interface.send_control(steering,velocity)
+
+            # update model
             self.odom_publisher.send_odometry(state, steering)
+            self.vehicle_model.update(steering, velocity)
             # log data
             data = tuple(self.vehicle_model.get_state())
             self.data_log.append_data(*data)
-            if self.simulation:
-                self._animate_robot_path(steering, x0, y0, xg, yg)
 
             #dist = np.linalg.norm([x0-x,y0-y])
             # Done if angle is close enough
@@ -189,36 +187,16 @@ class CarHighLevelCommands():
             steering, target_ind = \
                 pure_pursuit.pure_pursuit_control(self.vehicle_model, cx, cy, target_ind)
             self.ctrl_interface.send_control(steering, self.target_speed)
+            # update model
             self.odom_publisher.send_odometry(state, steering)
+            self.vehicle_model.update(steering, velocity)
             # log data
             data = (self.vehicle_model.x, self.vehicle_model.y,
                     self.vehicle_model.yaw, self.vehicle_model.v, self.time)
             self.data_log.append_data(*data)
-            # update for animation
-            if self.simulation:
-                self._animate_pure_pursuit(steering,cx,cy,target_ind)
-            else:
-                rospy.loginfo_throttle(1.5, self.vehicle_model)
+            rospy.loginfo_throttle(1.5, self.vehicle_model)
             # sleep so loop runs at 30Hz
             self.r.sleep()
-
-        if self.simulation:
-            plt.close()
-            self._animate_pure_pursuit(steering, cx, cy, target_ind)
-            plt.show()
-        else:
-            # just show resulting plot if not animating
-            self._plot_trajectory(cx, cy)
-            plt.show()
-
-    def at_goal(self):
-        """Checks if car is close enough to goal."""
-        state = self.vehicle_model.get_state()
-        dist = np.linalg.norm(np.subtract(state[0:2],self.goal))
-        if dist < 0.1:
-            return True
-        else:
-            return False
 
     def drive_backwards(self):
         """Car follows straigth trajectory of predefined length.
@@ -242,12 +220,12 @@ class CarHighLevelCommands():
             # calculate and send control to car
             velocity, steering = lf.line_follower_reverse(x, y, yaw, x0, y0, xg, yg)
             self.ctrl_interface.send_control(steering, velocity) # Reverse steering.
+            # update model
             self.odom_publisher.send_odometry(state, steering)
+            self.vehicle_model.update(steering, velocity)
             # log data
             data = tuple(self.vehicle_model.get_state())
             self.data_log.append_data(*data)
-            if self.simulation:
-                self._animate_robot_path(steering, x0, y0, xg, yg)
             # done if close enough to goal
             dist = np.linalg.norm([xg-x,yg-y])
             if dist < tol:
@@ -279,14 +257,13 @@ class CarHighLevelCommands():
             # calculate and send control to car
             velocity, steering = lf.line_follower(x, y, yaw, x0, y0, xg, yg)
             self.ctrl_interface.send_control(steering, velocity)
+            # update model
             self.odom_publisher.send_odometry(state, steering)
+            self.vehicle_model.update(steering, velocity)
             # log data
             data = tuple(self.vehicle_model.get_state())
             self.data_log.append_data(*data)
-            if self.simulation:
-                self._animate_robot_path(steering, x0, y0, xg, yg)
-            else:
-                rospy.loginfo_throttle(1.5, self.vehicle_model)
+            rospy.loginfo_throttle(1.5, self.vehicle_model)
             # done if close enough to goal
             dist = np.linalg.norm([xg-x,yg-y])
             #print('Current pos:')
@@ -341,8 +318,7 @@ def log_to_file(log):
 def deploy(name, goal):
     """Wraps the init of car commands."""
     rospy.init_node('SVEA_high_level_' + name)
-    simulation = False
-    car = CarHighLevelCommands(simulation, name, goal)
+    car = CarHighLevelCommands(name, goal)
     return car
 
 def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
@@ -356,7 +332,7 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
 
     # name = 'SVEA5'
     # goal = [4, 0]
-    from_file = True
+    from_file = False
     rover = deploy(name, goal) # This should be part of the code later on.
     # car = CarHighLevelCommands(simulation)
     if from_file:
@@ -370,8 +346,7 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
         l_var = {'rover': rover}
         c.execute_commands(name, g_var, l_var)
     else:
-        car.drive_forward()
-        car.turn_right()
+        # car.drive_forward()
         # car.turn_right()
         # car.drive_forward()
     log_to_file(rover.data_log)

@@ -31,6 +31,7 @@ class OdomPublisher():
         rospy.spin()
     def _start_publish(self):
         self.odom_pub = rospy.Publisher("odom", Odometry, queue_size=20)
+
     def send_odometry(self, state, steering):
         """Publishes the position of the car as estimated by the SimpleBicycle
         model simulation + the velocity commands.

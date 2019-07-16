@@ -115,6 +115,12 @@ class SimpleBicycleState(object):
     def get_state_dim(self):
         return len(self.get_state())
 
+    def correct_state(self, x, y, yaw, v):
+        self.x = x
+        self.y = y
+        self.yaw = yaw
+        self.v = v
+        
     def set_dt(self, dt):
         self.dt = dt
 
