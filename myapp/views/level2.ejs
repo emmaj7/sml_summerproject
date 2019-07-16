@@ -33,7 +33,7 @@ Last updated: 2019-07-09
  <div>
    <!-- This partial contains the help-tab.  -->
    <% include partials/helpTab.ejs %>
-   
+
   <!-- This partial contains modal shown if goal is reached. -->
    <% include partials/modal2.ejs %>
 
@@ -61,8 +61,15 @@ Last updated: 2019-07-09
   // The position of the goal for level 2.
   var goal_coords = {'x': 0.80, 'y': 0.9, 'yaw': 0};
   // Position of obstacles on level 2
-  var obstacle_coords = [{x: 0, y: 0, yaw: 0, size: 0.3}];
+  var obstacle_coords = [{x: 0.8, y: 0, yaw: 0, size: 0.3}];
   var level = 2;
+  // var modalBodyStr = `<p style="font-size: 25px;">You solved level ${level} with the following Python code:</p>
+  //                     <pre style="font-family: courier; font-weight: bold; font-size: 20px;" id='code'></pre>
+  //                     <p style="font-size: 25px;"> Continue to level ${level+1}?</p>`;
+  // var modalFooterStr = `<a href="/level${level}" ><button class="cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;"><p style="position: relative; z-index: 4000; margin-bottom: 0px;">Cancel</p></button></a>
+  //                     <a href="/level${level+1}" ><button class="cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;"><p style="position: relative; z-index: 4000; margin-bottom: 0px;">OK</p></button></a>`
+  // document.getElementById("modalBody").innerHTML = modalBodyStr;
+  // document.getElementById("modalFooter").innerHTML = modalFooterStr;
   var runningSimulation = false;
   let cancel_simulation = false;
   function cancelSimulation(){

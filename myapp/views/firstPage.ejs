@@ -17,19 +17,17 @@ Last updated: 2019-07-09
         text-align: center;
         font-weight: bold;
       }
-
       p {
         font-family: courier;
         text-align: center;
       }
-
       .btn {
         justify-content: center;
       }
     </style>
   </head>
   <body>
-    <div style="position: fixed; z-index: -99; width: 100%; height: 100%">
+    <div style="position: fixed; z-index: -99; width: 100%; height: 100%;">
       <video autoplay muted loop id="myVideo">
         <source src="./videos/marsvideo3.webm" type="video/webm">
       </video>
@@ -50,10 +48,12 @@ Last updated: 2019-07-09
       <div class="start-button row justify-content-center text-center">
         <div class="col-6">
            <a href="/level1" >
-           <button class="cool-btn btn1 btn" id="btn1">Start</button>
+           <button class="cool-btn btn1 btn" id="btn1">START</button>
            </a>
         </div>
       </div>
     </div>
+    <!-- This partial contains the help-tab.  -->
+    <% include partials/helpTab.ejs %>
   </body>
 </html>

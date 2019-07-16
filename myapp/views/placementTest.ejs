@@ -1,7 +1,7 @@
 <!--
-Level 1.
+For testing dynamic placement of workspace and simulation window.
 Emma Johansson
-Last updated: 2019-07-09
+Last updated: 2019-07-16
 -->
 
 <!DOCTYPE html>
@@ -50,6 +50,13 @@ Last updated: 2019-07-09
 
   </body>
   <script>
+
+
+
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    console.log("Fönstret är såhär brett:" + w);
+    console.log("Fönstret är såhär högt:" + h);
     // Injecting workspace into div
     var workspace = Blockly.inject('blocklyDiv',
                     {toolbox: document.getElementById('toolbox'),

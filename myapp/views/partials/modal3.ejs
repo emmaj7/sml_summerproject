@@ -12,25 +12,18 @@ Last updated: 2019-07-09
       </div>
       <div class="modal-body">
         <p style="font-size: 25px;">You solved level 3 with the following Python code:</p>
-        <pre style="font-family: courier; font-weight: bold; font-size: 20px;" id='code'></pre>
-        <p style="font-size: 25px;"> Are you ready to run the code on the car?</p>
+        <div class="code-box" style="width: 200px; margin: 0 auto;">
+            <pre style="text-align: left;" id='code'></pre>
+        </div>
+        <p style="font-size: 25px;"> Are you ready to send the code to the rover?</p>
       </div>
       <div class="modal-footer">
         <div  style="margin: 0 auto;">
           <div class="row">
+            <a href="/level3"><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;"><p style="position: relative; z-index: 4000; margin-bottom: 0px;">Cancel</p></button></a>
             <span id="runOnRoverBtn"></span>
-            <a href="/level3"><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;">Cancel</button></a>
-            <!-- <a href="#" ><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;" onclick="postCodeToCar()">Run on Car</button></a> -->
-          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-<!--
-<script type="text/javascript">
-  var span = document.getElementById("runOnRoverBtn");
-  var buttonStr = `<a href="/lastPage/?id=${level}" ><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;" onclick="postCodeToCar()">Run on Car</button></a>`;
-  var buttonStrHTML = buttonStr.html();
-  span.innerHTML = buttonStrHTML;
-</script> -->
