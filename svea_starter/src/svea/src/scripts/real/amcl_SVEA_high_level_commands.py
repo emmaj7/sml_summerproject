@@ -18,6 +18,8 @@ import mikaels_code.line_follower as lf
 import mikaels_code.car_commands as cc
 import mikaels_code.data_log as dlog
 
+from mikaels_code.odom_publisher import OdomPublisher
+from mikaels_code.amcl_pose_subscriber import AmclPoseSubscriber
 dirname = os.path.dirname(__file__)
 svea = os.path.join(dirname, '../../')
 sys.path.append(os.path.abspath(svea))
@@ -48,11 +50,11 @@ class CarHighLevelCommands():
         self.vehicle_model = SimpleBicycleState(*init_state, dt=dt)
         self.odom_publisher = OdomPublisher().start()
         state = self.vehicle_model.get_state()
-
+        rospy.sleep(0.5)
         self.odom_publisher.send_odometry(state, 0)
 
         self.ctrl_interface = ControlInterface().start()
-        rospy.sleep(1) # Wait till odometry updated
+        rospy.sleep(0.5) # Wait till odometry updated
 
         self.target_state = self.vehicle_model.get_state() # x, y, yaw, v
 
@@ -334,6 +336,7 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
     # goal = [4, 0]
     from_file = False
     rover = deploy(name, goal) # This should be part of the code later on.
+    amcl_pose_node = AmclPoseSubscriber(rover.vehicle_model).start()
     # car = CarHighLevelCommands(simulation)
     if from_file:
         # File with the code to execute
@@ -346,10 +349,12 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
         l_var = {'rover': rover}
         c.execute_commands(name, g_var, l_var)
     else:
-        # car.drive_forward()
+        print('driving forward')
+        rover.drive_forward()
         # car.turn_right()
         # car.drive_forward()
     log_to_file(rover.data_log)
     # rospy.signal_shutdown('Program end')
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    # main(sys.argv[1:])
+    main()

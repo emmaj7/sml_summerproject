@@ -4,61 +4,68 @@ import rospy
 import tf
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
-
+from threading import Thread
 
 class OdomPublisher():
     OPERATING_FREQ = 30 # [Hz]
 
     def __init__(self, vehicle_name=""):
         self.vehicle_name = vehicle_name
-        self.current_time = rospy.get_time()
         self.is_stop = False
         self.is_emergency = False
         self.odom_tf = tf.TransformBroadcaster()
         self.odom = Odometry()
         self.last_steering = 0
+        self.odom_pub = None
+        self.node_name = None
+
+    def __repr__(self):
+        return self.node_name
+    def __str__(self):
+        return self.node_name
 
     def start(self):
         Thread(target=self._init_and_spin_ros, args=()).start()
         return self
     def _init_and_spin_ros(self):
+        self.node_name = self.vehicle_name + '_odom'
         rospy.loginfo(
                 'Starting Odometry node: \n'
                 + str(self))
-        self.node_name = self.vehicle_name + '_odom'
-
         self._start_publish()
+        print('started publisher')
         rospy.spin()
     def _start_publish(self):
-        self.odom_pub = rospy.Publisher("odom", Odometry, queue_size=20)
+        self.odom_pub = rospy.Publisher(self.vehicle_name + "/odom",
+                                        Odometry,
+                                        queue_size=1)
 
     def send_odometry(self, state, steering):
         """Publishes the position of the car as estimated by the SimpleBicycle
         model simulation + the velocity commands.
-        pose_estimate is list [x, y, yaw, velocity]"""
+        state is list [x, y, yaw, velocity]"""
 
         # since all odometry is 6DOF we'll need a quaternion created from yaw
-        odom_quat = tf.transformations.quaternion_from_euler(0, 0, pose_estimate[2])
-            # first, we'll publish the transform over tf
-        self.odom_tf.sendTransform(
-            (pose_estimate[0], pose_estimate[1], 0.),
-            odom_quat,
-            self.current_time,
-            "base_link",
-            "odom"
-        )
-        self.odom.header.stamp = self.current_time
-        self.odom.header.frame_id = 'id'
+        odom_quat = tf.transformations.quaternion_from_euler(0, 0, state[2])
+
+        # first, we'll publish the transform over tf
+        self.odom_tf.sendTransform((state[0], state[1], 0.),
+                                    odom_quat,
+                                    rospy.Time.now(),
+                                    "base_link",
+                                    "odom")
+        self.odom.header.stamp = rospy.Time.now()
+        self.odom.header.frame_id = self.vehicle_name + '_odom'
         # set the position
-        self.odom.pose.pose = Pose(Point(pose_estimate[0],
-                                         pose_estimate[1],
+        self.odom.pose.pose = Pose(Point(state[0],
+                                         state[1],
                                          0.0),
                                    Quaternion(*odom_quat)
         )
 
         # set the velocity
-        vx = state[3]*math.cos(yaw)
-        vy = state[3]*math.sin(yaw)
+        vx = state[3]*math.cos(state[2])
+        vy = state[3]*math.sin(state[2])
         vth = steering - self.last_steering
         self.odom.child_frame_id = "base_link"
         self.odom.twist.twist = Twist(Vector3(vx, vy, 0), Vector3(0, 0, vth))

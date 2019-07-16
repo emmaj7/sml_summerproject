@@ -11,7 +11,7 @@
   <include file="$(find rplidar_ros)/launch/rplidar.launch"/>
 
   <!-- transform between base_link and laser scanner -->
-  <node pkg="tf" type="static_transform_publisher" name="laser" args=" 0.1 0 0.2 0 0 0 1  /base_link /laser  1"/>
+  <node pkg="tf" type="static_transform_publisher" name="laser" args=" 0.1 0 0.2 0 0 0 1  /base_link /laser  1000"/>
 
   <!--start qualisys odometry-->
   <!-- <include file="$(find qualisys)/launch/qualisys.launch"/>
@@ -20,9 +20,9 @@
   </include> -->
 
   <!-- start amcl localization -->
-  <include file= "$(find navigation)/amcl/examples/amcl_diff.launch"/>
+  <include file="$(find amcl)/examples/amcl_diff.launch"/>
 
-  <arg name= "my_args"/>
-  <node pkg="svea" type="amcl_SVEA_high_level_commands.py" name="amcl_SVEA_high_level_commands" args="$(arg my_args)" output="screen"/>
-
+  <!-- <arg name= "my_args"/> -->
+  <!-- <node pkg="svea" type="amcl_SVEA_high_level_commands.py" name="amcl_SVEA_high_level_commands" args="$(arg my_args)" output="screen"/> -->
+  <node pkg="svea" type="amcl_SVEA_high_level_commands.py" name="amcl_SVEA_high_level_commands" output="screen"/>
 </launch>
