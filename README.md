@@ -17,26 +17,26 @@ Now clone the git repository
 
 	git clone https://github.com/emmaj7/sml_summerproject.git
 
-and go to it using the terminal. Next you will have to compile and link the ROS libraries.
+and go to it using the terminal. Next you will have to install a few ROS dependencies
 
 	cd svea_starter
 
 Now run
 
 	apt-get install libbullet-dev
-	
+
 then run
 
 	sudo apt-get install libsdl-image1.2-dev
 	sudo apt-get install libsdl-dev
-	
-Finally run
+
+Compile and link the ROS libraries
 
 	catkin_make
 	source devel/setup.bash
 	rospack profile
 
-To make sure the libraries are linked in the future, also call:
+To make sure the libraries are linked in the future, also call
 
 	echo "source <path-to-svea-starter>/devel/setup.bash" >> ~/.bashrc
 	source ~/.bashrc
@@ -45,8 +45,12 @@ where you need to replace "<path-to-svea-starter>" with the file path to whereve
 
 Finally you have to install all node.js app dependencies. Go into the folder called "myapp" and run
 
-	sudo npm install
+	npm install
 
 You should now be good to go. Start the app on a local server by running:
 
 	nodemon app.js
+
+You can view the application by going into a browser and accessing
+
+	localhost:3000

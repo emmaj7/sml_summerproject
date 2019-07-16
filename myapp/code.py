@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ID:3
 rover.turn_left()
 rover.turn_right()
@@ -13,10 +14,14 @@ rover.drive_forward()
 rover.drive_forward()
 rover.drive_forward()
 rover.turn_right()
+=======
+# ID:4
+>>>>>>> amcl-navigation
 rover.drive_forward()
 rover.drive_forward()
 rover.drive_forward()
 #####
+<<<<<<< HEAD
 # ID:1
 for count in range(2):
   rover.turn_left()
@@ -51,6 +56,15 @@ rover.drive_forward()
 rover.drive_forward()
 #####
 # ID:8
+=======
+# ID:3
+rover.turn_right()
+#####
+# ID:2
+rover.drive_forward()
+#####
+# ID:1
+>>>>>>> amcl-navigation
 for count in range(2):
   rover.turn_left()
   rover.turn_right()
@@ -60,6 +74,7 @@ rover.drive_forward()
 rover.drive_forward()
 rover.drive_forward()
 #####
+<<<<<<< HEAD
 # ID:8
 rover.turn_left()
 rover.turn_left()
@@ -206,11 +221,19 @@ for count in range(2):
 rover.drive_backwards()
 rover.turn_right()
 rover.drive_forward()
+=======
+# ID:979050888139760800
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+>>>>>>> amcl-navigation
 rover.drive_forward()
 rover.drive_forward()
 rover.drive_forward()
 #####
 # ID:1
+<<<<<<< HEAD
 for count in range(2):
   rover.turn_left()
   rover.turn_right()
@@ -339,10 +362,17 @@ rover.drive_forward()
 rover.drive_forward()
 rover.drive_forward()
 rover.turn_left()
+=======
+rover.drive_forward()
+rover.turn_left()
+#####
+# ID:1
+>>>>>>> amcl-navigation
 rover.drive_forward()
 rover.drive_forward()
 rover.drive_forward()
 #####
+<<<<<<< HEAD
 # ID:183046713150187500
 rover.drive_forward()
 rover.drive_forward()
@@ -362,6 +392,8 @@ rover.turn_left()
 # ID:183046713150187500
 rover.drive_forward()
 #####
+=======
+>>>>>>> amcl-navigation
 # ID:1
 rover.drive_forward()
 rover.turn_left()
