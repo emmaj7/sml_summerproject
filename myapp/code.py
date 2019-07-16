@@ -1056,10 +1056,14 @@ rover.drive_forward()
 rover.drive_forward()
 rover.drive_forward()
 rover.turn_right()
+=======
+# ID:4
+>>>>>>> amcl-navigation
 rover.drive_forward()
 rover.drive_forward()
 rover.drive_forward()
 #####
+<<<<<<< HEAD
 # ID:1
 for count in range(2):
   rover.turn_left()
@@ -1094,6 +1098,15 @@ rover.drive_forward()
 rover.drive_forward()
 #####
 # ID:8
+=======
+# ID:3
+rover.turn_right()
+#####
+# ID:2
+rover.drive_forward()
+#####
+# ID:1
+>>>>>>> amcl-navigation
 for count in range(2):
   rover.turn_left()
   rover.turn_right()
@@ -1103,6 +1116,7 @@ rover.drive_forward()
 rover.drive_forward()
 rover.drive_forward()
 #####
+<<<<<<< HEAD
 # ID:8
 rover.turn_left()
 rover.turn_left()
@@ -1249,11 +1263,19 @@ for count in range(2):
 rover.drive_backwards()
 rover.turn_right()
 rover.drive_forward()
+=======
+# ID:979050888139760800
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+>>>>>>> amcl-navigation
 rover.drive_forward()
 rover.drive_forward()
 rover.drive_forward()
 #####
 # ID:1
+<<<<<<< HEAD
 for count in range(2):
   rover.turn_left()
   rover.turn_right()
@@ -1382,181 +1404,149 @@ rover.drive_forward()
 rover.drive_forward()
 rover.drive_forward()
 rover.turn_left()
-rover.drive_forward()
-rover.drive_forward()
-rover.drive_forward()
-#####
-# ID:183046713150187500
-rover.drive_forward()
-rover.drive_forward()
-rover.drive_forward()
-rover.turn_left()
-rover.drive_forward()
-rover.drive_forward()
-rover.drive_forward()
-#####
-# ID:183046713150187500
-rover.drive_forward()
-rover.drive_forward()
-rover.drive_forward()
-rover.drive_forward()
-rover.turn_left()
-#####
-# ID:183046713150187500
-rover.drive_forward()
-#####
-# ID:1
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:1
-<<<<<<< HEAD
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:1
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:1
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:3
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:2
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:2
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:2
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:1
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:2
 =======
->>>>>>> 5da6328a9d9d5177fc6d8d9f0daa5362357de57b
-for count in range(5):
-  rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
 #####
 # ID:1
-for count in range(5):
-  rover.drive_forward()
+>>>>>>> amcl-navigation
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
 #####
+<<<<<<< HEAD
+# ID:183046713150187500
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:183046713150187500
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+#####
+# ID:183046713150187500
+rover.drive_forward()
+#####
+=======
+>>>>>>> amcl-navigation
 # ID:1
-for count in range(5):
+rover.drive_forward()
+rover.turn_left()
+for count in range(2):
   rover.drive_forward()
-#####
-# ID:1
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:1
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:1
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:17
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:16
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:14
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:12
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:12
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:12
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:10
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:10
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:9
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:8
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:8
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:7
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:6
-for count in range(5):
-  rover.drive_forward()
-#####
-# ID:6
-for count in range(5):
-  rover.drive_forward()
+  rover.turn_right()
+rover.drive_forward()
+rover.drive_forward()
 #####
 # ID:5
-for count in range(5):
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+for count in range(2):
+  rover.turn_right()
   rover.drive_forward()
+rover.drive_forward()
 #####
-# ID:5
-for count in range(5):
-  rover.drive_forward()
+# ID:4
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.turn_right()
+rover.drive_forward()
+rover.turn_right()
+rover.drive_forward()
+rover.drive_forward()
 #####
-# ID:5
-for count in range(5):
-  rover.drive_forward()
+# ID:4
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.turn_right()
 #####
-# ID:3
-for count in range(5):
-  rover.drive_forward()
+# ID:4
+rover.drive_forward()
+rover.turn_left()
 #####
-# ID:3
-for count in range(5):
-  rover.drive_forward()
+# ID:389174864645670100
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_right()
 #####
-# ID:2
-for count in range(5):
-  rover.drive_forward()
+# ID:389174864645670100
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_right()
 #####
-# ID:2
-for count in range(5):
-  rover.drive_forward()
+# ID:389174864645670100
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:389174864645670100
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:206807026557900060
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:206807026557900060
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:206807026557900060
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:206807026557900060
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:206807026557900060
+rover.drive_forward()
 #####
 # ID:1
-for count in range(5):
-  rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
 #####
 # ID:1
-for count in range(5):
-  rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:48464133234961460
+rover.drive_forward()
+#####
+# ID:280439906854553800
+rover.drive_forward()
 #####

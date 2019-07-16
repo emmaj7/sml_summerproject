@@ -360,7 +360,6 @@ Date: 2019-07-10
 
       // corner points of r1
       corners_r1 = getCorners(realc1, w1, h1);
-
       // corner points of r2
       corners_r2 = getCorners(realc2, w2, h2);
 
@@ -566,6 +565,7 @@ Date: 2019-07-10
               runningSimulation = false;
               whichButton();
             } else { // Did not reach goal
+<<<<<<< HEAD
                 console.log("Klarade ej banan");
                 var tryAgainBtn = document.getElementById('tryAgainBtn');
                 console.log("Hittat knapp?" + tryAgainBtn);
@@ -573,11 +573,17 @@ Date: 2019-07-10
                 console.log("Hittat modal?" + tryAgainModal);
                 tryAgainModal.style.display = "block";
                 console.log("Visar modal");
+=======
+                var tryAgainBtn = document.getElementById('tryAgainBtn');
+                var tryAgainModal = document.getElementById('myTryAgainModal');
+                tryAgainModal.style.display = "block";
+>>>>>>> 10c04933978e2890968d0aa5f8bdade058909449
                 tryAgainBtn.onclick = function() {
                   tryAgainModal.style.display = "none";
                   runningSimulation = false;
                   whichButton();
                 }
+<<<<<<< HEAD
               }
             }
 
@@ -670,6 +676,17 @@ Date: 2019-07-10
         //     }
         //   }
         // }
+=======
+                window.onclick = function(event) {
+                  if (event.target == tryAgainModal) {
+                    tryAgainModal.style.display = "none";
+                    runningSimulation = false;
+                    whichButton();
+                    }
+                  }
+              }
+            }
+>>>>>>> 10c04933978e2890968d0aa5f8bdade058909449
       });
 
       // This function is run at 60 Hz. Defined by app.ticker.

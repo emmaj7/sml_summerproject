@@ -24,8 +24,11 @@ overflow: hidden;
 border-radius: 50px 50px 50px 50px;
 }
 
+<<<<<<< HEAD
 
 /* Used for modals */
+=======
+>>>>>>> 10c04933978e2890968d0aa5f8bdade058909449
 .cool-btn2:enabled{
 position: relative;
 font-family: courier;
