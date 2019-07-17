@@ -2,6 +2,12 @@ body{
   background-color: #494949 !important;
 }
 
+#wrapper{
+  height: 100%;
+  width: 100%;
+  top: 0px;
+}
+
 a.button{
   -webkit-appearance: button;
   -moz-appearance: button;
@@ -19,12 +25,16 @@ color: white !important;
 font-weight: bold;
 border: 2px solid #ff6d44;
 padding: 14px 50px;
-text-transform: uppercase;
 transition: 1s all ease;
 overflow: hidden;
 border-radius: 50px 50px 50px 50px;
 }
 
+<<<<<<< HEAD
+
+/* Used for modals */
+=======
+>>>>>>> 10c04933978e2890968d0aa5f8bdade058909449
 .cool-btn2:enabled{
 position: relative;
 font-family: courier;
@@ -34,7 +44,6 @@ color: white !important;
 font-weight: bold;
 border: 2px solid #ff6d44;
 padding: 14px 50px;
-text-transform: uppercase;
 transition: 1s all ease;
 overflow: hidden;
 border-radius: 50px 50px 50px 50px;
@@ -51,6 +60,7 @@ z-index: -1;
 transition: all 0.6s ease;
 }
 
+/* Used for modals */
 .cool-btn2:enabled::before{
 background: #ff6d44;
 content: "";
@@ -72,8 +82,8 @@ text-decoration: none;
 .btn1:enabled:hover::before{
 height: 300%;
 font-size: 25px;
-
 }
+
 
 pre {
  display: block;
@@ -89,7 +99,7 @@ h1{
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1000; /* Sit on top */
+  z-index: 10000; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width of screen */
@@ -115,7 +125,6 @@ h1{
 /* Modal Body */
 .modal-body {
   padding: 2px 16px;
-  text-align: center;
 }
 
 /* Modal Footer */
@@ -203,10 +212,11 @@ p{
 }
 
 #vid1, #vid2, #vid3{
-  -moz-box-shadow:    1px 3px 10px 6px #000;
-  -webkit-box-shadow: 1px 3px 10px 6px #000;
-  box-shadow:         1px 3px 10px 6px #000;
-  margin-top: 20px;
+  -webkit-box-shadow: 8px 8px 10px -6px black;
+	   -moz-box-shadow: 8px 8px 10px -6px black;
+	        box-shadow: 8px 8px 10px -6px black;
+  margin-top: 5%;
+
 }
 
 #sideTab a {

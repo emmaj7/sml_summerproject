@@ -1,0 +1,12 @@
+{
+team1: Viking,
+team2: MAVEN,
+team3: Curiosity,
+team4: Phoenix,
+team5: Pathfinder,
+team6: InSight,
+team7: Rosetta,
+team8: Odyssey,
+team9: Sojourner,
+team10: Phobos-Grunt
+}

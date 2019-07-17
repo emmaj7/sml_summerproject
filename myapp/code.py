@@ -1,4 +1,15 @@
 # ID:868948996651156500
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+<<<<<<< HEAD
+# ID:1
+for count in range(2):
+  rover.turn_left()
+  rover.turn_right()
+rover.drive_backwards()
+>>>>>>> f59c393804317d0f6bc2c64c0fbe62833692df6c
 rover.turn_right()
 #####
 # ID:305992048325502340

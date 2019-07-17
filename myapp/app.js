@@ -68,6 +68,10 @@ app.get('/adminPage', function(req, res){
   res.render('adminPage');
 });
 
+app.get('/placementTest', function(req, res){
+  res.render('placementTest');
+});
+
 
 app.get('/lastPage', function(req, res){
   var current_url = req.url;

@@ -1,7 +1,7 @@
 <!--
-Level 1.
+For testing dynamic placement of workspace and simulation window.
 Emma Johansson
-Last updated: 2019-07-09
+Last updated: 2019-07-16
 -->
 
 <!DOCTYPE html>
@@ -12,6 +12,7 @@ Last updated: 2019-07-09
     <% include partials/imports.ejs %>
   </head>
   <body>
+    <div id="wrapper">
     <div id="headerThings" style="height:65px">
       <h1 style="font-family: courier; margin-top: 10px; padding:0px; color:white; font-weight:bold; text-align:center;">TRIP TO MARS: level 1</h1>
     </div>
@@ -29,6 +30,13 @@ Last updated: 2019-07-09
     </div>
     <!-- This partial contains function which shows/hides run/cancel-buttons. -->
     <% include partials/whichButton.ejs %>
+
+      </div>
+
+  <script type="text/javascript">
+
+
+  </script>
   <div>
     <!-- This partial contains the help-tab.  -->
     <% include partials/helpTab.ejs %>
@@ -52,10 +60,10 @@ Last updated: 2019-07-09
   </body>
   <script>
 
-    // Function making the placement (left margin) of the workspace dynamic
+    // Function making the placement of the workspace dynamic (left margin)
     function placeWorkspaceLeft(){
       var windowWidth = window.innerWidth;
-      var marginLeftWorkspace = (((windowWidth/2)-800)/2)+(((windowWidth/2)-800)/4);
+      var marginLeftWorkspace = ((windowWidth/2)-800)/2;
       marginLeftWorkspace = Math.ceil(marginLeftWorkspace);
       return marginLeftWorkspace;
     }
@@ -71,7 +79,6 @@ Last updated: 2019-07-09
     var workspace = Blockly.inject('blocklyDiv',
                     {toolbox: document.getElementById('toolbox'),
                     verticalLayout: true,
-                    trashcan: true,
                     scrollbars: false,
                     theme: Blockly.Themes.HighContrast});
     // ID generated uniquely for each window.

@@ -1,10 +1,50 @@
+<!--
+Code for the last page, shown after all 3 levels are completed.
+Emma Johansson
+Last updated: 2019-07-12
+-->
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>TRIP TO MARS</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../assets/style.css"/>
+    <style>
+      h1 {
+        font-family: courier;
+        text-align: center;
+        font-weight: bold;
+      }
+      p {
+        font-family: courier;
+        text-align: center;
+      }
+      .btn {
+        justify-content: center;
+      }
+    </style>
   </head>
   <body>
-    <h1><%=teamName%></h1>
+    <div style="position: fixed; z-index: -99; width: 100%; height: 100%;">
+      <video autoplay muted loop id="myVideo">
+        <source src="../videos/marsvideo3.webm" type="video/webm"/>
+      </video>
+    </div>
+    <div style="display: inline-block;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 200;
+                right: 0;
+                width: 1000px;
+                height: 500px;
+                margin: auto;
+                color: white;">
+      <p style="font-size:40px;" class="my-5"> Congratulations </p>
+      <h1 style="font-size: 70px; color:#ff6d44;"> Team <%= teamName %>! </h1>
+      <p style="font-size:25px;" class="my-5"> Stay tuned to find out <br> if your code was chosen! </p>
+    </div>
   </body>
 </html>

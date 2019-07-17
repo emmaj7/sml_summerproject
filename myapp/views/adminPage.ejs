@@ -11,15 +11,32 @@
     <title>Admin Page</title>
   </head>
   <body>
-    <h1>Admin Page</h1>
+    <h1 style="text-align: center; margin-top: 30px; color: #ff6d44; font-size: 70px;">ADMIN PAGE</h1>
     <% include partials/runOnCarFunction.ejs %>
 
-    <!-- Things to do: Add a buttom to cancel the execution on the car. Should call socket 'kill-process'.
-     Make sure the cancel button is only avaiable after 'run has been pressed'-->
-    <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="runOnCar()" id="cancelBtn">Run on Car</button></a>
-    <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCode()" id="cancelBtn">Clear code.py</button></a>
-    <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCodeReal()" id="cancelBtn">Clear code_real.py</button></a>
-    <a href="#"><button class="cool-btn btn1 btn" type="button" onclick='checkAvailableId()' id="cancelBtn">checkAvailableId</button></a>
+    <div class="row my-5">
+      <div class="col-6 text-center">
+        <p style="color: white;">This button runs the selected code on the rover.</p>
+        <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="runOnCar()">Run on Car</button></a>
+      </div>
+      <div class="col-6 text-center">
+        <p style="color: white;">This button clears the code.py file.</p>
+        <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCode()">Clear code.py</button></a>
+      </div>
+    </div>
+    <div class="row my-5">
+      <div class="col-6 text-center">
+        <p style="color: white;">This button clears the code_real.py file.</p>
+        <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCodeReal()">Clear code_real.py</button></a>
+      </div>
+      <div class="col-6 text-center">
+        <p style="color: white;">This button shows the available team names.</p>
+        <a href="#"><button class="cool-btn btn1 btn" type="button" onclick='checkAvailableId()'>Available names</button></a>
+      </div>
+    </div>
+
+
+
     <script type="text/javascript">
       var unique_id = 'adminId';
       var goal_coords = {'x': 1.1, 'y': -1, 'yaw': 0};
