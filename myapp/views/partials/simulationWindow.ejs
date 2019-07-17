@@ -41,15 +41,32 @@ Date: 2019-07-10
     transparent: false, // default: false
     resolution: 1,      // default: 1
     forceCanvas: false  // force to use drawng API instead of WebGL
+
+
   });
+
+  // Function making the placement (right margin) of the simulation dynamic
+  function placeSimulationRight(){
+    var windowWidth = window.innerWidth;
+    var marginRightSimulation = (((windowWidth/2)-800)/2)+(((windowWidth/2)-800)/4);
+
+    // var marginLeftSimulation = 3*(((windowWidth/2)-800)/2)+800;
+    marginRightSimulation = Math.ceil(marginRightSimulation);
+    var rightStr = marginRightSimulation.toString() + "px";
+    return rightStr;
+  }
+
+  var simRightMargin = placeSimulationRight();
 
   // Change background color
   app.renderer.backgroundColor = 0x0DA765B;
   // access style of window
   app.renderer.view.style.position = "absolute";
-  app.renderer.view.style.left = '945px';
+  // app.renderer.view.style.left = '945px';
+  app.renderer.view.style.right = simRightMargin;
   app.renderer.view.style.top = '75px';
-  //Add the canvas that Pixi automatically created for you to the HTML document
+  // app.renderer.view.style.top = placeWorkspaceTop;
+  // Add the canvas that Pixi automatically created for you to the HTML document
   document.body.appendChild(app.view);
 
   // Variables for the simulation
@@ -565,7 +582,7 @@ Date: 2019-07-10
               runningSimulation = false;
               whichButton();
             } else { // Did not reach goal
-<<<<<<< HEAD
+
                 console.log("Klarade ej banan");
                 var tryAgainBtn = document.getElementById('tryAgainBtn');
                 console.log("Hittat knapp?" + tryAgainBtn);
@@ -573,120 +590,15 @@ Date: 2019-07-10
                 console.log("Hittat modal?" + tryAgainModal);
                 tryAgainModal.style.display = "block";
                 console.log("Visar modal");
-=======
-                var tryAgainBtn = document.getElementById('tryAgainBtn');
-                var tryAgainModal = document.getElementById('myTryAgainModal');
-                tryAgainModal.style.display = "block";
->>>>>>> 10c04933978e2890968d0aa5f8bdade058909449
                 tryAgainBtn.onclick = function() {
                   tryAgainModal.style.display = "none";
                   runningSimulation = false;
                   whichButton();
                 }
-<<<<<<< HEAD
+
               }
             }
 
-        // if (at_goal.toString() === 'true'){ // Completed level 1
-        //   runningSimulation = false;
-        //   whichButton();
-        //
-        //   if (level === 1 || level === 2){
-        //     var modal = document.getElementById('myModal');
-        //     modal.style.display = "block";
-        //     window.onclick = function(event) {
-        //       if (event.target == modal1) {
-        //         modal.style.display = "none";
-        //       }
-        //     }
-        //   }
-        //   // } else if (level === 2){ // Completed level 2
-        //   //   var modal2 = document.getElementById('myModal2');
-        //   //   modal2.style.display = "block";
-        //   //   window.onclick = function(event) {
-        //   //     if (event.target == modal2) {
-        //   //       modal2.style.display = "none";
-        //   //     }
-        //   //   }
-        //   else if (level === 3){ // Completed level 3
-        //     console.log('YESSS');
-        //     var modal3 = document.getElementById('myModal3');
-        //     modal3.style.display = "block";
-        //     window.onclick = function(event) {
-        //       if (event.target == modal3) {
-        //         modal3.style.display = "none";
-        //       }
-        //     }
-        //   }
-        // } else if (obstacleHit) { // Hit obstacle on either level
-        //   var tryAgainBtn = document.getElementById('restartBtn');
-        //   var hitModal = document.getElementById('myHitModal');
-        //   hitModal.style.display = "block";
-        //   tryAgainBtn.onclick = function() {
-        //     hitModal.style.display = "none";
-        //     runningSimulation = false;
-        //     whichButton();
-        //   }
-        //   window.onclick = function(event) {
-        //     if (event.target == hitModal) {
-        //       hitModal.style.display = "none";
-        //       runningSimulation = false;
-        //       whichButton();
-        //     }
-        //   }
-        // } else if (wallHit) { // Hit wall on either level
-        //   var tryAgainBtn = document.getElementById('restart2Btn');
-        //   var wallModal = document.getElementById('myWallModal');
-        //   wallModal.style.display = "block";
-        //   tryAgainBtn.onclick = function() {
-        //     wallModal.style.display = "none";
-        //     runningSimulation = false;
-        //     whichButton();
-        //   }
-        //   window.onclick = function(event) {
-        //     if (event.target == wallModal) {
-        //       wallModal.style.display = "none";
-        //       runningSimulation = false;
-        //       whichButton();
-        //     }
-        //   }
-        // } else {
-        //     if (forced_close) {
-        //       runningSimulation = false;
-        //       whichButton();
-        //     }
-        //     else { // Did not reach goal OBS! Visas ej på level 3 - måste fixas!
-        //     console.log("hello");
-        //     var tryAgainBtn = document.getElementById('tryAgainBtn');
-        //     var tryAgainModal = document.getElementById('myTryAgainModal');
-        //     tryAgainModal.style.display = "block";
-        //     console.log("yo");
-        //     tryAgainBtn.onclick = function() {
-        //       tryAgainModal.style.display = "none";
-        //       runningSimulation = false;
-        //       whichButton();
-        //       console.log("nä");
-        //     }
-        //     window.onclick = function(event) {
-        //       if (event.target == tryAgainModal) {
-        //         tryAgainModal.style.display = "none";
-        //         runningSimulation = false;
-        //         whichButton();
-        //       }
-        //     }
-        //   }
-        // }
-=======
-                window.onclick = function(event) {
-                  if (event.target == tryAgainModal) {
-                    tryAgainModal.style.display = "none";
-                    runningSimulation = false;
-                    whichButton();
-                    }
-                  }
-              }
-            }
->>>>>>> 10c04933978e2890968d0aa5f8bdade058909449
       });
 
       // This function is run at 60 Hz. Defined by app.ticker.

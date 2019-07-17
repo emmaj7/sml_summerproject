@@ -1,3 +1,98 @@
+# ID:917703521327752200
+rover.drive_forward()
+#####
+# ID:917703521327752200
+rover.drive_forward()
+#####
+# ID:707117298612807200
+rover.drive_forward()
+#####
+# ID:107994188236080750
+rover.drive_forward()
+#####
+# ID:623987582695843200
+rover.drive_forward()
+#####
+# ID:519372433279408060
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:853805384631222400
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:34
+for count in range(2):
+  rover.turn_left()
+  rover.turn_right()
+rover.drive_backwards()
+rover.turn_right()
+for count2 in range(3):
+  rover.drive_forward()
+#####
+# ID:357591580722299300
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_right()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:614773397398414500
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+rover.turn_left()
+rover.drive_forward()
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:30
+rover.drive_forward()
+rover.turn_left()
+rover.turn_right()
+rover.turn_left()
+#####
+# ID:127900516252050560
+rover.drive_forward()
+#####
+# ID:127900516252050560
+rover.drive_forward()
+#####
+# ID:5
+rover.turn_right()
+#####
+# ID:5
+rover.drive_forward()
+rover.turn_left()
+rover.turn_right()
+rover.turn_left()
+#####
+# ID:3
+for count in range(2):
+  rover.turn_left()
+  rover.turn_right()
+rover.drive_backwards()
+rover.turn_right()
+for count2 in range(3):
+  rover.drive_forward()
+#####
+# ID:3
+rover.drive_forward()
+#####
+# ID:3
+rover.drive_forward()
+#####
 # ID:27
 rover.drive_forward()
 rover.turn_left()

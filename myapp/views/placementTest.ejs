@@ -12,11 +12,13 @@ Last updated: 2019-07-16
     <% include partials/imports.ejs %>
   </head>
   <body>
+    <div id="wrapper">
     <div id="headerThings" style="height:65px">
       <h1 style="font-family: courier; margin-top: 10px; padding:0px; color:white; font-weight:bold; text-align:center;">TRIP TO MARS: level 1</h1>
     </div>
     <div>
-        <div id="blocklyDiv" style="height: 800px; width: 800px; margin-left:120px;"></div> <!-- borde vara 100px till left? -->
+        <!-- <div id="blocklyDiv" style="height: 800px; width: 800px; margin-left:120px;"></div> <!-- borde vara 100px till left? -->
+        <span id="placement"></span>
         <xml id="toolbox" style="display: none">
           <block type="forward_block"></block>
           <block type="backward_block"></block>
@@ -28,6 +30,13 @@ Last updated: 2019-07-16
     </div>
     <!-- This partial contains function which shows/hides run/cancel-buttons. -->
     <% include partials/whichButton.ejs %>
+
+      </div>
+
+  <script type="text/javascript">
+
+
+  </script>
   <div>
     <!-- This partial contains the help-tab.  -->
     <% include partials/helpTab.ejs %>
@@ -51,12 +60,21 @@ Last updated: 2019-07-16
   </body>
   <script>
 
+    // Function making the placement of the workspace dynamic (left margin)
+    function placeWorkspaceLeft(){
+      var windowWidth = window.innerWidth;
+      var marginLeftWorkspace = ((windowWidth/2)-800)/2;
+      marginLeftWorkspace = Math.ceil(marginLeftWorkspace);
+      return marginLeftWorkspace;
+    }
 
+    var workspaceLeft = placeWorkspaceLeft();
+    var workspaceTop = 75;
 
-    var w = window.innerWidth;
-    var h = window.innerHeight;
-    console.log("Fönstret är såhär brett:" + w);
-    console.log("Fönstret är såhär högt:" + h);
+    // Inserting positioning in string
+    var string = `<div id="blocklyDiv" style="z-index: 100; height: 800px; width: 800px; margin-left:${workspaceLeft}px; top:${workspaceTop}px;"></div>`;
+    document.getElementById("placement").innerHTML = string;
+
     // Injecting workspace into div
     var workspace = Blockly.inject('blocklyDiv',
                     {toolbox: document.getElementById('toolbox'),
