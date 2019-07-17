@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-# High level interface to run the SVEA cars.
+# High level interface to run the SVEA cars. amcl version
+# This version of the program uses amcl for localization of the vehicle
 # Written by Mikael Glamheden
-# 2019-06-04
+# Last updated: 2019-07-17
 
 import sys
 import os
@@ -44,11 +45,12 @@ class CarHighLevelCommands():
     """Class with high level methods intended to be called from a blockly-generated code."""
     def __init__(self, vehicle_name = "SVEA5", goal = [0, 0],
                        init_state = [0, 0, 0, 0]):
-        dt = 1/30
+        dt = 1.0/30
         # initialize odometry and control interface for real car
         # self.vehicle_model = ql.QualisysSimpleOdom(qualisys_model_name).start()
         self.vehicle_model = SimpleBicycleState(*init_state, dt=dt)
         self.odom_publisher = OdomPublisher().start()
+        self.amcl_pose_node = AmclPoseSubscriber().start()
         state = self.vehicle_model.get_state()
         rospy.sleep(0.5)
         self.odom_publisher.send_odometry(state, 0)
@@ -64,7 +66,7 @@ class CarHighLevelCommands():
         self.data_log = dlog.Data_log()
 
     def _send_position(self, steering):
-        # Send position to server using JSON
+        '''Send position to stdout in JSON format.'''
         state = self.vehicle_model.get_state()
         data = {'x': state[0], 'y': state[1], 'yaw': state[2], 'v': state[3], 'steering': steering}
         # sys.stdout.write(json.dumps(data))
@@ -129,6 +131,16 @@ class CarHighLevelCommands():
         else:
             return False
 
+    def _amcl_pose_update(self):
+        """update the bicycle model based on amcl"""
+        amcl_state = self.amcl_pose_node.get_state()
+        time_limit = 1.0/5 # Affects how recent the amcl data has to be to be take into account.
+
+        if (amcl_state[0] is not None and
+            rospy.Time.now().to_sec() - amcl_state[0] < time_limit):
+            self.vehicle_model.correct_state(*amcl_state[1:])
+            rospy.loginfo('Updated the vehicle model')
+
     def _turn(self, angle, direction):
         """Turn the car a given number of degrees relative to current orientation."""
         l = 1
@@ -151,9 +163,16 @@ class CarHighLevelCommands():
             velocity, steering = lf.orientation_controller(x, y, yaw, yaw_ref, direction)
             self.ctrl_interface.send_control(steering,velocity)
 
+
             # update model
-            self.odom_publisher.send_odometry(state, steering)
             self.vehicle_model.update(steering, velocity)
+
+            # publish dead reckoning
+            self.odom_publisher.send_odometry(state, steering)
+
+            # update with information from amcl
+            self._amcl_pose_update()
+
             # log data
             data = tuple(self.vehicle_model.get_state())
             self.data_log.append_data(*data)
@@ -189,9 +208,15 @@ class CarHighLevelCommands():
             steering, target_ind = \
                 pure_pursuit.pure_pursuit_control(self.vehicle_model, cx, cy, target_ind)
             self.ctrl_interface.send_control(steering, self.target_speed)
+
             # update model
-            self.odom_publisher.send_odometry(state, steering)
             self.vehicle_model.update(steering, velocity)
+
+            # publish dead reckoning
+            self.odom_publisher.send_odometry(state, steering)
+
+            # update with information from amcl
+            self._amcl_pose_update()
             # log data
             data = (self.vehicle_model.x, self.vehicle_model.y,
                     self.vehicle_model.yaw, self.vehicle_model.v, self.time)
@@ -222,9 +247,15 @@ class CarHighLevelCommands():
             # calculate and send control to car
             velocity, steering = lf.line_follower_reverse(x, y, yaw, x0, y0, xg, yg)
             self.ctrl_interface.send_control(steering, velocity) # Reverse steering.
+
             # update model
-            self.odom_publisher.send_odometry(state, steering)
             self.vehicle_model.update(steering, velocity)
+
+            # publish dead reckoning
+            self.odom_publisher.send_odometry(state, steering)
+
+            # update with information from amcl
+            self._amcl_pose_update()
             # log data
             data = tuple(self.vehicle_model.get_state())
             self.data_log.append_data(*data)
@@ -259,9 +290,15 @@ class CarHighLevelCommands():
             # calculate and send control to car
             velocity, steering = lf.line_follower(x, y, yaw, x0, y0, xg, yg)
             self.ctrl_interface.send_control(steering, velocity)
+
             # update model
-            self.odom_publisher.send_odometry(state, steering)
             self.vehicle_model.update(steering, velocity)
+
+            # publish dead reckoning
+            self.odom_publisher.send_odometry(state, steering)
+
+            # update with information from amcl
+            self._amcl_pose_update()
             # log data
             data = tuple(self.vehicle_model.get_state())
             self.data_log.append_data(*data)
@@ -336,7 +373,6 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
     # goal = [4, 0]
     from_file = False
     rover = deploy(name, goal) # This should be part of the code later on.
-    amcl_pose_node = AmclPoseSubscriber(rover.vehicle_model).start()
     # car = CarHighLevelCommands(simulation)
     if from_file:
         # File with the code to execute

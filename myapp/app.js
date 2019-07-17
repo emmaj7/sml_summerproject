@@ -98,7 +98,6 @@ app.post("/postcode2", urlencodedParser, function(req, res){
 // Required to run simulation.
 shell.exec('roscore', {async:true});
 
-
 io.on('connection', function(socket){
   console.log('opened connection');
   var forced_exit = false;
@@ -150,6 +149,7 @@ io.on('connection', function(socket){
     var id = 'USER' + obj.id;
     var goal = obj.goal;
     var command = 'roslaunch svea SVEA_high_level_commands.launch ';
+    // var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch '; // Use this if amcl navigation
     var args = 'my_args:=' + '"' + id + ' ' + JSON.stringify(goal) + '"';
     shell.exec(command + args, {async:true}, function(code, stdout, stderr){
       console.log('Exit Code: ', code);
@@ -304,7 +304,7 @@ function transmitPose(socket, name) {
   console.log('starting listener')
   rosnodejs.initNode('/listener_node/SVEA5')
     .then((rosNode) => {
-      // Create ROS subscriber on the 'chatter' topic expecting String messages
+      // Create ROS subscriber on the /SVEA5/pose topic
       let sub = rosNode.subscribe('/SVEA5/pose', geometry_msgs.PoseStamped,
         (data) => { // define callback execution
           var dataString = JSON.stringify(data);

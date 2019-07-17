@@ -2,7 +2,9 @@
 
 # High level interface to simulate the SVEA cars.
 # Written by Mikael Glamheden
-# 2019-06-04
+# Last updated: 2019-07-17
+
+
 
 import sys
 import os
@@ -77,7 +79,7 @@ class CarHighLevelCommands():
         self.data_log = dlog.Data_log()
 
     def _send_position(self, steering):
-        # Send position to server using JSON
+        '''Send position to stdout as JSON data'''
         state = self.vehicle_model.get_state()
         data = {'x': state[0], 'y': state[1], 'yaw': state[2], 'v': state[3], 'steering': steering}
         sys.stdout.write(json.dumps(data))

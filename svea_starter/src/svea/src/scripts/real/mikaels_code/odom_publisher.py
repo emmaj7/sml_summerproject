@@ -1,5 +1,11 @@
-import math
+#!/usr/bin/env python
 
+# High level interface to simulate the SVEA cars.
+# Written by Mikael Glamheden
+# Last updated: 2019-07-17
+
+
+import math
 import rospy
 import tf
 from nav_msgs.msg import Odometry
@@ -7,6 +13,9 @@ from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 from threading import Thread
 
 class OdomPublisher():
+    '''Class for interface with publishing to the odometry topic.
+        Given a 2D state, and steering information a geometry message is published.
+        The transform between /odom and /base_link is also broadcasted.'''
     OPERATING_FREQ = 30 # [Hz]
 
     def __init__(self, vehicle_name=""):
@@ -45,16 +54,18 @@ class OdomPublisher():
         model simulation + the velocity commands.
         state is list [x, y, yaw, velocity]"""
 
-        # since all odometry is 6DOF we'll need a quaternion created from yaw
+        # quaternion from yaw
         odom_quat = tf.transformations.quaternion_from_euler(0, 0, state[2])
 
-        # first, we'll publish the transform over tf
+        # publish the transform over tf
         self.odom_tf.sendTransform((state[0], state[1], 0.),
                                     odom_quat,
                                     rospy.Time.now(),
                                     "base_link",
                                     "odom")
+        # Set the time stamp
         self.odom.header.stamp = rospy.Time.now()
+        # set the frame id
         self.odom.header.frame_id = self.vehicle_name + '_odom'
         # set the position
         self.odom.pose.pose = Pose(Point(state[0],
@@ -62,11 +73,10 @@ class OdomPublisher():
                                          0.0),
                                    Quaternion(*odom_quat)
         )
-
         # set the velocity
         vx = state[3]*math.cos(state[2])
         vy = state[3]*math.sin(state[2])
-        vth = steering - self.last_steering
+        vth = (steering - self.last_steering)/OPERATING_FREQ # approximate the 2D yaw dot
         self.odom.child_frame_id = "base_link"
         self.odom.twist.twist = Twist(Vector3(vx, vy, 0), Vector3(0, 0, vth))
         if not self.is_emergency or not self.is_stop or not self.is_persistent:
