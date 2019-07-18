@@ -308,38 +308,25 @@ Date: 2019-07-10
         return false;
       }
     }
-    // Checks for collision with map edges.
+    // Checks for collision with borders of map.
     function edgeCollision(sprite){
-      let hit, vx, vy, wall;
-      wall = {};
-      hit = false;
-      //Find the half-heights of the sprite. (the shortest distance)
-      sprite.halfHeight = sprite.height / 2;
-
       // Get limits of map
-      wall.xmax = app.renderer.view.width;
-      wall.xmin = 0;
-      wall.ymin = 0;
-      wall.ymax = app.renderer.view.height;
+      c1 = transformReversed(0, app.renderer.view.height, 0); // lower left corner
+      c2 = transformReversed(app.renderer.view.width, 0, 0); // upper right corner
+      corners = getCorners(transformReversed(sprite.x, sprite.y, sprite.rotation),
+                           sprite.width/scale_factor,
+                           sprite.height/scale_factor);
 
       // Check for collisions with map border.
-      if (Math.abs(sprite.x-wall.xmax) < sprite.halfHeight){
-        console.log('Hit 1');
-        hit = true;
-      } else if (Math.abs(sprite.x-wall.xmin) < sprite.halfHeight){
-        console.log('Hit 2');
-        hit = true;
-      } else if (Math.abs(sprite.y-wall.ymax) < sprite.halfHeight) {
-        console.log('Hit 3');
-        console.log('HalfHeight: ', sprite.halfHeight);
-        console.log('Distance: ', Math.abs(sprite.y-wall.ymax));
-        console.log('Coords:', sprite.x, sprite.y);
-        hit = true;
-      } else if (Math.abs(sprite.y-wall.ymin) < sprite.halfHeight) {
-        console.log('Hit 4');
-        hit = true;
+      for (var i = 0; i < corners.length; i++) {
+        p = corners[i]
+        if (p[0] < c1.x || p[0] > c2.x){
+          return true
+        } else if (p[1] < c1.y || p[1] > c2.y) {
+          return true
+        }
       }
-      return hit;
+      return false
     }
     // returns vector perpendicular to side i of polygon.
     function getAxisNormal(ps,i){

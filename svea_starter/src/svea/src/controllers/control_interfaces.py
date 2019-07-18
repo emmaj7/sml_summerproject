@@ -67,8 +67,7 @@ class ControlInterface():
     def _start_listen(self):
         rospy.Subscriber(self.vehicle_name+'/lli/ctrl_actuated', lli_ctrl_actuated,
                          self._read_ctrl_actuated)
-        rospy.loginfo(
-                "Controller Interface successfully initialized")
+        rospy.loginfo("Controller Interface successfully initialized")
 
     def _start_publish(self):
         self.ctrl_request_pub = rospy.Publisher(self.vehicle_name+'/lli/ctrl_request',

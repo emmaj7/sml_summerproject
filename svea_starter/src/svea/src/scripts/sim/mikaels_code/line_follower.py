@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 # Written by Mikael Glamheden
-# 2019-06-04
+# Last updated: 2019-07-17
 
-# Controller for following straight line paths and orienting car.
+# Controller for following straight line paths and turning car.
 
 import math
 
@@ -13,6 +13,7 @@ def normalize_angle(angle):
     elif angle < -math.pi:
         angle += 2*math.pi
     return angle
+
 def saturate(v, max):
     if v > max:
         v = max
@@ -40,6 +41,7 @@ def line_follower_reverse(x, y, yaw, x0, y0, xg, yg):
     w = k2*dp
 
     return v, w
+
 def line_follower(x, y, yaw, x0, y0, xg, yg):
     p = 0.4 # look ahead gain
     k1 = 5.0 # velocity gain
