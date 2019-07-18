@@ -56,10 +56,13 @@ Last updated: 2019-07-09
       <% include partials/tutorial.ejs %>
 
       <!-- This partial has the code related to running the code on the car itself. -->
-      <% include partials/runOnCarFunction.ejs %>
+      <script type="text/javascript">
+        <% include partials/runOnCarFunctions.js %>
+      </script>
     </div>
   </body>
   <script>
+
     // Function making the placement (left margin) of the workspace dynamic
     function placeWorkspaceLeft(){
       var windowWidth = window.innerWidth;
@@ -67,8 +70,8 @@ Last updated: 2019-07-09
       marginLeftWorkspace = Math.ceil(marginLeftWorkspace);
       return marginLeftWorkspace;
     }
-    // Function making the placement (top margin) of the workspace dynamic
 
+    // Function making the placement (top margin) of the workspace dynamic
     function placeWorkspaceTop(){
       var windowHeight = window.innerHeight;
       console.log("height, enligt workspace: " + windowHeight);

@@ -1,9 +1,9 @@
 // Runs code in simulation environment.
 // Written by: Mikael Glamheden
-// Date: 2019-06-27
+// Last updated: 2019-07-18
 
 function runCode(){
-  // Generate JavaScript code and run it.
+  // Generate python code and run it.
   window.LoopTrap = 1000;
   Blockly.JavaScript.INFINITE_LOOP_TRAP =
   'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
@@ -18,16 +18,7 @@ function runCode(){
   $.post("/postcode", codeObj, function(codeObj, status){
     console.log(`${codeObj.code} and status is ${status}`)
   });
-  var onCar = false;
   // Run simulation. Function in simulationWindow.ejs
-  return runSimulation(onCar);
+  return runSimulation();
 
-
-
-  // Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-  // try {
-  //   eval(code);
-  // } catch (error) {
-  //   alert(error);
-  // }
 }

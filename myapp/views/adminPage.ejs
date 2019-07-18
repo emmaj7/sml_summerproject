@@ -1,4 +1,10 @@
+<!--
+Administrative page.
+Hold some powerful aftions only meant to be controlled by host.
 
+Created by: Emma Johansson & Mikael Glamheden
+Last updated: 2019-07-18
+ -->
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -12,7 +18,6 @@
   </head>
   <body>
     <h1 style="text-align: center; margin-top: 30px; color: #ff6d44; font-size: 70px;">ADMIN PAGE</h1>
-    <% include partials/runOnCarFunction.ejs %>
 
     <div class="row my-5">
       <div class="col-6 text-center">
@@ -38,53 +43,11 @@
 
 
     <script type="text/javascript">
+     // imports the functions related to running the code on the car.
+      <% include partials/runOnCarFunctions.js %>
       var unique_id = 'adminId';
       var goal_coords = {'x': 1.1, 'y': -1, 'yaw': 0};
-      function clearCode(){
-        var socket = io();
-        socket.on('connect', function(){
-          socket.emit('clearCode', function(){
-          });
-          socket.on('clearCodeRes', function(msg){
-            alert(msg);
-          });
-        });
-      }
-      function clearCodeReal(){
-        var socket = io();
-        socket.on('connect', function(){
-          socket.emit('clearCodeReal', function(){
-          });
-          socket.on('clearCodeRealRes', function(msg){
-            alert(msg);
-          });
-        });
-      }
-      function checkAvailableId(){
-        var socket = io();
-        socket.on('connect', function(){
-          socket.emit('checkAvailableId', function(){
-          });
-          socket.on('checkAvailableIdRes', function(msg){
-            console.log(msg);
-            alert(msg);
-            socket.close();
-          });
-        });
-      }
-      function getShortestCode(){
-        var socket = io();
-        socket.on('connect', function(){
-          socket.emit('getShortestCode', function(){
-          });
-          socket.on('getShortestCodeRes', function(msg){
-            console.log(msg.id);
-            alert(`The shortest code is ${msg.length} lines long and is written by ${msg.idName}`);
-            unique_id = msg.id;
-            socket.close();
-          });
-        });
-      }
+
     </script>
   </body>
 </html>

@@ -284,7 +284,7 @@ Date: 2019-07-10
     }
 
     // Called when run code button pressed.
-    function runSimulation(onCar){
+    function runSimulation(){
       app.ticker.start()
       var socket = io();
       curr_sprite = 5;
@@ -314,43 +314,21 @@ Date: 2019-07-10
       });
 
       // recieves position. Updates car position in simulation.
-      socket.on('position-sent-car', function(msg){
-        if(onCar){
-          let = JSON.parse(msg);
-          x = obj.x;
-          y = obj.y;
-          last_yaw = yaw;
-          yaw = obj.yaw;
-          if (obstacleHit || wallHit){
-            socket.emit('collision');
-            console.log('Collision!');
-          }
-          if (cancel_simulation){
-            console.log('cancelling');
-            socket.emit('kill-process');
-            cancel_simulation = false;
-          }
-        }
-      });
-
-      // recieves position. Updates car position in simulation.
       socket.on('position-sent-sim', function(msg){
-        if (onCar == false){
-          let obj = JSON.parse(msg);
-          x = obj.x;
-          y = obj.y;
-          last_yaw = yaw;
-          yaw = obj.yaw;
+        let obj = JSON.parse(msg);
+        x = obj.x;
+        y = obj.y;
+        last_yaw = yaw;
+        yaw = obj.yaw;
 
-          if (obstacleHit || wallHit){
-            socket.emit('collision');
-            console.log('Collision!');
-          }
-          if (cancel_simulation){
-            console.log('cancelling simulation');
-            socket.emit('cancel-simulation');
-            cancel_simulation = false;
-          }
+        if (obstacleHit || wallHit){
+          socket.emit('collision');
+          console.log('Collision!');
+        }
+        if (cancel_simulation){
+          console.log('cancelling simulation');
+          socket.emit('cancel-simulation');
+          cancel_simulation = false;
         }
       });
       // Called when python script is closed. Either forced or natural.
