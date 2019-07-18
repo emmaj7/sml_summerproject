@@ -36,7 +36,7 @@ Date: 2019-07-10
   //Create a Pixi Application
   let app = new Application({
     width: 800,         // default: 800
-    height: 800,        // default: 600
+    height: 800,        // default: 800
     antialias: true,    // default: false
     transparent: false, // default: false
     resolution: 1,      // default: 1
@@ -45,27 +45,37 @@ Date: 2019-07-10
 
   });
 
-  // Function making the placement (right margin) of the simulation dynamic
+  // Function making the placement (right margin) of the simulation window dynamic
   function placeSimulationRight(){
     var windowWidth = window.innerWidth;
     var marginRightSimulation = (((windowWidth/2)-800)/2)+(((windowWidth/2)-800)/4);
-
     // var marginLeftSimulation = 3*(((windowWidth/2)-800)/2)+800;
     marginRightSimulation = Math.ceil(marginRightSimulation);
     var rightStr = marginRightSimulation.toString() + "px";
     return rightStr;
   }
 
+  // Function making the placement (top margin) of the simulation window dynamic
+  function placeSimulationTop(){
+    var windowHeight = window.innerHeight;
+    console.log("height, enligt simulering: " + windowHeight);
+    var marginTopSimulation = (windowHeight-800)*0.35;
+    // var marginLeftSimulation = 3*(((windowWidth/2)-800)/2)+800;
+    marginTopSimulation = Math.ceil(marginTopSimulation);
+    var topStr = marginTopSimulation.toString() + "px";
+    console.log("marginTop, enligt simulering: " + marginTopSimulation);
+    return topStr;
+  }
+
   var simRightMargin = placeSimulationRight();
+  var simTopMargin = placeSimulationTop();
 
   // Change background color
   app.renderer.backgroundColor = 0x0DA765B;
   // access style of window
   app.renderer.view.style.position = "absolute";
-  // app.renderer.view.style.left = '945px';
   app.renderer.view.style.right = simRightMargin;
-  app.renderer.view.style.top = '75px';
-  // app.renderer.view.style.top = placeWorkspaceTop;
+  app.renderer.view.style.top = simTopMargin;
   // Add the canvas that Pixi automatically created for you to the HTML document
   document.body.appendChild(app.view);
 
@@ -357,7 +367,7 @@ Date: 2019-07-10
           runningSimulation = false;
           whichButton();
           if (level === 1){
-            var modal1 = document.getElementById('myModal1');
+            var modal1 = document.getElementById('myModal');
             modal1.style.display = "block";
             window.onclick = function(event) {
               if (event.target == modal1) {
@@ -365,7 +375,7 @@ Date: 2019-07-10
               }
             }
           } else if (level === 2){ // Completed level 2
-            var modal2 = document.getElementById('myModal2');
+            var modal2 = document.getElementById('myModal');
             modal2.style.display = "block";
             window.onclick = function(event) {
               if (event.target == modal2) {

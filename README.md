@@ -41,7 +41,7 @@ To make sure the libraries are linked in the future, also call
 	echo "source <path-to-svea-starter>/devel/setup.bash" >> ~/.bashrc
 	source ~/.bashrc
 
-where you need to replace "<path-to-svea-starter>" with the file path to wherever you cloned "svea_starter". For example, the full path might look like "/home/user/sml_summerproject/svea_starter/devel/setup.bash".
+where you need to replace "`<path-to-svea-starter>`" with the file path to wherever you cloned "svea_starter". For example, the full path might look like "/home/user/sml_summerproject/svea_starter/devel/setup.bash".
 
 Finally you have to install all node.js app dependencies. Go into the folder called "myapp" and run
 
