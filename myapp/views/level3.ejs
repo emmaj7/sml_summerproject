@@ -67,11 +67,6 @@ Last updated: 2019-07-09
       marginLeftWorkspace = Math.ceil(marginLeftWorkspace);
       return marginLeftWorkspace;
     }
-<<<<<<< HEAD
-    var workspaceLeft = placeWorkspaceLeft();
-    var workspaceTop = 75;
-=======
-
     // Function making the placement (top margin) of the workspace dynamic
 
     function placeWorkspaceTop(){
@@ -87,9 +82,6 @@ Last updated: 2019-07-09
     var workspaceTop = placeWorkspaceTop();
 
     var workspaceLeft = placeWorkspaceLeft();
-
-
->>>>>>> 8602ef13fa2e221e166b9d634415497f50f7a8ea
     // Inserting positioning in string
     var string = `<div id="blocklyDiv" style="position: absolute; z-index: 100; height: 800px; width: 800px; margin-left:${workspaceLeft}px; top:${workspaceTop}px;"></div>`;
     document.getElementById("placement").innerHTML = string;
