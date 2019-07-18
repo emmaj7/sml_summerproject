@@ -14,7 +14,7 @@ function postCodeToCar(){
   var code = Blockly.Python.workspaceToCode(workspace);
 
   var codeObj = {code:code, id: unique_id};
-
+  console.log('posting code');
   //  post code to server.
   var codeObj = {code: code, id: unique_id};
   $.post("/postcode2", codeObj, function(data, status){
