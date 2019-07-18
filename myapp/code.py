@@ -1,3 +1,35 @@
+# ID:2
+rover.drive_forward()
+rover.turn_left()
+#####
+# ID:1
+rover.drive_forward()
+rover.turn_left()
+#####
+# ID:1
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:4
+rover.drive_forward()
+rover.drive_forward()
+#####
+# ID:3
+rover.drive_forward()
+rover.turn_left()
+#####
+# ID:2
+rover.drive_forward()
+rover.turn_left()
+#####
+# ID:1
+rover.drive_forward()
+rover.turn_left()
+#####
+# ID:1
+rover.drive_forward()
+rover.turn_left()
+#####
 # ID:1
 rover.drive_forward()
 rover.turn_left()
