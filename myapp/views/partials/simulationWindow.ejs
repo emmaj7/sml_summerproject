@@ -298,19 +298,13 @@ Date: 2019-07-10
       socket.on('connect',function(){
         console.log('Connected');
         console.log('Session id: ' + unique_id); // Unique id for each html page opened.
-        if (onCar){
-          socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id,
+        socket.emit('simulationOnly', JSON.stringify({'id': unique_id,
+                                                      'start': start_coords,
                                                       'goal': goal_coords}));
-          console.log('Running code on car');
-        } else {
-          socket.emit('simulationOnly', JSON.stringify({'id': unique_id,
-                                                        'start': start_coords,
-                                                        'goal': goal_coords}));
-          console.log('starting simulation');
-          runningSimulation = true;
-          whichButton();
-          //dölj kör - visa cancel
-        }
+        console.log('starting simulation');
+        runningSimulation = true;
+        whichButton();
+        //dölj kör - visa cancel
       });
 
       // recieves position. Updates car position in simulation.

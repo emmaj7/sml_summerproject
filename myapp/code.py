@@ -1,3 +1,9 @@
+# ID:571716762767161800
+rover.drive_forward()
+#####
+# ID:614877841260011000
+rover.drive_forward()
+#####
 # ID:392157029269463200
 rover.drive_forward()
 rover.drive_forward()
