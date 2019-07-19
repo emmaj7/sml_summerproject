@@ -21,12 +21,15 @@ function postCodeToCar(){
     console.log(`${data} and status is ${status}`)
   });
 }
+
+// stops all processes running on the car.
 function cancelCar(){
   let socket = io();
   socket.on('connect',function(){
     console.log('Connected');
-    socket.emit('kill-session');
-    console.log('killing session');
+    socket.emit('kill-process');
+    console.log('killing process');
+    socket.close();
   });
 }
 // execute code on car.
@@ -42,6 +45,7 @@ function runOnCarFunction(){
                                                 'goal': goal_coords}));
     console.log('Running code on car');
     alert(`Executing code written by team ${unique_name} on the car.`);
+    socket.close();
   });
 }
 
@@ -53,6 +57,7 @@ function clearCode(){
     });
     socket.on('clearCodeRes', function(msg){
       alert(msg);
+      socket.close();
     });
   });
 }
@@ -65,6 +70,7 @@ function clearCodeReal(){
     });
     socket.on('clearCodeRealRes', function(msg){
       alert(msg);
+      socket.close();
     });
   });
 }

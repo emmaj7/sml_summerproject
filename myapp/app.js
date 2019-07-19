@@ -51,7 +51,8 @@ app.get("/level2", function(req, res){
   res.render("level2");
 });
 
-var computerNumber = 0; // generates a number for
+var computerNumber = 0; // generates a number for the user on the last page.
+
 // Renders level 3
 app.get("/level3", function(req, res){
   computerNumber = computerNumber + 1;
@@ -85,23 +86,16 @@ app.get('/lastPage', function(req, res){
 
 // writes post to file code.py.
 app.post("/postcode", urlencodedParser, function(req, res){
-  // console.log(req.body.code);
   var filename = 'code.py';
   writeCode(req.body.code,req.body.id, filename);
 });
 
 // writes post to file code_real.py.
 app.post("/postcode2", urlencodedParser, function(req, res){
-  // console.log(req.body.code);
   var filename = 'code_real.py';
   writeCode(req.body.code,req.body.id, filename);
 });
 
-// Launches roscore. REQUIRES ROS INSTALLED ON COMPUTER
-// Required to run simulation.
-function startRos(){
-  shell.exec('roscore', {async:true});
-}
 io.on('connection', function(socket){
   console.log('opened connection');
   var forced_exit = false;
@@ -117,7 +111,6 @@ io.on('connection', function(socket){
     try { // try-catch to only send data that is in JSON format
       var obj = JSON.parse(data);
       socket.emit('position-sent-sim', `${JSON.stringify(obj)}`);
-      // console.log('position sent');
     } catch(e) {
       console.log(`${data}`); // Writes data which isn't json to log.
     }
@@ -152,8 +145,8 @@ io.on('connection', function(socket){
     var obj = JSON.parse(msg);
     var id = 'USER' + obj.id;
     var goal = obj.goal;
-    var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch ';
-    // var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch '; // Use this if amcl navigation
+    // var command = 'roslaunch svea SVEA_high_level_commands.launch ';
+    var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch '; // Use this if amcl navigation
     var args = 'my_args:=' + '"' + id + ' ' + JSON.stringify(goal) + '"';
     shell.exec(command + args, {async:true}, function(code, stdout, stderr){
       console.log('Exit Code: ', code);
@@ -170,12 +163,11 @@ io.on('connection', function(socket){
       console.log('Program stderr: ', stderr);
       console.log('Program output: ', stdout);
     });
-    startRos() // restart ROS core node
   });
   // Button on admin page. Clears code in code.py
   socket.on('clearCode', function(){
     const data = '';
-    const message = 'code.py has been cleared';
+    const message = 'code.py has been cleared.';
     fs.writeFile('code.py', data, (err) => {
       if (err) throw err;
       console.log(message);
@@ -185,14 +177,14 @@ io.on('connection', function(socket){
   // Button on admin page. Clears code in code_real.py
   socket.on('clearCodeReal', function(){
     const data = '';
-    const message = 'code_real.py has been cleared';
+    const message = 'code_real.py has been cleared.';
     fs.writeFile('code_real.py', data, (err) => {
       if (err) throw err;
       console.log(message);
     });
     socket.emit('clearCodeRealRes', message);
   });
-
+  // Returns the id which have been posted to the server.
   socket.on('checkAvailableId', function(){
     const filename = 'code_real.py';
     var idList = getIdList(filename);
@@ -203,7 +195,7 @@ io.on('connection', function(socket){
       socket.emit('checkAvailableIdRes', 'No avaiable id:s');
     }
   });
-
+  // returns the name and length of the solution which is shortest.
   socket.on('getShortestCode', function(){
     var filename = 'code_real.py';
     var shortest = getShortestCode(filename);
@@ -213,9 +205,8 @@ io.on('connection', function(socket){
                                          idName: nameList[0],
                                          length: shortest.length});
     } else {
-      socket.emit('checkAvailableIdRes', "Couldn't find code");
+      socket.emit('checkAvailableIdRes', "Couldn't find code.");
     }
-
   });
 });
 
@@ -317,6 +308,11 @@ function transmitPose(socket, name) {
     });
 }
 
+// Launches roscore. REQUIRES ROS INSTALLED ON COMPUTER
+// Required to run simulation.
+function startRos(){
+  shell.exec('roscore', {async:true});
+}
 // starts roscore
 startRos()
 
