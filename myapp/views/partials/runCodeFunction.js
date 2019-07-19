@@ -3,6 +3,13 @@
 // Last updated: 2019-07-18
 
 function runCode(){
+
+  // VISA SPINNER
+  var spinner = document.getElementById('#spinner');
+  spinner.style.display = "block";
+
+
+
   // Generate python code and run it.
   window.LoopTrap = 1000;
   Blockly.JavaScript.INFINITE_LOOP_TRAP =
