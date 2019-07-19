@@ -39,17 +39,14 @@ Last updated: 2019-07-18
         <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCodeReal()">Clear code_real.py</button></a>
       </div>
       <div class="col-6 text-center">
-        <p style="color: white;">This button shows the available team names.</p>
-        <a href="#"><button class="cool-btn btn1 btn" type="button" onclick='checkAvailableId()'>Available names</button></a>
+        <p style="color: white;">This button shows used team names.</p>
+        <a href="#"><button class="cool-btn btn1 btn" type="button" onclick='checkUsedId()'>Used names</button></a>
       </div>
     </div>
-
-
-
     <script type="text/javascript">
      // imports the functions related to running the code on the car.
       <% include partials/runOnCarFunctions.js %>
-      
+
       var unique_id = 'adminId';
       var unique_name = 'name';
       var goal_coords = {'x': 1.1, 'y': -1, 'yaw': 0};
