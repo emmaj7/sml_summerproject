@@ -304,12 +304,15 @@ Date: 2019-07-10
                                                       'goal': goal_coords}));
         console.log('starting simulation');
         runningSimulation = true;
+        //Hide run - show cancel
         whichButton();
-        //dölj kör - visa cancel
+
+        // ÄNDRA VARIABEL EFTER 0.2 SEKUNDER
       });
 
       // recieves position. Updates car position in simulation.
       socket.on('position-sent-sim', function(msg){
+
         let obj = JSON.parse(msg);
         x = obj.x;
         y = obj.y;

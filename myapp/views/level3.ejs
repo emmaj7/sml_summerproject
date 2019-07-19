@@ -98,7 +98,7 @@ Last updated: 2019-07-09
     var unique_id = <%= id %>
     console.log('Window id: ', unique_id);
     // Generates html for button redirecting to the last page, and passing along id in the URL
-    var buttonStr = `<a href="/lastPage/?id=${unique_id}"><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;" onclick="postCodeToCar()"><p style="position: relative; z-index: 4000; margin-bottom: 0px;">Send</p></button></a>`;
+    var buttonStr = `<a href="#"><button class="cool-btn cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;" onclick="postCodeToCar(getRequest)"><p style="position: relative; z-index: 4000; margin-bottom: 0px;">Send</p></button></a>`;
     document.getElementById("runOnRoverBtn").innerHTML = buttonStr;
     // The position of the goal for level 3.
     var goal_coords = {'x': 1.1, 'y': -0.8, 'yaw': 0};

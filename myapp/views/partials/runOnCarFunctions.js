@@ -5,8 +5,19 @@
 // Last updated: 2019-07-17
 //
 
+function getRequest(){
+  // Ska byta sida
+  $.get(`/teamName/?id=${unique_id}`, function(data, status){
+    console.log(`${data} and status is ${status}`);
+    window.open(`${data.url}/lastPage/?teamName=${data.teamName}`, "_self");
+    console.log("Went to last page.");
+  });
+}
+
+
+
 // Post the python code to the server.
-function postCodeToCar(){
+function postCodeToCar(callback){
   // Get python code from blockly
   window.LoopTrap = 1000;
   Blockly.JavaScript.INFINITE_LOOP_TRAP =
@@ -20,6 +31,7 @@ function postCodeToCar(){
   $.post("/postcode2", codeObj, function(data, status){
     console.log(`${data} and status is ${status}`)
   });
+  callback();
 }
 
 // execute code on car.

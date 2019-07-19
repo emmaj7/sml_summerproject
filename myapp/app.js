@@ -73,15 +73,29 @@ app.get('/placementTest', function(req, res){
 });
 
 
-app.get('/lastPage', function(req, res){
+app.get('/teamName', function(req, res){
   var current_url = req.url;
-  var fullUrl = req.protocol + "://" + req.get('host') + current_url;;
+  var baseUrl = req.protocol + "://" + req.get('host');
+  var fullUrl = baseUrl + current_url;
+  console.log(fullUrl);
   current_url_obj = new URL(fullUrl);
   const search_params = current_url_obj.searchParams;
   const id = search_params.get('id');
   const rawData = fs.readFileSync('teamNames.json');
   const teamNames = JSON.parse(rawData);
-  res.render('lastPage', {teamName: teamNames.teamList[id-1]});
+  console.log("YO");
+  res.send({teamName: teamNames.teamList[id-1],
+            url: baseUrl});
+});
+
+app.get('/lastPage', function(req, res){
+  var current_url = req.url;
+  var baseUrl = req.protocol + "://" + req.get('host');
+  var fullUrl = baseUrl + current_url;
+  current_url_obj = new URL(fullUrl);
+  const search_params = current_url_obj.searchParams;
+  const id = search_params.get('teamName');
+  res.render('lastPage', {teamName: id});
 });
 
 // writes post to file code.py.
