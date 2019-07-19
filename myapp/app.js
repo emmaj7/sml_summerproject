@@ -160,7 +160,6 @@ io.on('connection', function(socket){
       console.log('Program stderr: ', stderr);
       console.log('Program output: ', stdout);
     });
-    transmitPose(socket, id);
     console.log('Launched SVEA_high_level_commands');
     socket.on('collision', function(){
       console.log('Collision detected');
@@ -230,6 +229,7 @@ io.on('connection', function(socket){
   });
 });
 
+// Returns the id of the solution which is shortest.
 function getShortestCode(filename){
   var textLines = fs.readFileSync(filename, 'utf-8').split('\n');
   var shortestL = 1000;
@@ -251,6 +251,7 @@ function getShortestCode(filename){
   return {id: idShortest, length: shortestL};
 }
 
+// converts an id number into a cool name
 function idNumberToName(numberList){
   const rawData = fs.readFileSync('teamNames.json');
   const nameList = JSON.parse(rawData).teamList;
@@ -262,6 +263,7 @@ function idNumberToName(numberList){
   return availableNames;
 }
 
+// returns the list of used id's
 function getIdList(filename){
   var lines = fs.readFileSync(filename, 'utf-8').split('\n')
   lines = lines.filter(function(line){
@@ -275,6 +277,7 @@ function getIdList(filename){
   }
   return  [... new Set(numbers)].sort();
 }
+
 // This function launches the python simulation
 function runScript(id, start, goal){
   id = 'USER' + id;
@@ -303,6 +306,7 @@ function yawFromQuaternions(qObj){
 }
 
 // send car position to simulation window.
+// Not used at the moment.
 function transmitPose(socket, name) {
   // Register node with ROS master
   console.log('starting listener')

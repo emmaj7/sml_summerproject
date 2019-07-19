@@ -110,6 +110,17 @@ Date: 2019-07-10
         './images/stone.png',
         './images/rectangle.png'])
   .load(setup);
+
+  function configureSprite(sprite, xScale, yScale, xAnchor, yAnchor, x, y, yaw, visibility){
+    sprite.scale.x = xScale;
+    sprite.scale.y = yScale;
+    sprite.anchor.x = xAnchor;
+    sprite.anchor.y = yAnchor;
+    pxCoords = coordinateTransform(x, y, yaw);
+    sprite.position.set(pxCoords.x, pxCoords .y);
+    sprite.rotation = pxCoords.yaw;
+    sprite.visible = visibility;
+  }
   // This `setup` function will run when the image has loaded
   function resize_image(image){
     let imageRatio = image.width / image.height;
@@ -151,54 +162,81 @@ Date: 2019-07-10
     for (var i = 0; i < obstacle_coords.length; i++) {
       obstacle = new Sprite(resources["./images/rectangle.png"].texture);
       obstacle_drawing = new Sprite(resources["./images/stone.png"].texture);
-      obstacle.scale.x = obstacle_coords[i].size;
-      obstacle.scale.y = obstacle_coords[i].size;
-      obstacle.anchor.x = 0.5; obstacle.anchor.y = 0.5;
-      obstacle_drawing.scale.x = obstacle_coords[i].size;
-      obstacle_drawing.scale.y =  obstacle_coords[i].size;
-      obstacle_drawing.anchor.x = 0.5; obstacle_drawing.anchor.y = 0.5;
-      obstaclePx = coordinateTransform(obstacle_coords[i].x,
-                                        obstacle_coords[i].y,
-                                        obstacle_coords[i].yaw);
-      obstacle.position.set(obstaclePx.x, obstaclePx .y);
-      obstacle_drawing.position.set(obstaclePx.x, obstaclePx .y);
-      obstacle_drawing.rotation = obstaclePx.yaw;
-
-      obstacle.visible = false;
+      configureSprite(obstacle,
+                      obstacle_coords[i].size,
+                      obstacle_coords[i].size,
+                      0.5,
+                      0.5,
+                      obstacle_coords[i].x,
+                      obstacle_coords[i].y,
+                      obstacle_coords[i].yaw,
+                      false);
+      configureSprite(obstacle_drawing,
+                      obstacle_coords[i].size,
+                      obstacle_coords[i].size,
+                      0.5,
+                      0.5,
+                      obstacle_coords[i].x,
+                      obstacle_coords[i].y,
+                      obstacle_coords[i].yaw,
+                      true);
       app.stage.addChild(obstacle);
       app.stage.addChild(obstacle_drawing);
       obstacles.push(obstacle);
     }
 
     // Init goal
-    goal = new Sprite(resources["./images/base-v2.png"].texture);
-    goal.scale.x = 0.4; goal.scale.y = 0.4;
-    goal.anchor.x = 0.5; goal.anchor.y = 0.6;
-    goalPx = coordinateTransform(goal_coords.x, goal_coords.y, goal_coords.yaw);
-    goal.position.set(goalPx.x,goalPx.y);
+    let goal = new Sprite(resources["./images/base-v2.png"].texture);
+    let goal_scale = {x: 0.4, y: 0.4};
+    let goal_achor = {x: 0.5, y: 0.6};
+    configureSprite(goal,
+                    goal_scale.x,
+                    goal_scale.y,
+                    goal_achor.x,
+                    goal_achor.y,
+                    goal_coords.x,
+                    goal_coords.y,
+                    goal_coords.yaw,
+                    true);
     app.stage.addChild(goal);
     cross = new Sprite(resources["./images/cross.png"].texture);
-    cross.scale.x = 0.4; cross.scale.y = 0.4;
-    cross.anchor.x = 0.5; cross.anchor.y = 0.5;
-    goalPx = coordinateTransform(goal_coords.x, goal_coords.y, goal_coords.yaw);
-    cross.position.set(goalPx.x,goalPx.y);
+    cross_scale = {x: 0.4, y: 0.4};
+    cross_anchor = {x: 0.5, y: 0.5}
+    configureSprite(cross,
+                    cross_scale.x,
+                    cross_scale.y,
+                    cross_anchor.x,
+                    cross_anchor.y,
+                    goal_coords.x,
+                    goal_coords.y,
+                    goal_coords.yaw,
+                    true);
     app.stage.addChild(cross);
 
     // Init car and hitbox.
     curr_sprite = 2; // starting texture for car.
     car = new Sprite(text2);
-    car.scale.x = 3*(90/app.renderer.width); car.scale.y = 3*(90/app.renderer.height);
-    car.anchor.x = 0.5; car.anchor.y = 0.5;
-    startPx = coordinateTransform(start_coords.x, start_coords.y, start_coords.yaw);
-    car.position.set(startPx.x,startPx.y);
-    car.rotation = startPx.yaw;
-
-    hitbox = new Sprite(resources["./images/circle.png"].texture);
-    hitbox.anchor.x = 0.5; hitbox.anchor.y = 0.5;
-    hitbox.height = car.height - 30; hitbox.width = car.width;
-    hitbox.position.set(startPx.x,startPx.y);
-    hitbox.visible = true; // hitbox visible/not visible
-
+    let car_anchor = {x: 0.5, y: 0.5};
+    configureSprite(car,
+                    real_length*(90/app.renderer.width),
+                    real_length*(90/app.renderer.height),
+                    car_anchor.x,
+                    car_anchor.y,
+                    start_coords.x,
+                    start_coords.y,
+                    start_coords.yaw,
+                    true);
+    hitbox = new Sprite(resources["./images/rectangle.png"].texture);
+    configureSprite(hitbox,
+                    1,
+                    1,
+                    car_anchor.x,
+                    car_anchor.y,
+                    start_coords.x,
+                    start_coords.y,
+                    start_coords.yaw,
+                    true);
+    hitbox.height = car.height - 50; hitbox.width = car.width - 20;
     app.stage.addChild(hitbox);
     app.stage.addChild(car);
   }
@@ -206,74 +244,10 @@ Date: 2019-07-10
 </div>
 <div>
   <script type="text/javascript">
-    // transforms between "true" coordinate system and browser window coordinates
-    function coordinateTransform(x, y, yaw){
-      let coords = {};
-      coords.x = scale_factor*(x + max);
-      coords.y = app.renderer.view.height - scale_factor*(y + max); // y = 0 is upper corner
-      coords.yaw = -yaw;
-      return coords;
-    }
-    // transform between window coordinates and "real" coordinates
-    function transformReversed(x, y, yaw){
-      let coords = {};
-      coords.x = x/scale_factor - max;
-      coords.y = -(y - app.renderer.view.height)/scale_factor - max;
-      coords.yaw = -yaw;
-      return coords;
-    };
-    // switch wich sprite to display.
-    function changeSprite(i){
-      if (i === 0) {
-        car.texture = text0;
-      } else if (i === 1) {
-        car.texture = text1;
-      } else if (i === 2) {
-        car.texture = text2;
-      } else if (i === 3) {
-        car.texture = text3;
-      } else if (i === 4) {
-        car.texture = text4;
-      }
-    }
-    // Checks if x between min and max.
-    function between(x, min, max) {
-      return x >= min && x <= max;
-    }
-    // decides which sprite to display
-    function newSprite(yaw, curr_sprite){
-      let res = new Object();
-      res.value = false;
-      res.sprite = curr_sprite;
-      d_yaw = (yaw-last_yaw)/dt;
-      if (between(d_yaw,-0.05, 0.05)) {
-        if (curr_sprite !== 2) {
-          res.value = true; res.sprite = 2;
-          curr_sprite = 2;
-        }
-      } else if (between(d_yaw, 0.05, 0.3)) {
-        if (curr_sprite !== 1) {
-          res.value = true; res.sprite = 1;
-          curr_sprite = 1;
-        }
-      } else if (between(d_yaw, 0.3, 0.6)) {
-        if (curr_sprite !== 0) {
-          res.value = true; res.sprite = 0;
-          curr_sprite = 0;
-        }
-      } else if (between(d_yaw, -0.3, -0.05)) {
-        if (curr_sprite !== 3) {
-          res.value = true; res.sprite = 3;
-          curr_sprite = 3;
-        }
-      } else if (between(d_yaw, -0.6, -0.3)) {
-        if (curr_sprite !== 4) {
-          res.value = true; res.sprite = 4;
-          curr_sprite = 4;
-        }
-      }
-      return res;
-    }
+
+    // import functions relevant to simulate the car.
+    <% include simulationWindowFunctions.js %>
+
     // updates position of car.
     function drive(){
       // console.log(hitbox.width);
@@ -299,150 +273,19 @@ Date: 2019-07-10
         wallHit = true
       }
     }
+
     // Checks if car is at goal.
     function atGoal(){
-      // checks if car is at goal.
-      let dist = Math.sqrt(Math.pow(x-goal_coords.x,2) + Math.pow(y-goal_coords.y,2));
+      let dist = Math.sqrt(Math.pow(x-goal_coords.x, 2) + Math.pow(y-goal_coords.y, 2));
       if (dist < marg){
           return true;
       } else {
         return false;
       }
     }
-    // Checks for collision with borders of map.
-    function edgeCollision(sprite){
-      // Get limits of map
-      c1 = transformReversed(0, app.renderer.view.height, 0); // lower left corner
-      c2 = transformReversed(app.renderer.view.width, 0, 0); // upper right corner
-      corners = getCorners(transformReversed(sprite.x, sprite.y, sprite.rotation),
-                           sprite.width/scale_factor,
-                           sprite.height/scale_factor);
-
-      // Check for collisions with map border.
-      for (var i = 0; i < corners.length; i++) {
-        p = corners[i]
-        if (p[0] < c1.x || p[0] > c2.x){
-          return true
-        } else if (p[1] < c1.y || p[1] > c2.y) {
-          return true
-        }
-      }
-      return false
-    }
-    // returns vector perpendicular to side i of polygon.
-    function getAxisNormal(ps,i){
-      let p1, p2;
-      if (i === ps.length - 1) {
-        p1 = ps[i]
-        p2 = ps[1];
-      } else {
-        p1 = ps[i];
-        p2 = ps[i + 1];
-      }
-      // b is unit vector perpendicular to one edge of r1 with lenght 1
-      let v = [p1[0]-p2[0], p1[1]-p2[1]];
-      v = [1, -v[0]/v[1]];
-      let b = [0,0];
-      b[0] = v[0]/Math.sqrt(Math.pow(v[0],2) + Math.pow(v[1],2));
-      b[1] = v[1]/Math.sqrt(Math.pow(v[0],2) + Math.pow(v[1],2));
-      return b;
-    }
-    // get the corners of a rectangle given center point, yaw, width and height.
-    function getCorners(c, w, h){
-      let w_cos = (w/2)*Math.cos(c.yaw);
-      let w_sin = (w/2)*Math.sin(c.yaw);
-      let h_cos = (h/2)*Math.cos(c.yaw);
-      let h_sin = (h/2)*Math.sin(c.yaw);
-      let p1 = [c.x + w_cos - h_sin,
-                c.y + w_sin + h_cos];
-      let p2 = [c.x + w_cos + h_sin,
-                c.y + w_sin - h_cos]
-      let p3 = [c.x - w_cos - h_sin,
-                c.y - w_sin + h_cos];
-      let p4 = [c.x - w_cos + h_sin,
-                c.y - w_sin - h_cos];
-      return [p1, p2, p3, p4];
-    }
-    // checks for collision between two rectangles (sprites)
-    // Uses SAT - separating axis theorem.
-    function collision(r1, r2) {
-      let realc1 = transformReversed(r1.x, r1.y, r1.rotation);
-      let realc2 = transformReversed(r2.x, r2.y, r2.rotation);
-      let w1 = r1.width/scale_factor;
-      let h1 = r1.height/scale_factor;
-      let w2 = r2.width/scale_factor;
-      let h2 = r2.height/scale_factor;
-
-      // corner points of r1
-      corners_r1 = getCorners(realc1, w1, h1);
-      // corner points of r2
-      corners_r2 = getCorners(realc2, w2, h2);
-
-      for (var i = 0; i < corners_r1.length; i++) {
-        let b = getAxisNormal(corners_r1,i);
-
-        let proj_r1 = []; // corners of r1 projected on b
-        for (var j = 0; j < corners_r1.length; j++) {
-          let a = b[0]*corners_r1[j][0] + b[1]*corners_r1[j][1];
-          proj_r1.push(a);
-        }
-
-        let proj_r2 = []; // corners of r2 projected on b
-        for (var j = 0; j < corners_r2.length; j++) {
-          let a = b[0]*corners_r2[j][0] + b[1]*corners_r2[j][1];
-          proj_r2.push(a);
-        }
-
-        max1 = Math.max(...proj_r1);
-        min1 = Math.min(...proj_r1);
-        max2 = Math.max(...proj_r2);
-        min2 = Math.min(...proj_r2);
-
-        d1 = min1 - max2;
-        d2 = min2 - max1;
-        if (d1 > 0 || d2 > 0){
-          return false;
-        }
-      }
-      return true;
-    }
-
-    function collisionOld(r1, r2) {
-      //Define the variables we'll need to calculate
-      let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
-      //hit will determine whether there's a collision
-      hit = false;
-      //Find the half-widths and half-heights of each sprite
-      r1.halfWidth = r1.width / 2;
-      r1.halfHeight = r1.height / 2;
-      r2.halfWidth = r2.width / 2;
-      r2.halfHeight = r2.height / 2;
-      //Calculate the distance vector between the sprites
-      vx = r1.x - r2.x;
-      vy = r1.y - r2.y;
-      //Figure out the combined half-widths and half-heights
-      combinedHalfWidths = r1.halfWidth + r2.halfWidth;
-      combinedHalfHeights = r1.halfHeight + r2.halfHeight;
-      //Check for a collision on the x axis
-      if (Math.abs(vx) < combinedHalfWidths) {
-        //A collision might be occurring. Check for a collision on the y axis
-        if (Math.abs(vy) < combinedHalfHeights) {
-          //There's definitely a collision happening
-          hit = true;
-        } else {
-          //There's no collision on the y axis
-          hit = false;
-        }
-      } else {
-        //There's no collision on the x axis
-        hit = false;2
-      }
-      //`hit` will be either `true` or `false`
-      return hit;
-    };
 
     // Called when run code button pressed.
-    function runSimulation(onCar){
+    function runSimulation(){
       app.ticker.start()
       var socket = io();
       curr_sprite = 5;
@@ -456,59 +299,31 @@ Date: 2019-07-10
       socket.on('connect',function(){
         console.log('Connected');
         console.log('Session id: ' + unique_id); // Unique id for each html page opened.
-        if (onCar){
-          socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id,
+        socket.emit('simulationOnly', JSON.stringify({'id': unique_id,
+                                                      'start': start_coords,
                                                       'goal': goal_coords}));
-          console.log('Running code on car');
-        } else {
-          socket.emit('simulationOnly', JSON.stringify({'id': unique_id,
-                                                        'start': start_coords,
-                                                        'goal': goal_coords}));
-          console.log('starting simulation');
-          runningSimulation = true;
-          whichButton();
-          //dölj kör - visa cancel
-        }
-      });
-
-      // recieves position. Updates car position in simulation.
-      socket.on('position-sent-car', function(msg){
-        if(onCar){
-          let = JSON.parse(msg);
-          x = obj.x;
-          y = obj.y;
-          last_yaw = yaw;
-          yaw = obj.yaw;
-          if (obstacleHit || wallHit){
-            socket.emit('collision');
-            console.log('Collision!');
-          }
-          if (cancel_simulation){
-            console.log('cancelling');
-            socket.emit('kill-process');
-            cancel_simulation = false;
-          }
-        }
+        console.log('starting simulation');
+        runningSimulation = true;
+        whichButton();
+        //dölj kör - visa cancel
       });
 
       // recieves position. Updates car position in simulation.
       socket.on('position-sent-sim', function(msg){
-        if (onCar == false){
-          let obj = JSON.parse(msg);
-          x = obj.x;
-          y = obj.y;
-          last_yaw = yaw;
-          yaw = obj.yaw;
+        let obj = JSON.parse(msg);
+        x = obj.x;
+        y = obj.y;
+        last_yaw = yaw;
+        yaw = obj.yaw;
 
-          if (obstacleHit || wallHit){
-            socket.emit('collision');
-            console.log('Collision!');
-          }
-          if (cancel_simulation){
-            console.log('cancelling simulation');
-            socket.emit('cancel-simulation');
-            cancel_simulation = false;
-          }
+        if (obstacleHit || wallHit){
+          socket.emit('collision');
+          console.log('Collision!');
+        }
+        if (cancel_simulation){
+          console.log('cancelling simulation');
+          socket.emit('cancel-simulation');
+          cancel_simulation = false;
         }
       });
       // Called when python script is closed. Either forced or natural.
