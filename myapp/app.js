@@ -72,7 +72,6 @@ app.get('/placementTest', function(req, res){
   res.render('placementTest');
 });
 
-
 app.get('/lastPage', function(req, res){
   var current_url = req.url;
   var fullUrl = req.protocol + "://" + req.get('host') + current_url;;
@@ -100,8 +99,9 @@ app.post("/postcode2", urlencodedParser, function(req, res){
 
 // Launches roscore. REQUIRES ROS INSTALLED ON COMPUTER
 // Required to run simulation.
-shell.exec('roscore', {async:true});
-
+function startRos(){
+  shell.exec('roscore', {async:true});
+}
 io.on('connection', function(socket){
   console.log('opened connection');
   var forced_exit = false;
@@ -152,7 +152,7 @@ io.on('connection', function(socket){
     var obj = JSON.parse(msg);
     var id = 'USER' + obj.id;
     var goal = obj.goal;
-    var command = 'roslaunch svea SVEA_high_level_commands.launch ';
+    var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch ';
     // var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch '; // Use this if amcl navigation
     var args = 'my_args:=' + '"' + id + ' ' + JSON.stringify(goal) + '"';
     shell.exec(command + args, {async:true}, function(code, stdout, stderr){
@@ -160,28 +160,18 @@ io.on('connection', function(socket){
       console.log('Program stderr: ', stderr);
       console.log('Program output: ', stdout);
     });
-    console.log('Launched SVEA_high_level_commands');
-    socket.on('collision', function(){
-      console.log('Collision detected');
-      const command = 'rosnode kill SVEA5 /SVEA_high_level_commands /listener_node/SVEA5 /qualisys /serial_node /world_to_qualisys_tf';
-      shell.exec(command, {async:true}, function(code, stdout, stderr){
-        console.log('Exit Code: ', code);
-        console.log('Program stderr: ', stderr);
-        console.log('Program output: ', stdout);
-      });
-    });
-    // kill all processes if stuff is canceled.
-    socket.on('kill-process', function(){
-      console.log('killing all processes');
-      const command = 'rosnode kill SVEA5 /SVEA_high_level_commands /listener_node/SVEA5 /qualisys /serial_node /world_to_qualisys_tf';
-      shell.exec(command, {async:true}, function(code, stdout, stderr){
-        console.log('Exit Code: ', code);
-        console.log('Program stderr: ', stderr);
-        console.log('Program output: ', stdout);
-      });
-    });
   });
-
+  // kill all processes if stuff is canceled.
+  socket.on('kill-process', function(){
+    console.log('killing all processes');
+    const command = 'rosnode kill -a';
+    shell.exec(command, {async:true}, function(code, stdout, stderr){
+      console.log('Exit Code: ', code);
+      console.log('Program stderr: ', stderr);
+      console.log('Program output: ', stdout);
+    });
+    startRos() // restart ROS core node
+  });
   // Button on admin page. Clears code in code.py
   socket.on('clearCode', function(){
     const data = '';
@@ -326,6 +316,9 @@ function transmitPose(socket, name) {
       );
     });
 }
+
+// starts roscore
+startRos()
 
 // Error 404 handling.
 app.use(function(req, res, next) {

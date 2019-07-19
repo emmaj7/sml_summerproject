@@ -25,6 +25,10 @@ Last updated: 2019-07-18
         <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="runOnCar()">Run on Car</button></a>
       </div>
       <div class="col-6 text-center">
+        <p style="color: white;">This button cancels the current execution.</p>
+        <a href="#"><button class="cool-btn btn1 btn" type="button" onclick='cancelCar()'>Cancel</button></a>
+      </div>
+      <div class="col-6 text-center">
         <p style="color: white;">This button clears the code.py file.</p>
         <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="clearCode()">Clear code.py</button></a>
       </div>
@@ -46,6 +50,7 @@ Last updated: 2019-07-18
      // imports the functions related to running the code on the car.
       <% include partials/runOnCarFunctions.js %>
       var unique_id = 'adminId';
+      var unique_name = 'name';
       var goal_coords = {'x': 1.1, 'y': -1, 'yaw': 0};
 
     </script>

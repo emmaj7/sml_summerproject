@@ -21,16 +21,27 @@ function postCodeToCar(){
     console.log(`${data} and status is ${status}`)
   });
 }
-
+function cancelCar(){
+  let socket = io();
+  socket.on('connect',function(){
+    console.log('Connected');
+    socket.emit('kill-session');
+    console.log('killing session');
+  });
+}
 // execute code on car.
 function runOnCar(){
-  unique_id = getShortestCode(); // returns the id of the shortest solution
+  getShortestCode(runOnCarFunction);
+}
+function runOnCarFunction(){
+  let socket = io();
   socket.on('connect',function(){
     console.log('Connected');
     console.log('Session id: ' + unique_id); // Unique id for each html page opened.
     socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id,
-    'goal': goal_coords}));
+                                                'goal': goal_coords}));
     console.log('Running code on car');
+    alert(`Executing code written by team ${unique_name} on the car.`);
   });
 }
 
@@ -73,16 +84,20 @@ function checkAvailableId(){
 }
 
 // returns the id of the shortest code solution in code_real.py
-function getShortestCode(){
+function getShortestCode(callback){
   var socket = io();
   socket.on('connect', function(){
     socket.emit('getShortestCode', function(){
     });
     socket.on('getShortestCodeRes', function(msg){
       console.log(msg.id);
-      alert(`The shortest code is ${msg.length} lines long and is written by ${msg.idName}`);
+      // alert(`The shortest code is ${msg.length} lines long and is written by ${msg.idName}.`);
+      unique_id = msg.id
+      unique_name = msg.idName
+      console.log('unique_id : ', unique_id);
       socket.close();
-      return msg.id;
+      console.log('msg : ', msg);
+      callback();
     });
   });
 }
