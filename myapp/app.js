@@ -200,15 +200,18 @@ io.on('connection', function(socket){
     socket.emit('clearCodeRealRes', message);
   });
   // Returns the id which have been posted to the server.
-  socket.on('checkAvailableId', function(){
+  socket.on('checkUsedId', function(){
     const filename = 'code_real.py';
-    var idList = getIdList(filename);
-    if (idList != null){
-      nameList = idNumberToName(idList);
-      socket.emit('checkAvailableIdRes', nameList);
-    } else {
-      socket.emit('checkAvailableIdRes', 'No avaiable id:s');
-    }
+    getIdList(filename, function(idList){
+      if (idList.length > 0){
+        nameList = idNumberToName(idList);
+        console.log("Returning used id's", nameList);
+        socket.emit('checkUsedIdRes', nameList);
+      } else {
+        console.log("No used id's");
+        socket.emit('checkUsedIdRes', 'None');
+      }
+    });
   });
   // returns the name and length of the solution which is shortest.
   socket.on('getShortestCode', function(){
@@ -260,7 +263,7 @@ function idNumberToName(numberList){
 }
 
 // returns the list of used id's
-function getIdList(filename){
+function getIdList(filename,callback){
   var lines = fs.readFileSync(filename, 'utf-8').split('\n')
   lines = lines.filter(function(line){
     if (line.includes('# ID:')) {
@@ -271,7 +274,8 @@ function getIdList(filename){
   for (var i = 0; i < lines.length; i++) {
     numbers.push(parseInt(lines[i].replace(/\D/g,'')));
   }
-  return  [... new Set(numbers)].sort();
+  callback([... new Set(numbers)].sort());
+
 }
 
 // This function launches the python simulation

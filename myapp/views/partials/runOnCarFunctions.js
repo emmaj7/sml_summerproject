@@ -14,8 +14,6 @@ function getRequest(){
   });
 }
 
-
-
 // Post the python code to the server.
 function postCodeToCar(callback){
   // Get python code from blockly
@@ -88,14 +86,14 @@ function clearCodeReal(){
 }
 
 // shows the id's of the posted code solutions
-function checkAvailableId(){
+function checkUsedId(){
   var socket = io();
   socket.on('connect', function(){
-    socket.emit('checkAvailableId', function(){
+    socket.emit('checkUsedId', function(){
     });
-    socket.on('checkAvailableIdRes', function(msg){
+    socket.on('checkUsedIdRes', function(msg){
       console.log(msg);
-      alert(msg);
+      alert(`The used id's are: ${msg}`);
       socket.close();
     });
   });
