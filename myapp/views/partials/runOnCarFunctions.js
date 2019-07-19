@@ -25,7 +25,7 @@ function postCodeToCar(callback){
   var code = Blockly.Python.workspaceToCode(workspace);
 
   var codeObj = {code:code, id: unique_id};
-
+  console.log('posting code');
   //  post code to server.
   var codeObj = {code: code, id: unique_id};
   $.post("/postcode2", codeObj, function(data, status){
@@ -34,15 +34,30 @@ function postCodeToCar(callback){
   callback();
 }
 
+// stops all processes running on the car.
+function cancelCar(){
+  let socket = io();
+  socket.on('connect',function(){
+    console.log('Connected');
+    socket.emit('kill-process');
+    console.log('killing process');
+    socket.close();
+  });
+}
 // execute code on car.
 function runOnCar(){
-  unique_id = getShortestCode(); // returns the id of the shortest solution
+  getShortestCode(runOnCarFunction);
+}
+function runOnCarFunction(){
+  let socket = io();
   socket.on('connect',function(){
     console.log('Connected');
     console.log('Session id: ' + unique_id); // Unique id for each html page opened.
     socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id,
-    'goal': goal_coords}));
+                                                'goal': goal_coords}));
     console.log('Running code on car');
+    alert(`Executing code written by team ${unique_name} on the car.`);
+    socket.close();
   });
 }
 
@@ -54,6 +69,7 @@ function clearCode(){
     });
     socket.on('clearCodeRes', function(msg){
       alert(msg);
+      socket.close();
     });
   });
 }
@@ -66,6 +82,7 @@ function clearCodeReal(){
     });
     socket.on('clearCodeRealRes', function(msg){
       alert(msg);
+      socket.close();
     });
   });
 }
@@ -85,16 +102,20 @@ function checkAvailableId(){
 }
 
 // returns the id of the shortest code solution in code_real.py
-function getShortestCode(){
+function getShortestCode(callback){
   var socket = io();
   socket.on('connect', function(){
     socket.emit('getShortestCode', function(){
     });
     socket.on('getShortestCodeRes', function(msg){
       console.log(msg.id);
-      alert(`The shortest code is ${msg.length} lines long and is written by ${msg.idName}`);
+      // alert(`The shortest code is ${msg.length} lines long and is written by ${msg.idName}.`);
+      unique_id = msg.id
+      unique_name = msg.idName
+      console.log('unique_id : ', unique_id);
       socket.close();
-      return msg.id;
+      console.log('msg : ', msg);
+      callback();
     });
   });
 }

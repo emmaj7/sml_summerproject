@@ -16,9 +16,9 @@ class OdomPublisher():
     '''Class for interface with publishing to the odometry topic.
         Given a 2D state, and steering information a geometry message is published.
         The transform between /odom and /base_link is also broadcasted.'''
-    OPERATING_FREQ = 30 # [Hz]
 
     def __init__(self, vehicle_name=""):
+        self.operating_freq = 30 # [Hz]
         self.vehicle_name = vehicle_name
         self.is_stop = False
         self.is_emergency = False
@@ -76,7 +76,7 @@ class OdomPublisher():
         # set the velocity
         vx = state[3]*math.cos(state[2])
         vy = state[3]*math.sin(state[2])
-        vth = (steering - self.last_steering)/OPERATING_FREQ # approximate the 2D yaw dot
+        vth = (steering - self.last_steering)/self.operating_freq # approximate the 2D yaw dot
         self.odom.child_frame_id = "base_link"
         self.odom.twist.twist = Twist(Vector3(vx, vy, 0), Vector3(0, 0, vth))
         if not self.is_emergency or not self.is_stop or not self.is_persistent:
