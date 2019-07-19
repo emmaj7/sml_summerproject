@@ -313,6 +313,10 @@ Date: 2019-07-10
       // recieves position. Updates car position in simulation.
       socket.on('position-sent-sim', function(msg){
 
+        // Hides spinner
+        var spinner = document.getElementById('spinner');
+        spinner.style.display = "none";
+
         let obj = JSON.parse(msg);
         x = obj.x;
         y = obj.y;

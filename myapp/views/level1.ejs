@@ -26,6 +26,9 @@ Last updated: 2019-07-09
         </xml>
         <!-- This partial has all the relevant code related to the simulation window. -->
           <% include partials/simulationWindow.ejs %>
+        <div class="d-flex justify-content-center" style="z-index:1000;">
+          <% include partials/spinner.ejs %>
+        </div>
     </div>
     <div class="text-center" id="buttonDiv" style="margin-top: 45%;">
       <!-- This partial contains function which shows/hides run/cancel-buttons. -->
@@ -49,8 +52,6 @@ Last updated: 2019-07-09
 
     <!-- This partial contains modal shown if help-button is clicked. -->
     <% include partials/tutorial.ejs %>
-
-    <% include partials/spinner.ejs %>
 
   </div>
 

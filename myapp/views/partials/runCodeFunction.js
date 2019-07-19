@@ -4,11 +4,9 @@
 
 function runCode(){
 
-  // VISA SPINNER
-  var spinner = document.getElementById('#spinner');
+  // Show spinner
+  var spinner = document.getElementById('spinner');
   spinner.style.display = "block";
-
-
 
   // Generate python code and run it.
   window.LoopTrap = 1000;
