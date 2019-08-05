@@ -1,0 +1,27 @@
+<!--
+Partial containing cancel-button for Admin page, and function deciding if it should be shown or not.
+Emma Johansson
+Last updated: 2019-07-09
+-->
+<div class="col-6 text-center">
+  <p style="color: white;">This button cancels the current execution.</p>
+  <a href="#"><button class="cool-btn btn1 btn" type="button" onclick='cancelCar()' id="cancelRun">Cancel</button></a>
+  <p id="message"> The rover is currently not running any code. </p>
+</div>
+
+<script src="https://code.jquery.com/jquery.js"></script>
+<script type="text/javascript">
+  function showOrNot(){
+      // If the simulation is running the cancel-button will be shown and run-button will be hidden.
+      if (runningCode === true){
+        $("#cancelRun").show();
+        $("#message").hide();
+      }
+      // If not, the cancel-button will be hidden and run-button will be shown.
+      else {
+        $("#cancelRun").hide();
+        $("#message").show();
+      }
+  }
+
+</script>

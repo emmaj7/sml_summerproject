@@ -10,13 +10,13 @@ Last updated: 2019-07-09
 
 <script src="https://code.jquery.com/jquery.js"></script>
 <script type="text/javascript">
-  function whichButton(){
+  function runOrCancel(){
       // If the simulation is running the cancel-button will be shown and run-button will be hidden.
       if (runningSimulation === true){
         $("#cancelBtn").show();
         $("#runBtn").hide();
       }
-      // If tnot, the cancel-button will be hidden and run-button will be shown.
+      // If not, the cancel-button will be hidden and run-button will be shown.
       else {
         $("#cancelBtn").hide();
         $("#runBtn").show();

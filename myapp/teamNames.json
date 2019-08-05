@@ -1,15 +1,12 @@
-{
-  "teamList":
-[
-"Viking",
-"MAVEN",
-"Curiosity",
-"Phoenix",
-"Pathfinder",
-"InSight",
-"Rosetta",
-"Odyssey",
-"Sojourner",
-"Phobos-Grunt"
-]
-}
+{"teamList":[
+  "Viking",
+  "MAVEN",
+  "Curiosity",
+  "Phoenix",
+  "Pathfinder",
+  "InSight",
+  "Rosetta",
+  "Odyssey",
+  "Sojourner",
+  "Phobos-Grunt"
+]}

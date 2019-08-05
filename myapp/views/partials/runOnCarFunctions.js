@@ -46,6 +46,7 @@ function cancelCar(){
 function runOnCar(){
   getShortestCode(runOnCarFunction);
 }
+
 function runOnCarFunction(){
   let socket = io();
   socket.on('connect',function(){
@@ -53,7 +54,9 @@ function runOnCarFunction(){
     console.log('Session id: ' + unique_id); // Unique id for each html page opened.
     socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id,
                                                 'goal': goal_coords}));
+    // Kalla på funktion som aktiverar cancel-knappen
     console.log('Running code on car');
+    runningCode = True;
     alert(`Executing code written by team ${unique_name} on the car.`);
     socket.close();
   });
@@ -114,6 +117,20 @@ function getShortestCode(callback){
       socket.close();
       console.log('msg : ', msg);
       callback();
+    });
+  });
+}
+
+// clear content of UsedIds-variable
+function clearUsedIdsVar(){
+  var socket = io();
+  socket.on('connect', function(){
+    socket.emit('clearUsedIdsVar', function(){
+    });
+    socket.on('clearUsedIdsVarRes', function(msg){
+      usedIds = {};
+      console.log(usedIds);
+      socket.close();
     });
   });
 }

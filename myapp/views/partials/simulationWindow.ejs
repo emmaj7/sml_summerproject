@@ -45,6 +45,8 @@ Date: 2019-07-10
 
   });
 
+  // FLYTTA DESSA TVÅ FUNKTIONER TILL sim.WindowFunctions?
+
   // Function making the placement (right margin) of the simulation window dynamic
   function placeSimulationRight(){
     var windowWidth = window.innerWidth;
@@ -305,9 +307,8 @@ Date: 2019-07-10
         console.log('starting simulation');
         runningSimulation = true;
         //Hide run - show cancel
-        whichButton();
+        runOrCancel();
 
-        // ÄNDRA VARIABEL EFTER 0.2 SEKUNDER
       });
 
       // recieves position. Updates car position in simulation.
@@ -345,7 +346,7 @@ Date: 2019-07-10
 
         if (at_goal.toString() === 'true'){ // Completed level 1
           runningSimulation = false;
-          whichButton();
+          runOrCancel();
           if (level === 1){
             var modal1 = document.getElementById('myModal');
             modal1.style.display = "block";
@@ -382,7 +383,7 @@ Date: 2019-07-10
           tryAgainBtn.onclick = function() {
             hitModal.style.display = "none";
             runningSimulation = false;
-            whichButton();
+            runOrCancel();
           }
         } else if (wallHit) { // Hit wall on either level
           console.log("Nu har vi krockat med en vägg...");
@@ -395,29 +396,29 @@ Date: 2019-07-10
           tryAgainBtn.onclick = function() {
             wallModal.style.display = "none";
             runningSimulation = false;
-            whichButton();
+            runOrCancel();
           }
         } else {
             if (forced_close) {
               runningSimulation = false;
-              whichButton();
+              runOrCancel();
             } else { // Did not reach goal
+              var spinner = document.getElementById('spinner');
+              spinner.style.display = "none";
 
-                console.log("Klarade ej banan");
-                var tryAgainBtn = document.getElementById('tryAgainBtn');
-                console.log("Hittat knapp?" + tryAgainBtn);
-                var tryAgainModal = document.getElementById('myTryAgainModal');
-                console.log("Hittat modal?" + tryAgainModal);
-                tryAgainModal.style.display = "block";
-                console.log("Visar modal");
-                tryAgainBtn.onclick = function() {
-                  tryAgainModal.style.display = "none";
-                  runningSimulation = false;
-                  whichButton();
-                }
+              var tryAgainBtn = document.getElementById('tryAgainBtn');
 
+              var tryAgainModal = document.getElementById('myTryAgainModal');
+
+              tryAgainModal.style.display = "block";
+
+              tryAgainBtn.onclick = function() {
+                tryAgainModal.style.display = "none";
+                runningSimulation = false;
+                runOrCancel();
               }
             }
+          }
 
       });
 
