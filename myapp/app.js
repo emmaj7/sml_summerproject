@@ -2,7 +2,7 @@
 // Written by: Mikael Glamheden & Emma Johansson
 // Last edited: 2019-06-27
 
-
+var PORT = process.env.PORT || 3000;
 const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -376,7 +376,7 @@ app.use(function(req, res, next) {
   res.render('404page', {'message': fullUrl});
 });
 
-var PORT = process.env.PORT || 3000;
+
 
 http.listen(PORT, function(){
   console.log('Server running')
