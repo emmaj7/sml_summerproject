@@ -2,7 +2,7 @@
 // Written by: Mikael Glamheden & Emma Johansson
 // Last edited: 2019-06-27
 
-var PORT = process.env.PORT || 3000;
+// var PORT = process.env.PORT || 3000;
 const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -378,6 +378,6 @@ app.use(function(req, res, next) {
 
 
 
-http.listen(PORT, function(){
+http.listen(process.env.PORT || 3000, function(){
   console.log('Server running')
 });
