@@ -2,7 +2,7 @@
 // Written by: Mikael Glamheden & Emma Johansson
 // Last edited: 2019-06-27
 
-
+// var PORT = process.env.PORT || 3000;
 const fs = require("fs");
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -24,6 +24,7 @@ var http = require("http").createServer(app);
 var io = require('socket.io')(http); // handles two-way data streams
 
 var urlencodedParser = bodyParser.urlencoded({extended:false});
+var usedIds = {};
 
 app.set("view engine", "ejs");
 
@@ -59,36 +60,57 @@ app.get("/level3", function(req, res){
   res.render("level3", {id: computerNumber});
 });
 
-// Renders tutorial
+// Renders help-page
 app.get('/helpPage', function(req, res){
   res.render('helpPage');
 });
 
-// renders admin page. Not accessable through UI.
+// Renders admin page. Not accessable through UI.
 app.get('/adminPage', function(req, res){
   res.render('adminPage');
 });
 
-app.get('/placementTest', function(req, res){
-  res.render('placementTest');
-});
-
-
+// Sends teamname and url
 app.get('/teamName', function(req, res){
   var current_url = req.url;
   var baseUrl = req.protocol + "://" + req.get('host');
   var fullUrl = baseUrl + current_url;
-  console.log(fullUrl);
+  console.log("Full URL: " + fullUrl);
   current_url_obj = new URL(fullUrl);
   const search_params = current_url_obj.searchParams;
   const id = search_params.get('id');
-  const rawData = fs.readFileSync('teamNames.json');
-  const teamNames = JSON.parse(rawData);
-  console.log("YO");
-  res.send({teamName: teamNames.teamList[id-1],
+
+  // Opens file with list of available team names
+  var rawData = fs.readFileSync('teamNames.json');
+  var teamNames = JSON.parse(rawData);
+  var array = teamNames.teamList;
+  console.log(array);
+  // Assigning the first name of the list
+  res.send({teamName: array[id-1],
             url: baseUrl});
+  // Add the used id and its corresponding team name to the object containing used IDs
+  usedIds[id.toString()] = array[id-1];
+  console.log(usedIds);
+
 });
 
+// app.get('/teamName', function(req, res){
+//   var current_url = req.url;
+//   var baseUrl = req.protocol + "://" + req.get('host');
+//   var fullUrl = baseUrl + current_url;
+//   console.log(fullUrl);
+//   current_url_obj = new URL(fullUrl);
+//   const search_params = current_url_obj.searchParams;
+//   const id = search_params.get('id');
+//   const rawData = fs.readFileSync('teamNames.json');
+//   const teamNames = JSON.parse(rawData);
+//   console.log("YO");
+//   // Här måste vi kalla på en funktion (?) som tar ut rätt lag-namn
+//   res.send({teamName: teamNames.teamList[id-1],
+//             url: baseUrl});
+// });
+
+// Renders lastpage (shown when all levels are completed)
 app.get('/lastPage', function(req, res){
   var current_url = req.url;
   var baseUrl = req.protocol + "://" + req.get('host');
@@ -250,19 +272,31 @@ function getShortestCode(filename){
   return {id: idShortest, length: shortestL};
 }
 
-// converts an id number into a cool name
+// converts an id number into a cool name input: numberList
+
+// läs från nytt objekt
 function idNumberToName(numberList){
-  const rawData = fs.readFileSync('teamNames.json');
-  const nameList = JSON.parse(rawData).teamList;
-  var availableNames = [];
-  for (var i = 0; i < numberList.length; i++) {
-    var index = numberList[i];
-    availableNames.push(nameList[index]);
+  var usedNames = [];
+  for (var i = 0; i < numberList.length; i++){
+    var id = numberList[i];
+    console.log(id);
+    var teamName = usedIds[id];
+    console.log(teamName);
+    usedNames.push(teamName);
   }
-  return availableNames;
+  console.log(usedNames);
+  return usedNames;
+  // const rawData = fs.readFileSync('teamNames.json');
+  // const nameList = JSON.parse(rawData).teamList;
+  // var availableNames = [];
+  // for (var i = 0; i < numberList.length; i++) {
+  //   var index = numberList[i];
+  //   availableNames.push(nameList[index]);
+  // }
+  // return availableNames;
 }
 
-// returns the list of used id's
+// returns the list of used id's from code_real
 function getIdList(filename,callback){
   var lines = fs.readFileSync(filename, 'utf-8').split('\n')
   lines = lines.filter(function(line){
@@ -343,6 +377,7 @@ app.use(function(req, res, next) {
 });
 
 
-http.listen(3000, function(){
-  console.log('listening on *:3000')
+
+http.listen(process.env.PORT || 3000, function(){
+  console.log('Server running')
 });

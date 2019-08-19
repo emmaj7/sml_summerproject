@@ -43,7 +43,7 @@ function newSprite(yaw, curr_sprite){
   return res;
 }
 
-// switch wich sprite to display.
+// switch which sprite to display.
 function changeSprite(i){
   if (i === 0) {
     car.texture = text0;
