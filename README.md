@@ -17,20 +17,15 @@ Now clone the git repository
 
 	git clone https://github.com/emmaj7/sml_summerproject.git
 
-and go to it using the terminal. Next you will have to install a few ROS dependencies
+and go to it using the terminal. Go to the "svea_starter" folder.
 
 	cd svea_starter
 
 Now run
 
-	apt-get install libbullet-dev
+	rosdep install --from-paths src --ignore-src -r -y
 
-then run
-
-	sudo apt-get install libsdl-image1.2-dev
-	sudo apt-get install libsdl-dev
-
-Compile and link the ROS libraries
+to install all dependencies. Compile and link the ROS libraries
 
 	catkin_make
 	source devel/setup.bash
