@@ -24,16 +24,16 @@ from math import radians, degrees
 import rospy
 from geometry_msgs.msg import Twist
 from low_level_interface.msg import lli_ctrl_request, lli_ctrl_actuated
-
+from low_level_interface.msg import lli_ctrl
 
 class ControlInterface():
 
     OPERATING_FREQ = 30 # [Hz]
 
     MAX_STEER_PERCENT = 80 # [%]
-    MAX_VELOCITY_PERCENT = 400 #[%]
+    MAX_VELOCITY_PERCENT = 100 #[%]
 
-    MAX_VELOCITY = 4 #[m/s]
+    MAX_VELOCITY = 1 #[m/s]
 
     def __init__(self, vehicle_name=""):
         # rospy.init_node(vehicle_name + '_control_interface')
@@ -41,6 +41,9 @@ class ControlInterface():
         self.vehicle_name = vehicle_name
 
         self.ctrl_request = lli_ctrl_request()
+
+        self.ctrl_request_new = lli_ctrl()
+
         self.last_ctrl_update = rospy.get_time()
 
         self.is_stop = False
@@ -67,12 +70,14 @@ class ControlInterface():
     def _start_listen(self):
         rospy.Subscriber(self.vehicle_name+'/lli/ctrl_actuated', lli_ctrl_actuated,
                          self._read_ctrl_actuated)
-        rospy.loginfo(
-                "Controller Interface successfully initialized")
+        rospy.loginfo("Controller Interface successfully initialized")
 
     def _start_publish(self):
         self.ctrl_request_pub = rospy.Publisher(self.vehicle_name+'/lli/ctrl_request',
                                                 lli_ctrl_request,
+                                                queue_size = 1)
+        self.ctrl_request_pub_new = rospy.Publisher(self.vehicle_name+'/lli/ctrl',
+                                                lli_ctrl,
                                                 queue_size = 1)
 
     def _read_ctrl_actuated(self, msg):
@@ -142,6 +147,12 @@ class ControlInterface():
 
         steer_percent, vel_percent = self._clip_ctrl(steer_percent, vel_percent)
 
+
+        self.ctrl_request_new.steering = steer_percent
+        self.ctrl_request_new.velocity = vel_percent
+        self.ctrl_request_new.trans_diff = transmission
+        self.ctrl_request_new.ctrl_code = ctrl_code
+
         self.ctrl_request.steering = steer_percent
         self.ctrl_request.velocity = vel_percent
         self.ctrl_request.transmission = transmission
@@ -152,6 +163,8 @@ class ControlInterface():
         if not self.is_emergency or not self.is_stop or not self.is_persistent:
             self.ctrl_request_pub.publish(self.ctrl_request)
             self.ctrl_request_log.append(self.ctrl_request)
+
+            self.ctrl_request_pub_new.publish(self.ctrl_request_new)
 
     def set_is_stop(self, is_stop = True):
         self.is_stop = is_stop

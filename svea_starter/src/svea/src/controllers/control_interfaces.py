@@ -25,7 +25,6 @@ import rospy
 from geometry_msgs.msg import Twist
 from low_level_interface.msg import lli_ctrl_request, lli_ctrl_actuated
 
-
 class ControlInterface():
 
     OPERATING_FREQ = 30 # [Hz]
