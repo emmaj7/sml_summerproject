@@ -183,6 +183,7 @@ io.on('connection', function(socket){
     var id = 'USER' + obj.id;
     var goal = obj.goal;
     var command = 'roslaunch svea SVEA_high_level_commands.launch ';
+    // var command = 'roslaunch svea zed_SVEA_high_level_commands.launch '; // Use this if zed camera navigation    
     // var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch '; // Use this if amcl navigation
     var args = 'my_args:=' + '"' + id + ' ' + JSON.stringify(goal) + '"';
     shell.exec(command + args, {async:true}, function(code, stdout, stderr){
