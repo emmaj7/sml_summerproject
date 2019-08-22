@@ -24,6 +24,7 @@ from math import radians, degrees
 import rospy
 from geometry_msgs.msg import Twist
 from low_level_interface.msg import lli_ctrl_request, lli_ctrl_actuated
+from svea_arduino.msg import lli_ctrl
 
 class ControlInterface():
 
@@ -39,7 +40,10 @@ class ControlInterface():
 
         self.vehicle_name = vehicle_name
 
-        self.ctrl_request = lli_ctrl_request()
+        # self.ctrl_request = lli_ctrl_request()
+
+        self.ctrl_request = lli_ctrl()
+
         self.last_ctrl_update = rospy.get_time()
 
         self.is_stop = False
@@ -64,13 +68,13 @@ class ControlInterface():
         rospy.spin()
 
     def _start_listen(self):
-        rospy.Subscriber(self.vehicle_name+'/lli/ctrl_actuated', lli_ctrl_actuated,
+        rospy.Subscriber(self.vehicle_name+'/lli/ctrl_actuated', lli_ctrl,
                          self._read_ctrl_actuated)
         rospy.loginfo("Controller Interface successfully initialized")
 
     def _start_publish(self):
         self.ctrl_request_pub = rospy.Publisher(self.vehicle_name+'/lli/ctrl_request',
-                                                lli_ctrl_request,
+                                                lli_ctrl,
                                                 queue_size = 1)
 
     def _read_ctrl_actuated(self, msg):
@@ -80,19 +84,17 @@ class ControlInterface():
         # collect important params
         steering = self.ctrl_request.steering
         velocity = self.ctrl_request.velocity
-        transmission = self.ctrl_request.transmission
-        differential_front = self.ctrl_request.differential_front
-        differential_rear = self.ctrl_request.differential_rear
-        ctrl_code = self.ctrl_request.ctrl_code
+        trans_diff = self.ctrl_request.trans_diff
+        # differential_front = self.ctrl_request.differential_front
+        # differential_rear = self.ctrl_request.differential_rear
+        ctrl = self.ctrl_request.ctrl
 
         return ("## Vehicle: {0}\n".format(self.vehicle_name)
                 +"  -ctrl request:\n"
                 +"      steering   - {0}\n".format(steering)
                 +"      velocity   - {0}\n".format(velocity)
-                +"      trans      - {0}\n".format(transmission)
-                +"      diff_front - {0}\n".format(differential_front)
-                +"      diff_rear  - {0}\n".format(differential_rear)
-                +"      ctrl_code  - {0}\n".format(ctrl_code)
+                +"      trans      - {0}\n".format(trans_diff)
+                +"      ctrl_code  - {0}\n".format(ctrl)
                 +"  -Is stopped: {0}\n".format(self.is_stop)
                 +"  -Is emergency: {0}\n".format(self.is_emergency))
 
@@ -140,12 +142,11 @@ class ControlInterface():
 
         steer_percent, vel_percent = self._clip_ctrl(steer_percent, vel_percent)
 
+
         self.ctrl_request.steering = steer_percent
         self.ctrl_request.velocity = vel_percent
-        self.ctrl_request.transmission = transmission
-        self.ctrl_request.differential_front = differential_front
-        self.ctrl_request.differential_rear = differential_rear
-        self.ctrl_request.ctrl_code = ctrl_code
+        self.ctrl_request.trans_diff = 0 # set to default value.
+        self.ctrl_request.ctrl = ctrl_code
 
         if not self.is_emergency or not self.is_stop or not self.is_persistent:
             self.ctrl_request_pub.publish(self.ctrl_request)
@@ -195,19 +196,14 @@ class ControlInterfaceWTeleop(ControlInterface):
         # collect important params
         steering = self.ctrl_request.steering
         velocity = self.ctrl_request.velocity
-        transmission = self.ctrl_request.transmission
-        differential_front = self.ctrl_request.differential_front
-        differential_rear = self.ctrl_request.differential_rear
+        trans_diff = self.ctrl_request.trans_diff
         ctrl_code = self.ctrl_request.ctrl_code
-
 
         return ("## Vehicle: {0}\n".format(self.vehicle_name)
                 +"  -ctrl request:\n"
                 +"      steering   - {0}\n".format(steering)
                 +"      velocity   - {0}\n".format(velocity)
-                +"      trans      - {0}\n".format(transmission)
-                +"      diff_front - {0}\n".format(differential_front)
-                +"      diff_rear  - {0}\n".format(differential_rear)
+                +"      trans      - {0}\n".format(trans_diff)
                 +"      ctrl_code  - {0}\n".format(ctrl_code)
                 +"  -% teleop: {0}\n".format(self.percent_teleop)
                 +"  -Is stopped: {0}\n".format(self.is_stop)
@@ -240,10 +236,8 @@ class ControlInterfaceWTeleop(ControlInterface):
 
         self.ctrl_request.steering = steer_percent
         self.ctrl_request.velocity = vel_percent
-        self.ctrl_request.transmission = transmission
-        self.ctrl_request.differential_front = differential_front
-        self.ctrl_request.differential_rear = differential_rear
-        self.ctrl_request.ctrl_code = ctrl_code
+        self.ctrl_request.trans_diff = 0
+        self.ctrl_request.ctrl = ctrl_code
 
         if not self.is_emergency or not self.is_stop or not self.is_persistent:
             self.ctrl_request_pub.publish(self.ctrl_request)
