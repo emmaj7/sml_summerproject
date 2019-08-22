@@ -61,7 +61,7 @@ class CarHighLevelCommands():
             # initialize odometry and control interface for real car
             self.vehicle_model = ql.QualisysSimpleOdom(qualisys_model_name).start()
             self.ctrl_interface = ControlInterface().start()
-            rospy.sleep(1) # Wait till odometry updated
+            rospy.sleep(2) # Wait till odometry updated
 
             self.target_state = self.vehicle_model.get_state() # x, y, yaw, v
 
@@ -345,13 +345,14 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
     # print('argv:')
     # print(argv)
 
-    name = argv[0] # makes it possible to have multiple copies of simulation
-    goal = demjson.decode(argv[1])
-    goal = [goal["x"], goal["y"]]
+    # name = argv[0] # makes it possible to have multiple copies of simulation
+    # goal = demjson.decode(argv[1])
+    # goal = [goal["x"], goal["y"]]
 
-    # name = 'SVEA5'
-    # goal = [4, 0]
-    from_file = True
+    name = 'SVEA5'
+    goal = [4, 0]
+
+    from_file = False
     rover = deploy(name, goal) # This should be part of the code later on.
     # car = CarHighLevelCommands(simulation)
     if from_file:
@@ -365,11 +366,12 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
         l_var = {'rover': rover}
         c.execute_commands(name, g_var, l_var)
     else:
-        car.drive_forward()
-        car.turn_right()
+        rover.drive_forward()
+        # rover.turn_left()
         # car.turn_right()
         # car.drive_forward()
     log_to_file(rover.data_log)
-    # rospy.signal_shutdown('Program end')
+    rospy.signal_shutdown('Program end')
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    # main(sys.argv[1:])
+    main()
