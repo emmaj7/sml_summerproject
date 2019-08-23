@@ -127,8 +127,6 @@ class CarHighLevelCommands():
         """update the bicycle model based on zed camera"""
         state = self.pose_node.get_state()
         time_limit = 1.0/2 # Affects how recent the zed camera data has to be to be take into account.
-        print('Ros time : %d' % rospy.Time.now()))
-        print()
         if (state[0] is not None and
             rospy.Time.now().to_sec() - state[0] < time_limit):
             self.vehicle_model.correct_state(*state[1:])
@@ -361,13 +359,13 @@ def deploy(name):
     car = CarHighLevelCommands()
     return car
 
-def main(argv = ['SVEA5']):
+def main(argv = ['SVEA5', 'code_real.py']):
 
     # print('argv:')
     # print(argv)
 
     name = argv[0] # makes it possible to have multiple copies of simulation
-    dir_path = os.path.dirname(os.path.realpath(__file__))    
+    dir_path = os.path.dirname(os.path.realpath(__file__))
     filename = dir_path + '/../../../../../../myapp/' + argv[1]
     # name = 'SVEA5'
     # goal = [4, 0]
