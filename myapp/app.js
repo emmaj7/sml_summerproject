@@ -312,7 +312,7 @@ function runScript(id, start, goal){
 
 // Writes code to beginning of code file
 function writeCode(code, id, filename){
-  data = '# ' + 'ID:' + id + '\n' + code + '#####\n';
+  data = '# ' + 'ID:' + '&' + id + '&' + '\n' + code + '#####\n';
   prependFile(filename, data, function(err){
     if (err){
       console.log(err);
