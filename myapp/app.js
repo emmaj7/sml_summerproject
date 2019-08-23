@@ -173,6 +173,7 @@ io.on('connection', function(socket){
     var filename = "code_real.py";
     // var command = 'roslaunch svea zed_SVEA_high_level_commands.launch '; // Use this if zed camera navigation
     // var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch '; // Use this if amcl navigation
+<<<<<<< HEAD
     var args = 'my_args:=' + '"' + id + ' ' + filename '"';
     shell.exec(command + args, {async:true}, function(code, stdout, stderr){
       console.log('Exit Code: ', code);
@@ -185,6 +186,10 @@ io.on('connection', function(socket){
     var command = 'roslaunch svea SVEA_high_level_commands.launch ';
     var filename = "default.py";
     var args = 'my_args:=' + '"' + id + ' ' + filename '"';
+=======
+    var args = 'my_args:=' + '"' + id + ' ' + JSON.stringify(goal) + filename + '"';
+    my_args:=
+>>>>>>> af0f6ae039e2ced8f869ab5a226f4da8f1ff288a
     shell.exec(command + args, {async:true}, function(code, stdout, stderr){
       console.log('Exit Code: ', code);
       console.log('Program stderr: ', stderr);
