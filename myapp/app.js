@@ -173,7 +173,7 @@ io.on('connection', function(socket){
     var filename = "code_real.py";
     // var command = 'roslaunch svea zed_SVEA_high_level_commands.launch '; // Use this if zed camera navigation
     // var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch '; // Use this if amcl navigation
-    var args = 'my_args:=' + '"' + id + ' ' + filename '"';
+    var args = 'my_args:=' + '"' + id + ' ' + filename + '"';
     shell.exec(command + args, {async:true}, function(code, stdout, stderr){
       console.log('Exit Code: ', code);
       console.log('Program stderr: ', stderr);
@@ -184,7 +184,8 @@ io.on('connection', function(socket){
   socket.on('runDefaultCode', function(){
     var command = 'roslaunch svea SVEA_high_level_commands.launch ';
     var filename = "default.py";
-    var args = 'my_args:=' + '"' + id + ' ' + filename '"';
+    var id = 'Default';
+    var args = 'my_args:=' + '"' + id + ' ' + filename + '"';
     shell.exec(command + args, {async:true}, function(code, stdout, stderr){
       console.log('Exit Code: ', code);
       console.log('Program stderr: ', stderr);
@@ -312,7 +313,6 @@ function getIdList(filename,callback){
 
 // This function launches the python simulation
 function runScript(id, start, goal){
-  id = 'USER' + id;
   var pathId = path.join(__dirname, '/../svea_starter/src/svea/src/scripts/sim/sim_SVEA_high_level_commands.py');
   return spawn('python', ["-u",
                           pathId,
@@ -323,7 +323,7 @@ function runScript(id, start, goal){
 
 // Writes code to beginning of code file
 function writeCode(code, id, filename){
-  data = '# ' + 'ID:' + id + '\n' + code + '#####\n';
+  data = '# ' + 'ID:' + '&' + id + '&' + '\n' + code + '#####\n';
   prependFile(filename, data, function(err){
     if (err){
       console.log(err);

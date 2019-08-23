@@ -14,7 +14,7 @@ class CarCommands:
 
     def _read_commands(self, id):
         """Looks after code block with the given id."""
-        id = id.strip('USER')
+        id = '&' + id + '&'
         code_start = False
         self.commands = ''
         file = open(self.filename,"r")
