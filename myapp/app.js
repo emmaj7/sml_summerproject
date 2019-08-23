@@ -317,7 +317,6 @@ function getIdList(filename,callback){
 
 // This function launches the python simulation
 function runScript(id, start, goal){
-  id = 'USER' + id;
   var pathId = path.join(__dirname, '/../svea_starter/src/svea/src/scripts/sim/sim_SVEA_high_level_commands.py');
   return spawn('python', ["-u",
                           pathId,
