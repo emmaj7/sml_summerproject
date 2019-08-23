@@ -48,6 +48,7 @@ function runOnCar(){
 }
 
 function runDefaultCode(){
+  let socket = io();
   socket.emit('runDefaultCode');
 }
 

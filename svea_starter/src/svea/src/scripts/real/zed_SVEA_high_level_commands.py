@@ -367,6 +367,7 @@ def main(argv = ['SVEA5']):
     # print(argv)
 
     name = argv[0] # makes it possible to have multiple copies of simulation
+    dir_path = os.path.dirname(os.path.realpath(__file__))    
     filename = dir_path + '/../../../../../../myapp/' + argv[1]
     # name = 'SVEA5'
     # goal = [4, 0]
@@ -375,7 +376,6 @@ def main(argv = ['SVEA5']):
     # car = CarHighLevelCommands(simulation)
     if from_file:
         # File with the code to execute
-        dir_path = os.path.dirname(os.path.realpath(__file__))
         # filename = dir_path + '/../../../../../../myapp/code_real.py'
         c = cc.CarCommands(filename)
 
