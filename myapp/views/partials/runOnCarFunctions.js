@@ -49,6 +49,7 @@ function runOnCar(){
 
 function runDefaultCode(){
   socket.emit('runDefaultCode');
+  alert("Executing default code on the car.")
 }
 
 function runOnCarFunction(){
