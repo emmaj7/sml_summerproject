@@ -25,15 +25,14 @@ import rospy
 from geometry_msgs.msg import Twist
 from low_level_interface.msg import lli_ctrl_request, lli_ctrl_actuated
 
-
 class ControlInterface():
 
     OPERATING_FREQ = 30 # [Hz]
 
     MAX_STEER_PERCENT = 80 # [%]
-    MAX_VELOCITY_PERCENT = 400 #[%]
+    MAX_VELOCITY_PERCENT = 100 #[%]
 
-    MAX_VELOCITY = 4 #[m/s]
+    MAX_VELOCITY = 1 #[m/s]
 
     def __init__(self, vehicle_name=""):
         # rospy.init_node(vehicle_name + '_control_interface')
@@ -67,8 +66,7 @@ class ControlInterface():
     def _start_listen(self):
         rospy.Subscriber(self.vehicle_name+'/lli/ctrl_actuated', lli_ctrl_actuated,
                          self._read_ctrl_actuated)
-        rospy.loginfo(
-                "Controller Interface successfully initialized")
+        rospy.loginfo("Controller Interface successfully initialized")
 
     def _start_publish(self):
         self.ctrl_request_pub = rospy.Publisher(self.vehicle_name+'/lli/ctrl_request',

@@ -3,7 +3,7 @@ This project uses [blockly](https://developers.google.com/blockly/) which lets t
 ## Setting up the environment
 The project assumes you are running ubuntu 16.04. and that you have the following applications installed on your machine:
 * [ROS](https://www.ros.org/). You can install ROS by following [this guide](http://wiki.ros.org/kinetic/Installation/Ubuntu).
-* [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/). You can install them by following [this guide](https://tecadmin.net/install-latest-nodejs-npm-on-ubuntu/).
+* [Node.js](https://nodejs.org/en/) and [npm](https://www.npmjs.com/). You can install them by following [this guide](https://tecadmin.net/install-latest-nodejs-npm-on-ubuntu/). Get the LTS release. 
 
 The python application requires numpy and matplotlib. Install them if you don't already have them.
 
@@ -17,20 +17,15 @@ Now clone the git repository
 
 	git clone https://github.com/emmaj7/sml_summerproject.git
 
-and go to it using the terminal. Next you will have to install a few ROS dependencies
+and go to it using the terminal. Go to the "svea_starter" folder.
 
 	cd svea_starter
 
 Now run
 
-	apt-get install libbullet-dev
+	rosdep install --from-paths src --ignore-src -r -y
 
-then run
-
-	sudo apt-get install libsdl-image1.2-dev
-	sudo apt-get install libsdl-dev
-
-Compile and link the ROS libraries
+to install all dependencies. Compile and link the ROS libraries
 
 	catkin_make
 	source devel/setup.bash
