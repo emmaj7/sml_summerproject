@@ -47,6 +47,10 @@ function runOnCar(){
   getShortestCode(runOnCarFunction);
 }
 
+function runDefaultCode(){
+  socket.emit('runDefaultCode');
+}
+
 function runOnCarFunction(){
   let socket = io();
   socket.on('connect',function(){
