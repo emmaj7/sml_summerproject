@@ -172,7 +172,8 @@ io.on('connection', function(socket){
     var command = 'roslaunch svea SVEA_high_level_commands.launch ';
     // var command = 'roslaunch svea zed_SVEA_high_level_commands.launch '; // Use this if zed camera navigation
     // var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch '; // Use this if amcl navigation
-    var args = 'my_args:=' + '"' + id + ' ' + JSON.stringify(goal) + '"';
+    var args = 'my_args:=' + '"' + id + ' ' + JSON.stringify(goal) + filename + '"';
+    my_args:=
     shell.exec(command + args, {async:true}, function(code, stdout, stderr){
       console.log('Exit Code: ', code);
       console.log('Program stderr: ', stderr);

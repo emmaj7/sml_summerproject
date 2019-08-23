@@ -344,18 +344,18 @@ def main(argv = ['SVEA5']):
     # print(argv)
 
     name = argv[0] # determines which code snippet to take from file.
+    filename = dir_path + '/../../../../../../myapp/' + argv[1]
     # goal = demjson.decode(argv[1])
-    # goal = [goal["x"], goal["y"]]
-
+    # goal = [goal["x"], goal["y"]
     # name = 'SVEA5'
 
-    from_file = True
+    from_file = False
     rover = deploy(name) # This should be part of the code later on.
     # car = CarHighLevelCommands(simulation)
     if from_file:
         # File with the code to execute
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        filename = dir_path + '/../../../../../../myapp/code_real.py'
+        # filename = dir_path + '/../../../../../../myapp/code_real.py'
         c = cc.CarCommands(filename)
 
         # variables to pass on
@@ -364,10 +364,6 @@ def main(argv = ['SVEA5']):
         c.execute_commands(name, g_var, l_var)
     else:
         rover.drive_forward()
-        rover.drive_backwards()
-        rover.drive_forward()
-        rover.turn_left()
-        rover.turn_right()
         # rover.turn_left()
         # car.turn_right()
         # car.drive_forward()
