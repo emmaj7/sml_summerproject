@@ -52,8 +52,8 @@ function runOnCarFunction(){
   socket.on('connect',function(){
     console.log('Connected');
     console.log('Session id: ' + unique_id); // Unique id for each html page opened.
-    socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id,
-                                                'goal': goal_coords}));
+    // socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id,
+    //                                             'goal': goal_coords}));
     // Kalla på funktion som aktiverar cancel-knappen
     console.log('Running code on car');
     runningCode = true;

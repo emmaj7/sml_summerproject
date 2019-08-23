@@ -18,7 +18,7 @@
       <arg name="model" value="SVEA5"/>
   </include>
 
-  <!-- <arg name= "my_args"/>
-  <node pkg="svea" type="SVEA_high_level_commands.py" name="SVEA_high_level_commands" args="$(arg my_args)" output="screen"/> -->
-  <node pkg="svea" type="SVEA_high_level_commands.py" name="SVEA_high_level_commands" output="screen"/>
+  <arg name= "my_args"/>
+  <node pkg="svea" type="SVEA_high_level_commands.py" name="SVEA_high_level_commands" args="$(arg my_args)" output="screen"/>
+  <!-- <node pkg="svea" type="SVEA_high_level_commands.py" name="SVEA_high_level_commands" output="screen"/> -->
 </launch>

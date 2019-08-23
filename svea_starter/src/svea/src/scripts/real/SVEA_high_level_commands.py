@@ -40,17 +40,16 @@ import qualisys_localizers as ql
 
 class CarHighLevelCommands():
     """Class with high level methods intended to be called from a blockly-generated code."""
-    def __init__(self, simulation = True, vehicle_name = "SVEA5", goal = [0, 0],
+    def __init__(self, simulation = True,
                        init_state = [0, 0, 0, 0]):
         self.simulation = simulation
-        self.goal = goal
         # self.show_animation = animation
         qualisys_model_name = 'SVEA5'
         dt = 0.01
         if self.simulation:
             # initialize simulated model and control interface
             self.vehicle_model = SimpleBicycleState(*init_state, dt=dt)
-            self.ctrl_interface = ControlInterface(vehicle_name).start()
+            self.ctrl_interface = ControlInterface(qualisys_model_name).start()
             rospy.sleep(0.5)
             # start background simulation thread
             self.simulator = SimSVEA(vehicle_name, self.vehicle_model, dt, is_publish=True)
@@ -130,7 +129,7 @@ class CarHighLevelCommands():
     def _turn(self, angle, direction):
         """Turn the car a given number of degrees relative to current orientation."""
         l = 1
-        tol1 = 1.1*math.pi/180 # angular tolerance
+        tol1 = 3*math.pi/180 # angular tolerance
         tol2 = 2 # positional tolerance
         x0 = self.target_state[0]
         y0 = self.target_state[1]
@@ -206,18 +205,15 @@ class CarHighLevelCommands():
             self._plot_trajectory(cx, cy)
             plt.show()
 
-    def at_goal(self):
-        """Checks if car is close enough to goal."""
-        state = self.vehicle_model.get_state()
-        dist = np.linalg.norm(np.subtract(state[0:2],self.goal))
-        if dist < 0.1:
-            return True
-        else:
-            return False
-
     def drive_backwards(self):
         """Car follows straigth trajectory of predefined length.
             Uses line following algorithm to get to goal."""
+        # Go into reverse mode.
+        self.ctrl_interface.send_control(0,-1)
+        self.r.sleep()
+        self.ctrl_interface.send_control(0,0)
+        self.r.sleep()
+
         l = 0.5 # goal distance
         tol = 0.1 # ok distance to goal
         state = self.vehicle_model.get_state()
@@ -251,6 +247,7 @@ class CarHighLevelCommands():
             self._send_position(steering)
             # sleep so loop runs at 30Hz
             self.r.sleep()
+        self.ctrl_interface.send_control(0,0)
         self.target_state[0] = xg
         self.target_state[1] = yg
         print('Completed drive backwards!')
@@ -292,6 +289,7 @@ class CarHighLevelCommands():
             self._send_position(steering)
             # sleep so loop runs at 30Hz
             self.r.sleep()
+        self.ctrl_interface.send_control(0,0)
         self.target_state[0] = xg
         self.target_state[1] = yg
         print('Completed drive forward!')
@@ -333,27 +331,26 @@ def log_to_file(log):
     f.close()
     print('Wrote log')
 
-def deploy(name, goal):
+def deploy(name):
     """Wraps the init of car commands."""
     rospy.init_node('SVEA_high_level_' + name)
     simulation = False
-    car = CarHighLevelCommands(simulation, name, goal)
+    car = CarHighLevelCommands(simulation)
     return car
 
-def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
+def main(argv = ['SVEA5']):
 
     # print('argv:')
     # print(argv)
 
-    # name = argv[0] # makes it possible to have multiple copies of simulation
+    name = argv[0] # determines which code snippet to take from file.
     # goal = demjson.decode(argv[1])
     # goal = [goal["x"], goal["y"]]
 
-    name = 'SVEA5'
-    goal = [4, 0]
+    # name = 'SVEA5'
 
-    from_file = False
-    rover = deploy(name, goal) # This should be part of the code later on.
+    from_file = True
+    rover = deploy(name) # This should be part of the code later on.
     # car = CarHighLevelCommands(simulation)
     if from_file:
         # File with the code to execute
@@ -367,11 +364,15 @@ def main(argv = ['SVEA5', '{"x": 4, "y": 0, "yaw": 0}']):
         c.execute_commands(name, g_var, l_var)
     else:
         rover.drive_forward()
+        rover.drive_backwards()
+        rover.drive_forward()
+        rover.turn_left()
+        rover.turn_right()
         # rover.turn_left()
         # car.turn_right()
         # car.drive_forward()
     log_to_file(rover.data_log)
     rospy.signal_shutdown('Program end')
 if __name__ == '__main__':
-    # main(sys.argv[1:])
-    main()
+    main(sys.argv[1:])
+    # main()

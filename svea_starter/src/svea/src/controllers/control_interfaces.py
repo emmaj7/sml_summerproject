@@ -145,7 +145,6 @@ class ControlInterface():
         # Range is changed from percent to: -127 - 127
         steer_percent = steer_percent * -1.27
         vel_percent = vel_percent * 1.27
-
         self.ctrl_request.steering = steer_percent
         self.ctrl_request.velocity = vel_percent
         self.ctrl_request.trans_diff = 8 # set to low gear value.
