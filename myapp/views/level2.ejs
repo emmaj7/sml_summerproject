@@ -75,9 +75,12 @@ Last updated: 2019-07-25
     // ID generated uniquely for each window.
     var unique_id = (Math.random()*Math.pow(10,18)).toString();
     // The position of the goal for level 2.
-    var goal_coords = {'x': 0.80, 'y': 0.9, 'yaw': 0};
+    var goal_coords = {'x': 0.80, 'y': 0.80, 'yaw': 0};
     // Position of obstacles on level 2
-    var obstacle_coords = [{x: 0.8, y: 0.0, yaw: 0, size: 0.3}];
+    var obstacle_coords = [{x: 0.8, y: 0.0, yaw: 0, size: 0.3},
+                            {x: -0.8, y: 1, yaw: 0, size: 0.3}];
+
+
     var level = 2;
     var modalBodyStr = `<p style="font-size: 25px;">You solved level ${level} with the following Python code:</p>
                         <div class="code-box" style="width: 200px; margin: 0 auto;">

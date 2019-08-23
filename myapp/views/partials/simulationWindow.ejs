@@ -106,7 +106,7 @@ Date: 2019-07-10
   loader
   .add(['./images/svea_cars2.png',
         './images/mars-background2.png',
-        './images/parkingspot.png',
+        './images/new.png',
         './images/circle.png',
         './images/cross.png',
         './images/stone.png',
@@ -188,8 +188,8 @@ Date: 2019-07-10
     }
 
     // Init goal
-    let goal = new Sprite(resources["./images/parkingspot.png"].texture);
-    let goal_scale = {x: 0.15, y: 0.15};
+    let goal = new Sprite(resources["./images/new.png"].texture);
+    let goal_scale = {x: 0.60, y: 0.60};
     let goal_achor = {x: 0.5, y: 0.6};
     configureSprite(goal,
                     goal_scale.x,
@@ -213,7 +213,7 @@ Date: 2019-07-10
                     goal_coords.y,
                     goal_coords.yaw,
                     true);
-    app.stage.addChild(cross);
+    //app.stage.addChild(cross);
 
     // Init car and hitbox.
     curr_sprite = 2; // starting texture for car.
@@ -342,7 +342,7 @@ Date: 2019-07-10
         socket.disconnect(true); // close connection to server.
         at_goal = atGoal(); // variable from level.
         console.log('At goal: ' + at_goal.toString());
-        // document.getElementById('modal');
+        document.getElementById('modal');
 
         if (at_goal.toString() === 'true'){ // Completed level 1
           runningSimulation = false;

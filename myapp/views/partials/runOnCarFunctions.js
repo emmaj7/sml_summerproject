@@ -56,7 +56,6 @@ function runOnCarFunction(){
                                                 'goal': goal_coords}));
     // Kalla på funktion som aktiverar cancel-knappen
     console.log('Running code on car');
-    runningCode = True;
     alert(`Executing code written by team ${unique_name} on the car.`);
     socket.close();
   });

@@ -24,7 +24,6 @@ var http = require("http").createServer(app);
 var io = require('socket.io')(http); // handles two-way data streams
 
 var urlencodedParser = bodyParser.urlencoded({extended:false});
-var usedIds = {};
 
 app.set("view engine", "ejs");
 
@@ -85,30 +84,18 @@ app.get('/teamName', function(req, res){
   var teamNames = JSON.parse(rawData);
   var array = teamNames.teamList;
   console.log(array);
-  // Assigning the first name of the list
-  res.send({teamName: array[id-1],
-            url: baseUrl});
-  // Add the used id and its corresponding team name to the object containing used IDs
-  usedIds[id.toString()] = array[id-1];
-  console.log(usedIds);
-
+  if (id <= 10){             // If the id is under/or 10 assign name with the same index
+    res.send({teamName: array[id-1],
+              url: baseUrl});
+  }
+  else{                     // If the id is over 10 assign name with same index as last digit, also add number at end
+    var lastDigit =  id % 10;
+    var firstDigit = ((id % 10) % 10);
+    teamName = array[lastDigit-1] + " " + (firstDigit+1).toString();
+    res.send({teamName: teamName,
+              url: baseUrl});
+  }
 });
-
-// app.get('/teamName', function(req, res){
-//   var current_url = req.url;
-//   var baseUrl = req.protocol + "://" + req.get('host');
-//   var fullUrl = baseUrl + current_url;
-//   console.log(fullUrl);
-//   current_url_obj = new URL(fullUrl);
-//   const search_params = current_url_obj.searchParams;
-//   const id = search_params.get('id');
-//   const rawData = fs.readFileSync('teamNames.json');
-//   const teamNames = JSON.parse(rawData);
-//   console.log("YO");
-//   // Här måste vi kalla på en funktion (?) som tar ut rätt lag-namn
-//   res.send({teamName: teamNames.teamList[id-1],
-//             url: baseUrl});
-// });
 
 // Renders lastpage (shown when all levels are completed)
 app.get('/lastPage', function(req, res){
@@ -272,28 +259,24 @@ function getShortestCode(filename){
   return {id: idShortest, length: shortestL};
 }
 
-// converts an id number into a cool name input: numberList
-
-// läs från nytt objekt
+// converts an id number into a cool name, input: numberList
 function idNumberToName(numberList){
+  const rawData = fs.readFileSync('teamNames.json');
+  const nameList = JSON.parse(rawData).teamList;
   var usedNames = [];
-  for (var i = 0; i < numberList.length; i++){
-    var id = numberList[i];
-    console.log(id);
-    var teamName = usedIds[id];
-    console.log(teamName);
-    usedNames.push(teamName);
+  for (var i = 0; i < numberList.length; i++) {
+    var id = numberList[i]
+    if (id <= 10){
+      usedNames.push(nameList[numberList[i] - 1]);
+    }
+    else {
+      var lastDigit =  id % 10;
+      var firstDigit = ((id % 10) % 10);
+      teamName = nameList[lastDigit-1] + " " + (firstDigit+1).toString();
+      usedNames.push(teamName);
+    }
   }
-  console.log(usedNames);
   return usedNames;
-  // const rawData = fs.readFileSync('teamNames.json');
-  // const nameList = JSON.parse(rawData).teamList;
-  // var availableNames = [];
-  // for (var i = 0; i < numberList.length; i++) {
-  //   var index = numberList[i];
-  //   availableNames.push(nameList[index]);
-  // }
-  // return availableNames;
 }
 
 // returns the list of used id's from code_real

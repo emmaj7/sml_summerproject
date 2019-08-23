@@ -24,8 +24,11 @@ Last updated: 2019-07-18
         <p style="color: white;">This button runs shortest code on the rover, and shows which team won.</p>
         <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="runOnCar()">Run on Car</button></a>
       </div>
-      <!-- This partial contains a button cancelling the execution on the rover if it is running. -->
-      <% include partials/cancelRun.ejs %>
+      <div class="col-6 text-center">
+        <p style="color: white;">This button cancels the current execution.</p>
+        <a href="#"><button class="cool-btn btn1 btn" type="button" onclick="cancelCar()">Cancel Run</button></a>
+      </div>
+
     </div>
     <div class="row my-5">
       <div class="col-6 text-center">
@@ -52,7 +55,6 @@ Last updated: 2019-07-18
      // imports the functions related to running the code on the car.
       <% include partials/runOnCarFunctions.js %>
 
-      var runningCode = false;
       var unique_id = 'adminId';
       var unique_name = 'name';
       var goal_coords = {'x': 1.1, 'y': -1, 'yaw': 0};
