@@ -167,7 +167,7 @@ io.on('connection', function(socket){
   socket.on('runCodeOnCar', function(msg){
     console.log('starting car');
     var obj = JSON.parse(msg);
-    var id = 'USER' + obj.id;
+    var id = obj.id;
     var goal = obj.goal;
     var command = 'roslaunch svea SVEA_high_level_commands.launch ';
     var filename = "code_real.py";
