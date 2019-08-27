@@ -87,7 +87,7 @@ Date: 2019-07-10
   let hitbox; // hitbox / shadow of car.
   let x_offset = 0.3;
   let y_offset = 0.4; // starting offset of car from lower left corner.
-  let real_length = 3; // length of map in meters.
+  let real_length = 4; // length of map in meters.
   let scale_factor = app.renderer.view.height/real_length;
   let last_yaw = 0;
   let dt = 1/30;
@@ -189,8 +189,8 @@ Date: 2019-07-10
 
     // Init goal
     let goal = new Sprite(resources["./images/new.png"].texture);
-    let goal_scale = {x: 0.60, y: 0.60};
-    let goal_achor = {x: 0.5, y: 0.6};
+    let goal_scale = {x: 0.45, y: 0.45}; // 0.60 innan
+    let goal_achor = {x: 0.5, y: 0.5};
     configureSprite(goal,
                     goal_scale.x,
                     goal_scale.y,
@@ -220,8 +220,8 @@ Date: 2019-07-10
     car = new Sprite(text2);
     let car_anchor = {x: 0.5, y: 0.5};
     configureSprite(car,
-                    real_length*(90/app.renderer.width),
-                    real_length*(90/app.renderer.height),
+                    real_length*((90/app.renderer.width)*Math.pow(0.75,2)),
+                    real_length*((90/app.renderer.height)*Math.pow(0.75,2)),
                     car_anchor.x,
                     car_anchor.y,
                     start_coords.x,
