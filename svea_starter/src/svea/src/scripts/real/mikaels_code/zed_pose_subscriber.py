@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Written by: Mikael Glamheden
-# Last edited: 2019-07-17
+# Last edited: 2019-08-28
 
 import rospy
 import tf
@@ -13,7 +13,7 @@ from threading import Thread
 class PoseSubscriber():
     '''Subscribes to the /zed/zed_node/pose topic. Saves the relevant parameters'''
     def __init__(self):
-        self.node_name = 'zed_pose'
+        self.node_name = 'zed_pose_estimate'
         self.x = None
         self.y = None
         self.yaw = None
@@ -26,7 +26,7 @@ class PoseSubscriber():
 
     def get_state(self):
         '''Returns the state as a vector'''
-        return [self.time, self.x, self.y, self.yaw]
+        return [self.x, self.y, self.yaw, self.time]
 
     def start(self):
         Thread(target=self._init_and_spin_ros, args=()).start()
@@ -50,9 +50,16 @@ class PoseSubscriber():
     def _callback(self, msg):
         self._update_vehicle_pose(msg)
 
+    def _transform(self, zed_x, zed_y, zed_yaw):
+        """Transform between zed camera frame and vehicle frame."""
+        x = - zed_x
+        y = - zed_y
+        yaw = zed_yaw
+        return x, y, yaw
+
     def _update_vehicle_pose(self, msg):
-        '''Fetches the 2D parameters from the amcl_pose msg and
-        stores them in object variables. Also publishes the 2D data.'''
+        '''Fetches the 2D parameters from the zed_pose msg and
+        transforms them to the vehicles frame.'''
         self.time = rospy.Time(msg.header.stamp.secs, msg.header.stamp.nsecs).to_sec()
         pose = msg.pose
         quat = [pose.orientation.x,
@@ -62,12 +69,10 @@ class PoseSubscriber():
         angles = tf.transformations.euler_from_quaternion(quat, axes='sxyz')
         yaw = angles[-1]
         pos = pose.position
-        self.x = pos.x
-        self.y = pos.y
-        self.yaw = yaw
-        message = ('Aquired amcl pose : ' +
+        self.x, self.y, self.yaw = self._transform(pos.x, pos.y, yaw)
+        message = ('Pose estimate : ' +
                   'Timestamp: ' + str(self.time) + ', ' +
-                  'x: ' + str(pos.x) + ', ' +
-                  'y: ' + str(pos.y) + ', ' +
-                  'yaw: ' + str(yaw))
+                  'x: ' + str(self.x) + ', ' +
+                  'y: ' + str(self.y) + ', ' +
+                  'yaw: ' + str(self.yaw))
         self.pose_pub.publish(message)
