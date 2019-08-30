@@ -57,7 +57,7 @@ class CarHighLevelCommands():
         # self.odom_publisher.send_odometry(state, 0)
 
         self.ctrl_interface = ControlInterface().start()
-        rospy.sleep(4) # Wait till odometry updated
+        rospy.sleep(6) # Wait till odometry updated
 
         self.target_state = self.pose_node.get_state() # x, y, yaw, v
 
