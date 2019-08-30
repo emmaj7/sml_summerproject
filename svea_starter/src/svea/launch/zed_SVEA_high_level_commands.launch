@@ -21,6 +21,6 @@ Last updated: 2019-08-28
   <include file="$(find zed_wrapper)/launch/zed.launch"/>
 
   <!-- <arg name= "my_args"/> -->
-  <!-- <node pkg="svea" type="amcl_SVEA_high_level_commands.py" name="amcl_SVEA_high_level_commands" args="$(arg my_args)" output="screen"/> -->
-  <node pkg="svea" type="zed_SVEA_high_level_commands.py" name="zed_SVEA_high_level_commands" output="screen"/>
+  <node pkg="svea" type="amcl_SVEA_high_level_commands.py" name="amcl_SVEA_high_level_commands" args="$(arg my_args)" output="screen"/>
+  <!-- <node pkg="svea" type="zed_SVEA_high_level_commands.py" name="zed_SVEA_high_level_commands" output="screen"/> -->
 </launch>

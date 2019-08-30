@@ -261,7 +261,7 @@ def main(argv = ['SVEA5', 'code_real.py']):
     name = argv[0] # makes it possible to have multiple copies of simulation
     # name = 'SVEA5'
     # goal = [4, 0]
-    from_file = False
+    from_file = True
     rover = deploy(name) # This should be part of the code later on.
     # car = CarHighLevelCommands(simulation)
     if from_file:
@@ -287,5 +287,5 @@ def main(argv = ['SVEA5', 'code_real.py']):
     log_to_file(rover.data_log)
     # rospy.signal_shutdown('Program end')
 if __name__ == '__main__':
-    # main(sys.argv[1:])
-    main()
+    main(sys.argv[1:])
+    # main()
