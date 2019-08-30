@@ -11,7 +11,7 @@ The python application requires numpy and matplotlib. Install them if you don't 
 
 Futhermore we recommend installing [nodemon](https://www.npmjs.com/package/nodemon) which simplifies debugging when you're testing out your applications.
 
-	npm install -g nodemon
+	sudo npm install -g nodemon
 
 Now clone the git repository
 
@@ -29,14 +29,11 @@ to install all dependencies. Compile and link the ROS libraries
 
 	catkin_make
 	source devel/setup.bash
-	rospack profile
 
-To make sure the libraries are linked in the future, also call
+To avoid having to source the setupfile in the future, also call
 
-	echo "source <path-to-svea-starter>/devel/setup.bash" >> ~/.bashrc
+	echo "source $PWD/devel/setup.bash" >> ~/.bashrc
 	source ~/.bashrc
-
-where you need to replace "`<path-to-svea-starter>`" with the file path to wherever you cloned "svea_starter". For example, the full path might look like "/home/user/sml_summerproject/svea_starter/devel/setup.bash".
 
 Finally you have to install all node.js app dependencies. Go into the folder called "myapp" and run
 
