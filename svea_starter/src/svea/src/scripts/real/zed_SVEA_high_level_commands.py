@@ -12,7 +12,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import json
-
+import string
 import demjson
 
 import mikaels_code.line_follower as lf
@@ -136,7 +136,7 @@ class CarHighLevelCommands():
         self.r.sleep()
 
         l = 0.5 # goal distance
-        tol = 0.1 # ok distance to goal
+        tol = 0.15 # ok distance to goal
         state = self.pose_node.get_state()
         x0 = self.target_state[0]
         y0 = self.target_state[1]
@@ -253,39 +253,54 @@ def deploy(name):
     car = CarHighLevelCommands()
     return car
 
-def main(argv = ['SVEA5', 'code_real.py']):
-
-    # print('argv:')
-    # print(argv)
-
-    name = argv[0] # makes it possible to have multiple copies of simulation
-    # name = 'SVEA5'
-    # goal = [4, 0]
+def main(argv = ['code_real.py']):
     from_file = True
-    rover = deploy(name) # This should be part of the code later on.
-    # car = CarHighLevelCommands(simulation)
     if from_file:
+
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        filename = dir_path + '/../../../../../../myapp/' + argv[1]
-        # File with the code to execute
-        # filename = dir_path + '/../../../../../../myapp/code_real.py'
+        filename = dir_path + '/../../../../../../myapp/' + argv[0]
+
         c = cc.CarCommands(filename)
+        name, length = c.get_shortest_code()
+
+        print('---------------------------------------------')
+        print('Running code with id ' + name + ' which is %d lines long' % length)
+        print('---------------------------------------------')
+
+        rover = deploy(name) # This should be part of the code later on.
 
         # variables to pass on
         g_var = {'CarHighLevelCommands': CarHighLevelCommands}
         l_var = {'rover': rover}
         c.execute_commands(name, g_var, l_var)
     else:
+        name = 'SVEA5'
+        rover = deploy(name)
+        # rover.drive_forward()
+        # rover.turn_left()
+        # rover.turn_left()
+        # rover.turn_right()
+        # rover.turn_right()
+        # rover.drive_forward()
+        # rover.drive_forward()
+        # rover.drive_forward()
+        # rover.turn_right()
+        # rover.drive_forward()
+        # rover.drive_forward()
+        # rover.drive_forward()
         rover.turn_left()
         rover.turn_right()
         rover.turn_left()
         rover.turn_right()
         rover.drive_backwards()
         rover.turn_right()
+        rover.drive_forward()
+        rover.drive_forward()
+        rover.drive_forward()
 
         # car.drive_forward()
     log_to_file(rover.data_log)
-    # rospy.signal_shutdown('Program end')
+    rospy.signal_shutdown('Program end')
 if __name__ == '__main__':
     main(sys.argv[1:])
     # main()

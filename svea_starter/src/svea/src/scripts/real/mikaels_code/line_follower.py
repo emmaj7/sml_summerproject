@@ -24,7 +24,7 @@ def saturate(v, max):
 def line_follower_reverse(x, y, yaw, x0, y0, xg, yg):
     p = 0.4 # look ahead gain
     k1 = 0.8 # velocity gain
-    k2 = 2.0 # angular velocity gain
+    k2 = 4.0 # angular velocity gain
 
     yaw_ref = math.atan2(yg-y0,xg-x0)
     yaw_ref = normalize_angle(yaw_ref)
@@ -44,8 +44,8 @@ def line_follower_reverse(x, y, yaw, x0, y0, xg, yg):
 
 def line_follower(x, y, yaw, x0, y0, xg, yg):
     p = 0.4 # look ahead gain
-    k1 = 1.0 # velocity gain
-    k2 = 10.0 # angular velocity gain
+    k1 = 1.0*0.9 # velocity gain
+    k2 = 8.0 # angular velocity gain
 
     yaw_ref = math.atan2(yg-y0,xg-x0)
     yaw_ref = normalize_angle(yaw_ref)

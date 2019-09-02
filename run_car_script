@@ -1,0 +1,8 @@
+#!/bin/bash
+
+FILENAME = $1
+
+echo Copying code file from server
+sshpass -f "./password/password.txt" scp mikael@11.0.1.87:/home/mikael/sml_summerproject/myapp/code_real.py  myapp/code_real.py
+echo Starting zed_SVEA_high_level_commands
+roslaunch svea zed_SVEA_high_level_commands.launch my_args:="$FILENAME"
