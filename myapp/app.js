@@ -162,48 +162,6 @@ io.on('connection', function(socket){
         subprocess.kill();
     });
   });
-
-  // Launches the car.
-  socket.on('runCodeOnCar', function(msg){
-    console.log('starting car');
-    var obj = JSON.parse(msg);
-    var id = obj.id;
-    var goal = obj.goal;
-    // var command = 'roslaunch svea SVEA_high_level_commands.launch '; // Use this if qualisys navigation.
-    var filename = "code_real.py";
-    var command = 'roslaunch svea zed_SVEA_high_level_commands.launch '; // Use this if zed camera navigation
-    // var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch '; // Use this if amcl navigation
-    var args = 'my_args:=' + '"' + id + ' ' + filename + '"';
-    shell.exec(command + args, {async:true}, function(code, stdout, stderr){
-      console.log('Exit Code: ', code);
-      console.log('Program stderr: ', stderr);
-      console.log('Program output: ', stdout);
-    });
-  });
-
-  socket.on('runDefaultCode', function(){
-    // var command = 'roslaunch svea SVEA_high_level_commands.launch '; // Use this if qualisys navigation
-    var command = 'roslaunch svea zed_SVEA_high_level_commands.launch '; // Use this if zed camera navigation
-    var filename = "default.py";
-    var id = 'Default';
-    var args = 'my_args:=' + '"' + id + ' ' + filename + '"';
-    shell.exec(command + args, {async:true}, function(code, stdout, stderr){
-      console.log('Exit Code: ', code);
-      console.log('Program stderr: ', stderr);
-      console.log('Program output: ', stdout);
-    });
-  });
-
-  // kill all processes if stuff is canceled.
-  socket.on('kill-process', function(){
-    console.log('killing all processes');
-    const command = 'rosnode kill -a';
-    shell.exec(command, {async:true}, function(code, stdout, stderr){
-      console.log('Exit Code: ', code);
-      console.log('Program stderr: ', stderr);
-      console.log('Program output: ', stdout);
-    });
-  });
   // Button on admin page. Clears code in code.py
   socket.on('clearCode', function(){
     const data = '';
@@ -243,11 +201,12 @@ io.on('connection', function(socket){
     var filename = 'code_real.py';
     var shortest = getShortestCode(filename);
     if (shortest != null) {
-      nameList = idNumberToName([shortest.id]);
-
+      console.log('Returning the team names with shortest code.')
+      nameList = idNumberToName(shortest.list);
       socket.emit('getShortestCodeRes', {id: shortest.id,
                                          idName: nameList[0],
-                                         length: shortest.length});
+                                         length: shortest.length,
+                                         shortList: nameList});
     } else {
       socket.emit('checkAvailableIdRes', "Couldn't find code.");
     }
@@ -258,8 +217,8 @@ io.on('connection', function(socket){
 function getShortestCode(filename){
   var textLines = fs.readFileSync(filename, 'utf-8').split('\n');
   var shortestL = 1000;
-  var currentId, currentL, idShortest;
-
+  var currentId, currentL, shortestId;
+  var shortestList = [];
   for (var i = 0; i < textLines.length; i++) {
     if (textLines[i].includes('# ID:')) {
       currentId = parseInt(textLines[i].replace(/\D/g,''));
@@ -267,13 +226,17 @@ function getShortestCode(filename){
     } else if (textLines[i].includes('####')) {
       if (currentL < shortestL) {
         shortestL = currentL;
-        idShortest = currentId;
+        shortestId = currentId;
+        shortestList = [];
+        shortestList.push(shortestId);
+      } else if (currentL == shortestL) {
+        shortestList.push(currentId);
       }
     } else {
       currentL = currentL + 1;
     }
   }
-  return {id: idShortest, length: shortestL};
+  return {id: shortestId, length: shortestL, list: shortestList};
 }
 
 // converts an id number into a cool name, input: numberList
@@ -330,34 +293,6 @@ function writeCode(code, id, filename){
       console.log(err);
     }
   });
-}
-
-// get yaw from quaternions
-function yawFromQuaternions(qObj){
-  var yaw   =  Math.asin(2*qObj.x*qObj.y + 2*qObj.z*qObj.w);
-  return yaw;
-}
-
-// send car position to simulation window.
-// Not used at the moment.
-function transmitPose(socket, name) {
-  // Register node with ROS master
-  console.log('starting listener')
-  rosnodejs.initNode('/listener_node/SVEA5')
-    .then((rosNode) => {
-      // Create ROS subscriber on the /SVEA5/pose topic
-      let sub = rosNode.subscribe('/SVEA5/pose', geometry_msgs.PoseStamped,
-        (data) => { // define callback execution
-          var dataString = JSON.stringify(data);
-          var pos = data.pose.position;
-          var obj = {'x':pos.x, 'y': pos.y,};
-          var yaw = yawFromQuaternions(data.pose.orientation);
-          obj.yaw = yaw;
-          socket.emit('position-sent-car', JSON.stringify(obj));
-          // console.log(dataString);
-        }
-      );
-    });
 }
 
 // Launches roscore. REQUIRES ROS INSTALLED ON COMPUTER

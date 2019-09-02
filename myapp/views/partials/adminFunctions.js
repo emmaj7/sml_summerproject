@@ -32,41 +32,6 @@ function postCodeToCar(callback){
   callback();
 }
 
-// stops all processes running on the car.
-function cancelCar(){
-  let socket = io();
-  socket.on('connect',function(){
-    console.log('Connected');
-    socket.emit('kill-process');
-    console.log('killing process');
-    socket.close();
-  });
-}
-// execute code on car.
-function runOnCar(){
-  getShortestCode(runOnCarFunction);
-}
-
-function runDefaultCode(){
-  let socket = io();
-  socket.emit('runDefaultCode');
-  alert("Executing default code on the car.")
-}
-
-function runOnCarFunction(){
-  let socket = io();
-  socket.on('connect',function(){
-    console.log('Connected');
-    console.log('Session id: ' + unique_id); // Unique id for each html page opened.
-    socket.emit('runCodeOnCar', JSON.stringify({'id': unique_id,
-                                                'goal': goal_coords}));
-    // Kalla på funktion som aktiverar cancel-knappen
-    console.log('Running code on car');
-    alert(`Executing code written by team ${unique_name} on the car.`);
-    socket.close();
-  });
-}
-
 // clear the content of code.py
 function clearCode(){
   var socket = io();
@@ -101,27 +66,39 @@ function checkUsedId(){
     });
     socket.on('checkUsedIdRes', function(msg){
       console.log(msg);
-      alert(`The used id's are: ${msg}`);
+      tabs = '\t';
+      string = tabs;
+      for (var i = 0; i < msg.length-1; i++) {
+        string = string + msg[i] + '\n' + tabs;
+      }
+      string = string + msg[msg.length-1]
+      alert(`The used id's are:\n ${string}`);
       socket.close();
     });
   });
 }
-
 // returns the id of the shortest code solution in code_real.py
-function getShortestCode(callback){
+function shortestCode(){
   var socket = io();
   socket.on('connect', function(){
     socket.emit('getShortestCode', function(){
     });
     socket.on('getShortestCodeRes', function(msg){
       console.log(msg.id);
-      // alert(`The shortest code is ${msg.length} lines long and is written by ${msg.idName}.`);
+      if (msg.shortList.length > 1) {
+        var tabs = '\t\t\t\t\t'
+        var string = tabs;
+        for (var i = 0; i < msg.shortList.length -1; i++) {
+            string = string + msg.shortList[i] + '\n' + tabs;
+        }
+        string = string + msg.shortList[msg.shortList.length-1];
+        alert(`\t\tThe shortest code is ${msg.length} lines long.\n The following teams got solved it with that many steps: \n ${string}`)
+      } else {
+        alert(`The shortest code is ${msg.length} lines long and is written by: \n ${msg.idName}.`);
+      }
       unique_id = msg.id
       unique_name = msg.idName
-      console.log('unique_id : ', unique_id);
       socket.close();
-      console.log('msg : ', msg);
-      callback();
     });
   });
 }
