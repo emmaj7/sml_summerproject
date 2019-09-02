@@ -83,7 +83,6 @@ app.get('/teamName', function(req, res){
   var rawData = fs.readFileSync('teamNames.json');
   var teamNames = JSON.parse(rawData);
   var array = teamNames.teamList;
-  console.log(array);
   if (id <= 10){             // If the id is under/or 10 assign name with the same index
     res.send({teamName: array[id-1],
               url: baseUrl});
