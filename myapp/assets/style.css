@@ -67,6 +67,8 @@ pre {
  white-space: pre;
  margin: 1em 0;
  text-align: left;
+ font-size: 20px;
+ color: #ff6d44;
 }
 
 /* h1{

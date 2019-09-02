@@ -80,11 +80,11 @@ Last updated: 2019-07-25
     var obstacle_coords = [];
     var at_goal = false;
     var level = 1;
-    var modalBodyStr = `<p style="font-size: 25px;">You solved level ${level} with the following Python code:</p>
-                        <div class="code-box" style="width: 200px; margin: 0 auto;">
-                            <pre id='code'></pre>
+    var modalBodyStr = `<p style="font-size: 30px;">You solved level ${level} with the following Python code:</p>
+                        <div class="code-box" style="width: 275px; margin: 0 auto;">
+                            <pre style="color: #ff6d44; font-size: 20px;" id='code'></pre>
                         </div>
-                        <p style="font-size: 25px;"> Continue to level ${level+1}?</p>`;
+                        <p style="font-size: 30px;"> Continue to level ${level+1}?</p>`;
     var modalFooterStr = `<a href="/level${level}" ><button class="cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;"><p style="position:relative; z-index: 4000; margin-bottom: 0px;">Cancel</p></button></a>
     <a href="/level${level+1}" ><button class="cool-btn2 btn1 btn" id="btn1" style="text-decoration: none !important; margin-left:10px; margin-right: 10px;"><p style="position: relative; z-index: 4000; margin-bottom: 0px;">OK</p></button></a>`
     document.getElementById("modalBody").innerHTML = modalBodyStr;
