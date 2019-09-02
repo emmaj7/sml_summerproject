@@ -169,9 +169,9 @@ io.on('connection', function(socket){
     var obj = JSON.parse(msg);
     var id = obj.id;
     var goal = obj.goal;
-    var command = 'roslaunch svea SVEA_high_level_commands.launch ';
+    // var command = 'roslaunch svea SVEA_high_level_commands.launch '; // Use this if qualisys navigation.
     var filename = "code_real.py";
-    // var command = 'roslaunch svea zed_SVEA_high_level_commands.launch '; // Use this if zed camera navigation
+    var command = 'roslaunch svea zed_SVEA_high_level_commands.launch '; // Use this if zed camera navigation
     // var command = 'roslaunch svea amcl_SVEA_high_level_commands.launch '; // Use this if amcl navigation
     var args = 'my_args:=' + '"' + id + ' ' + filename + '"';
     shell.exec(command + args, {async:true}, function(code, stdout, stderr){
@@ -182,7 +182,8 @@ io.on('connection', function(socket){
   });
 
   socket.on('runDefaultCode', function(){
-    var command = 'roslaunch svea SVEA_high_level_commands.launch ';
+    // var command = 'roslaunch svea SVEA_high_level_commands.launch '; // Use this if qualisys navigation
+    var command = 'roslaunch svea zed_SVEA_high_level_commands.launch '; // Use this if zed camera navigation
     var filename = "default.py";
     var id = 'Default';
     var args = 'my_args:=' + '"' + id + ' ' + filename + '"';

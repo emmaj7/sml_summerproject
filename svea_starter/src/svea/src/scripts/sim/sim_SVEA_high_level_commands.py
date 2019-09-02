@@ -175,44 +175,6 @@ class CarHighLevelCommands():
         self.target_state[1] = y
         print('[' + self.vehicle_name + '] : ' + 'Completed turn!')
 
-    def pure_pursuit(self, cx, cy):
-        """Make car drive along given trajectory. Uses pure pursuit algorithm."""
-        # Pure pursuit params
-        pure_pursuit.k = 0.4  # look forward gain
-        pure_pursuit.Lfc = 0.4  # look-ahead distance
-        pure_pursuit.L = 0.324  # [m] wheel base of vehicle
-
-        # pure pursuit calculation
-        lastIndex = len(cx) - 1
-        target_ind = pure_pursuit.calc_target_index(self.vehicle_model, cx, cy)
-
-        # simualtion + animation loop
-        while lastIndex > target_ind and not rospy.is_shutdown():
-            # compute control input via pure pursuit
-            steering, target_ind = \
-                pure_pursuit.pure_pursuit_control(self.vehicle_model, cx, cy, target_ind)
-            self.ctrl_interface.send_control(steering, self.target_speed)
-            # log data
-            data = (self.vehicle_model.x, self.vehicle_model.y,
-                    self.vehicle_model.yaw, self.vehicle_model.v, self.time)
-            self.data_log.append_data(*data)
-            # update for animation
-            if self.show_animation:
-                self._animate_pure_pursuit(steering,cx,cy,target_ind)
-
-            self._send_position(steering)
-            # sleep so loop runs at 30Hz
-            self.r.sleep()
-
-        if self.show_animation:
-            plt.close()
-            self._animate_pure_pursuit(steering, cx, cy, target_ind)
-            plt.show()
-        else:
-            # just show resulting plot if not animating
-            self._plot_trajectory(cx, cy)
-            plt.show()
-
     def at_goal(self):
         """Checks if car is close enough to goal."""
         state = self.vehicle_model.get_state()
@@ -258,8 +220,8 @@ class CarHighLevelCommands():
             self.r.sleep()
         self.target_state[0] = xg
         self.target_state[1] = yg
-        print('[' + self.vehicle_name + '] : ' + 'Completed drive backwards!')
-        print('State:'  + str(self.vehicle_model.get_state))
+        # print('[' + self.vehicle_name + '] : ' + 'Completed drive backwards!')
+        # print('State:'  + str(self.vehicle_model.get_state))
 
     def drive_forward(self):
         """Car follows straigth trajectory of predefined length.
@@ -297,8 +259,8 @@ class CarHighLevelCommands():
             self.r.sleep()
         self.target_state[0] = xg
         self.target_state[1] = yg
-        print('[' + self.vehicle_name + '] : ' + 'Completed drive forward!')
-        print('State:'  + str(self.vehicle_model.get_state))
+        # print('[' + self.vehicle_name + '] : ' + 'Completed drive forward!')
+        # print('State:'  + str(self.vehicle_model.get_state))
 
     def turn_right(self):
         """Makes a full 90 degree right turn."""
@@ -307,7 +269,7 @@ class CarHighLevelCommands():
         angle = lf.normalize_angle(self.target_state[2] - angle_add)
         self.target_state[2] = angle
         self._turn(angle, direction)
-        print('State:'  + str(self.vehicle_model.get_state))
+        # print('State:'  + str(self.vehicle_model.get_state))
 
     def turn_left(self):
         """Makes a full 90 degree left turn."""
@@ -316,7 +278,7 @@ class CarHighLevelCommands():
         angle = lf.normalize_angle(self.target_state[2] + angle_add)
         self.target_state[2] = angle
         self._turn(angle, direction)
-        print('State:'  + str(self.vehicle_model.get_state))
+        # print('State:'  + str(self.vehicle_model.get_state))
 
 def log_to_file(log):
     """Logs the cars path during execution to a file"""

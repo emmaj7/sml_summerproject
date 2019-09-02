@@ -129,7 +129,7 @@ class CarHighLevelCommands():
     def _turn(self, angle, direction):
         """Turn the car a given number of degrees relative to current orientation."""
         l = 1
-        tol1 = 3*math.pi/180 # angular tolerance
+        tol1 = 5*math.pi/180 # angular tolerance
         tol2 = 2 # positional tolerance
         x0 = self.target_state[0]
         y0 = self.target_state[1]
@@ -157,6 +157,7 @@ class CarHighLevelCommands():
             # Done if angle is close enough
             if abs(yaw_ref-yaw) < tol1:
                 at_goal = True
+                self.ctrl_interface.send_control(0,0)
 
             self._send_position(steering)
             # sleep so loop runs at 30Hz
@@ -242,6 +243,7 @@ class CarHighLevelCommands():
             # done if close enough to goal
             dist = np.linalg.norm([xg-x,yg-y])
             if dist < tol:
+                self.ctrl_interface.send_control(0,0)
                 at_goal = True
             # Send position to server.
             self._send_position(steering)
@@ -344,16 +346,17 @@ def main(argv = ['SVEA5']):
     # print(argv)
 
     name = argv[0] # determines which code snippet to take from file.
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    filename = dir_path + '/../../../../../../myapp/' + argv[1]
     # goal = demjson.decode(argv[1])
     # goal = [goal["x"], goal["y"]
     # name = 'SVEA5'
 
-    from_file = True
+    from_file = False
     rover = deploy(name) # This should be part of the code later on.
     # car = CarHighLevelCommands(simulation)
     if from_file:
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        filename = dir_path + '/../../../../../../myapp/' + argv[1]
+        print('filename %s' % filename)
         # File with the code to execute
         # filename = dir_path + '/../../../../../../myapp/code_real.py'
         c = cc.CarCommands(filename)
@@ -364,11 +367,14 @@ def main(argv = ['SVEA5']):
         c.execute_commands(name, g_var, l_var)
     else:
         rover.drive_forward()
-        # rover.turn_left()
+        rover.drive_backwards()
+        # rover.drive_forward()
+        # rover.drive_forward()
+        # rover.drive_forward()
         # car.turn_right()
         # car.drive_forward()
     log_to_file(rover.data_log)
-    rospy.signal_shutdown('Program end')
+    # rospy.signal_shutdown('Program end')
 if __name__ == '__main__':
-    main(sys.argv[1:])
-    # main()
+    # main(sys.argv[1:])
+    main()

@@ -259,6 +259,8 @@ Date: 2019-07-10
       hitbox.position.set(coords.x, coords.y);
       hitbox.rotation = coords.yaw;
 
+      console.log('x:', x, 'y : ', y, 'yaw : ', yaw);
+
       // changes sprite to display depending on how much car is turning.
       let response = newSprite(yaw, curr_sprite);
       if (response.value) {

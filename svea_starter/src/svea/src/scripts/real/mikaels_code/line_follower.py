@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Written by Mikael Glamheden
-# Last editet: 2019-07-17
+# Last editet: 2019-08-28
 
 # Controller for following straight line paths and for turning.
 
@@ -23,8 +23,8 @@ def saturate(v, max):
 
 def line_follower_reverse(x, y, yaw, x0, y0, xg, yg):
     p = 0.4 # look ahead gain
-    k1 = 5.0 # velocity gain
-    k2 = 10.0 # angular velocity gain
+    k1 = 0.8 # velocity gain
+    k2 = 2.0 # angular velocity gain
 
     yaw_ref = math.atan2(yg-y0,xg-x0)
     yaw_ref = normalize_angle(yaw_ref)
@@ -44,7 +44,7 @@ def line_follower_reverse(x, y, yaw, x0, y0, xg, yg):
 
 def line_follower(x, y, yaw, x0, y0, xg, yg):
     p = 0.4 # look ahead gain
-    k1 = 5.0 # velocity gain
+    k1 = 1.0 # velocity gain
     k2 = 10.0 # angular velocity gain
 
     yaw_ref = math.atan2(yg-y0,xg-x0)
@@ -62,7 +62,7 @@ def line_follower(x, y, yaw, x0, y0, xg, yg):
     return v, w
 
 def orientation_controller(x, y, yaw, yaw_ref, direction):
-    k1 = 5.0 # angular velocity gain
+    k1 = 2.0 # angular velocity gain
     k2 = 1.0 # velocity gain
 
 
@@ -72,14 +72,7 @@ def orientation_controller(x, y, yaw, yaw_ref, direction):
         w = -k1*(yaw_ref-yaw)
     else:
         w = k1*(yaw_ref-yaw) # angular velocity controller
-    w = saturate(w,math.pi/2)
+    w = saturate(w,36*math.pi/180)
 
-    # velocity controller
-    # d0 = math.cos(yaw_ref)*(x0-x) + math.sin(yaw_ref)*(y0-y)
-    # v = k2*d0
-    # if v < 0:
-    #     v = v - 0.05
-    # if v >= 0:
-    #     v  = v + 0.05
-    v = 0.3 # override velocity controller.
+    v = 0.3*0.9 # override velocity controller.
     return v, w
