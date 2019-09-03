@@ -96,7 +96,7 @@ Date: 2019-07-10
   let x = start_coords.x;
   let y = start_coords.y;
   let yaw = start_coords.yaw;
-  let marg = 0.2; // margin to goal that counts as reached.
+  let marg = 0.25; // margin to goal that counts as reached.
   let text0, text1, text2, text3, text4; // holds the 5 car sprite textures.
   let curr_sprite; // current displayed texture nr
   let obstacleHit = false;
@@ -189,7 +189,7 @@ Date: 2019-07-10
 
     // Init goal
     let goal = new Sprite(resources["./images/new.png"].texture);
-    let goal_scale = {x: 0.6, y: 0.6};
+    let goal_scale = {x: 0.5, y: 0.5};
     let goal_achor = {x: 0.5, y: 0.5};
     configureSprite(goal,
                     goal_scale.x,
@@ -201,19 +201,6 @@ Date: 2019-07-10
                     goal_coords.yaw,
                     true);
     app.stage.addChild(goal);
-    cross = new Sprite(resources["./images/cross.png"].texture);
-    cross_scale = {x: 0.4, y: 0.4};
-    cross_anchor = {x: 0.5, y: 0.5}
-    configureSprite(cross,
-                    cross_scale.x,
-                    cross_scale.y,
-                    cross_anchor.x,
-                    cross_anchor.y,
-                    goal_coords.x,
-                    goal_coords.y,
-                    goal_coords.yaw,
-                    true);
-    //app.stage.addChild(cross);
 
     // Init car and hitbox.
     curr_sprite = 2; // starting texture for car.
@@ -259,7 +246,7 @@ Date: 2019-07-10
       hitbox.position.set(coords.x, coords.y);
       hitbox.rotation = coords.yaw;
 
-      console.log('x:', x, 'y : ', y, 'yaw : ', yaw);
+      // console.log('x:', x, 'y : ', y, 'yaw : ', yaw);
 
       // changes sprite to display depending on how much car is turning.
       let response = newSprite(yaw, curr_sprite);
@@ -281,6 +268,7 @@ Date: 2019-07-10
     // Checks if car is at goal.
     function atGoal(){
       let dist = Math.sqrt(Math.pow(x-goal_coords.x, 2) + Math.pow(y-goal_coords.y, 2));
+      console.log('distance : ', dist);
       if (dist < marg){
           return true;
       } else {
