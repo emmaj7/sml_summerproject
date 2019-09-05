@@ -14,6 +14,7 @@ function runCode(){
   'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
   // var code = Blockly.JavaScript.workspaceToCode(workspace);
   var code = Blockly.Python.workspaceToCode(workspace);
+  console.log('Code : ');
   console.log(code);
 
   document.getElementById('code').innerHTML = code; // sends code to box on screen.

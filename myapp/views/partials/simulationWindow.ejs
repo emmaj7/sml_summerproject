@@ -60,12 +60,12 @@ Date: 2019-07-10
   // Function making the placement (top margin) of the simulation window dynamic
   function placeSimulationTop(){
     var windowHeight = window.innerHeight;
-    console.log("height, enligt simulering: " + windowHeight);
+    // console.log("height, enligt simulering: " + windowHeight);
     var marginTopSimulation = (windowHeight-800)*0.35;
     // var marginLeftSimulation = 3*(((windowWidth/2)-800)/2)+800;
     marginTopSimulation = Math.ceil(marginTopSimulation);
     var topStr = marginTopSimulation.toString() + "px";
-    console.log("marginTop, enligt simulering: " + marginTopSimulation);
+    // console.log("marginTop, enligt simulering: " + marginTopSimulation);
     return topStr;
   }
 
@@ -119,7 +119,7 @@ Date: 2019-07-10
     sprite.anchor.x = xAnchor;
     sprite.anchor.y = yAnchor;
     pxCoords = coordinateTransform(x, y, yaw);
-    sprite.position.set(pxCoords.x, pxCoords .y);
+    sprite.position.set(pxCoords.x, pxCoords.y);
     sprite.rotation = pxCoords.yaw;
     sprite.visible = visibility;
   }
@@ -268,7 +268,7 @@ Date: 2019-07-10
     // Checks if car is at goal.
     function atGoal(){
       let dist = Math.sqrt(Math.pow(x-goal_coords.x, 2) + Math.pow(y-goal_coords.y, 2));
-      console.log('distance : ', dist);
+      console.log('distance to goal : ', dist);
       if (dist < marg){
           return true;
       } else {
@@ -328,7 +328,7 @@ Date: 2019-07-10
       socket.on('close', function(forced_close){
         app.ticker.stop();
         console.log()
-        console.log('Connection closed');
+        // console.log('Connection closed');
         socket.disconnect(true); // close connection to server.
         at_goal = atGoal(); // variable from level.
         console.log('At goal: ' + at_goal.toString());
@@ -365,27 +365,34 @@ Date: 2019-07-10
         } else if (obstacleHit) { // Hit obstacle on either level
           console.log("Nu har vi krockat med ett hinder...");
           var tryAgainBtn = document.getElementById('restartBtn');
-          console.log("Hittat knapp?" + tryAgainBtn);
+          // console.log("Hittat knapp?" + tryAgainBtn);
           var hitModal = document.getElementById('myHitModal');
-          console.log("Hittat modal?" + hitModal);
+          // console.log("Hittat modal?" + hitModal);
           hitModal.style.display = "block";
-          console.log("Visar modal");
+          // console.log("Visar modal");
           tryAgainBtn.onclick = function() {
             hitModal.style.display = "none";
             runningSimulation = false;
+            // Movning car back to start position.
+            app.ticker.start();
+            app.ticker.addOnce(delta => returnToStart(delta));
             runOrCancel();
           }
         } else if (wallHit) { // Hit wall on either level
+
           console.log("Nu har vi krockat med en vägg...");
           var tryAgainBtn = document.getElementById('restart2Btn');
-          console.log("Hittat knapp?" + tryAgainBtn);
+          // console.log("Hittat knapp?" + tryAgainBtn);
           var wallModal = document.getElementById('myWallModal');
-          console.log("Hittat modal?" + wallModal);
+          // console.log("Hittat modal?" + wallModal);
           wallModal.style.display = "block";
-          console.log("Visar modal");
+          // console.log("Visar modal");
           tryAgainBtn.onclick = function() {
             wallModal.style.display = "none";
             runningSimulation = false;
+            // Movning car back to start position.
+            app.ticker.start();
+            app.ticker.addOnce(delta => returnToStart(delta));
             runOrCancel();
           }
         } else {
@@ -405,6 +412,9 @@ Date: 2019-07-10
               tryAgainBtn.onclick = function() {
                 tryAgainModal.style.display = "none";
                 runningSimulation = false;
+                // Movning car back to start position.
+                app.ticker.start();
+                app.ticker.addOnce(delta => returnToStart(delta));
                 runOrCancel();
               }
             }

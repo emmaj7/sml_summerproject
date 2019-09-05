@@ -58,12 +58,22 @@ function changeSprite(i){
   }
 }
 
+// Returns the car to the start position
+function returnToStart(){
+  let coords = coordinateTransform(start_coords.x, start_coords.y, start_coords.yaw);
+  car.position.set(coords.x, coords.y);
+  car.rotation = coords.yaw;
+  hitbox.position.set(coords.x, coords.y);
+  hitbox.rotation = coords.yaw;
+  console.log('return to start');
+  app.ticker.stop();
+}
 // transforms between "true" coordinate system and browser window coordinates
 function coordinateTransform(x, y, yaw){
   let coords = {};
   coords.x = scale_factor*(x + max);
   coords.y = app.renderer.view.height - scale_factor*(y + max); // y = 0 is upper corner
-  coords.yaw = -yaw;
+  coords.yaw = -yaw
   return coords;
 }
 // transform between window coordinates and "real" coordinates
