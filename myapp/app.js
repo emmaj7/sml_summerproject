@@ -1,6 +1,6 @@
 // Main file for the server application.
 // Written by: Mikael Glamheden & Emma Johansson
-// Last edited: 2019-06-27
+// Last edited: 2019-09-03
 
 // var PORT = process.env.PORT || 3000;
 const fs = require("fs");

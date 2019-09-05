@@ -3,7 +3,7 @@ Hold all functions that makes the simulation window work.
 eg. functions for checking collisons, changing sprites etc.
 
 Written by: Mikael Glamheden
-Last edited: 2019-07-18
+Last edited: 2019-09-05
 */
 
 

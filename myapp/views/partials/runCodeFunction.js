@@ -1,6 +1,6 @@
 // Runs code in simulation environment.
 // Written by: Mikael Glamheden
-// Last updated: 2019-07-18
+// Last updated: 2019-09-05
 
 function runCode(){
 
