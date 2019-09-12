@@ -13,7 +13,7 @@ function newSprite(yaw, curr_sprite){
   let res = new Object();
   res.value = false;
   res.sprite = curr_sprite;
-  d_yaw = (yaw-last_yaw)/dt;
+  d_yaw = (yaw-last_yaw)/(3*dt);
   if (between(d_yaw,-0.05, 0.05)) {
     if (curr_sprite !== 2) {
       res.value = true; res.sprite = 2;
