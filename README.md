@@ -7,7 +7,7 @@ The project assumes you are running ubuntu 16.04. and that you have the followin
 
 The python application requires numpy and matplotlib. Install them if you don't already have them.
 
-	pip install numpy matplotlib
+	pip install numpy matplotlib demjson
 
 Futhermore we recommend installing [nodemon](https://www.npmjs.com/package/nodemon) which simplifies debugging when you're testing out your applications.
 
