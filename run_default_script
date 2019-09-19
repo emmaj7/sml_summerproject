@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# bash file to copy python code from host computer to SVEA car.
-# The script then launches the program which will execute the code on the car.
-
-FILENAME="code_real.py"
+FILENAME="default.py"
 IP_ADDRESS="192.168.1.2" # On Netgear router
 USER="mikael"
 REMOTE_PATH="$USER@$IP_ADDRESS:/home/$USER/sml_summerproject/myapp/"

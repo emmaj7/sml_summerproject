@@ -14,9 +14,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-import mikaels_code.line_follower as lf
-import mikaels_code.car_commands as cc
-import mikaels_code.data_log as dlog
+import dependencies.line_follower as lf
+import dependencies.car_commands as cc
+import dependencies.data_log as dlog
 
 import json
 
@@ -56,11 +56,11 @@ class CarHighLevelCommands():
         if self.simulation:
             # initialize simulated model and control interface
             self.vehicle_model = SimpleBicycleState(*init_state, dt=dt)
-            self.ctrl_interface = ControlInterface(vehicle_name).start()
-            rospy.sleep(0.2)
+            # self.ctrl_interface = ControlInterface(vehicle_name).start()
+            # rospy.sleep(0.2)
             # start background simulation thread
-            self.simulator = SimSVEA(vehicle_name, self.vehicle_model, dt, is_publish=True)
-            self.simulator.start()
+            # self.simulator = SimSVEA(vehicle_name, self.vehicle_model, dt, is_publish=True)
+            # self.simulator.start()
             self.target_state = init_state
 
             #rospy.sleep(0.5)
@@ -154,8 +154,8 @@ class CarHighLevelCommands():
             yaw = state[2]
             # calculate and send control to car
             velocity, steering = lf.orientation_controller(x, y, yaw, yaw_ref, direction)
-            self.ctrl_interface.send_control(steering,velocity)
-
+            # self.ctrl_interface.send_control(steering,velocity)
+            self.vehicle_model.update(steering, velocity)
             # log data
             data = tuple(self.vehicle_model.get_state())
             self.data_log.append_data(*data)
@@ -170,7 +170,8 @@ class CarHighLevelCommands():
             self._send_position(steering)
             # sleep so loop runs at 30Hz
             self.r.sleep()
-        self.ctrl_interface.send_control(0,0)
+        # self.ctrl_interface.send_control(0,0)
+        self.vehicle_model.update(0, 0)
         self.target_state[0] = x
         self.target_state[1] = y
         print('[' + self.vehicle_name + '] : ' + 'Completed turn!')
@@ -203,8 +204,8 @@ class CarHighLevelCommands():
             yaw = state[2]
             # calculate and send control to car
             velocity, steering = lf.line_follower_reverse(x, y, yaw, x0, y0, xg, yg)
-            self.ctrl_interface.send_control(steering, velocity) # Reverse steering.
-
+            # self.ctrl_interface.send_control(steering, velocity) # Reverse steering.
+            self.vehicle_model.update(steering, velocity)
             # log data
             data = tuple(self.vehicle_model.get_state())
             self.data_log.append_data(*data)
@@ -242,9 +243,9 @@ class CarHighLevelCommands():
             yaw = state[2]
             # calculate and send control to car
             velocity, steering = lf.line_follower(x, y, yaw, x0, y0, xg, yg)
-            self.ctrl_interface.send_control(steering, velocity)
+            # self.ctrl_interface.send_control(steering, velocity)
+            self.vehicle_model.update(steering, velocity)
             # log data
-
             data = tuple(self.vehicle_model.get_state())
             self.data_log.append_data(*data)
             if self.show_animation:

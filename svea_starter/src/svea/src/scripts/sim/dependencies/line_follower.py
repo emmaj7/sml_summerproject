@@ -32,7 +32,7 @@ def line_follower_reverse(x, y, yaw, x0, y0, xg, yg):
     # Velocity control
     dg = math.cos(yaw_ref)*(xg-x) + math.sin(yaw_ref)*(yg-y)
     v = k1*dg
-    v =  - saturate(v,4)
+    v =  - saturate(v,2)
 
     angle = normalize_angle(yaw_ref-math.pi)
     # Angle control
@@ -53,13 +53,12 @@ def line_follower(x, y, yaw, x0, y0, xg, yg):
     # Velocity control
     dg = math.cos(yaw_ref)*(xg-x) + math.sin(yaw_ref)*(yg-y)
     v = k1*dg
-    v = saturate(v,4)
+    v = saturate(v,2)
 
     # Angle control
     # dp = yaw_ref-yaw;
     dp = math.sin(yaw_ref)*(x+p*math.cos(yaw)-x0) - math.cos(yaw_ref)*(y+p*math.sin(yaw)-y0)
     w = k2*dp
-
     return v, w
 
 def orientation_controller(x, y, yaw, yaw_ref, direction):
@@ -82,5 +81,5 @@ def orientation_controller(x, y, yaw, yaw_ref, direction):
     #     v = v - 0.05
     # if v >= 0:
     #     v  = v + 0.05
-    v = 4 # override velocity controller.
+    v = 2 # override velocity controller.
     return v, w

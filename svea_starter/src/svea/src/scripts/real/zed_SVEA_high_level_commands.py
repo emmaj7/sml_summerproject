@@ -3,7 +3,7 @@
 # High level interface to run the SVEA cars. zed version.
 # This version of the program uses zed camera for localization of the vehicle
 # Written by Mikael Glamheden
-# Last updated: 2019-07-17
+# Last updated: 2019-09-05
 
 import sys
 import os
@@ -15,13 +15,10 @@ import json
 import string
 import demjson
 
-import mikaels_code.line_follower as lf
-import mikaels_code.car_commands as cc
-import mikaels_code.data_log as dlog
-
-from mikaels_code.odom_publisher import OdomPublisher
-from mikaels_code.amcl_pose_subscriber import AmclPoseSubscriber
-from mikaels_code.zed_pose_subscriber import PoseSubscriber
+import dependencies.line_follower as lf
+import dependencies.car_commands as cc
+import dependencies.data_log as dlog
+from dependencies.zed_pose_subscriber import PoseSubscriber
 
 dirname = os.path.dirname(__file__)
 svea = os.path.join(dirname, '../../')

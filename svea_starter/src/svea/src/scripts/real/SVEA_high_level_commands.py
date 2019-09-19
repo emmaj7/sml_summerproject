@@ -14,9 +14,9 @@ import json
 
 import demjson
 
-import mikaels_code.line_follower as lf
-import mikaels_code.car_commands as cc
-import mikaels_code.data_log as dlog
+import dependencies.line_follower as lf
+import dependencies.car_commands as cc
+import dependencies.data_log as dlog
 
 dirname = os.path.dirname(__file__)
 svea = os.path.join(dirname, '../../')

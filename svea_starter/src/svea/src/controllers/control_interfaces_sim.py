@@ -31,7 +31,7 @@ class ControlInterface():
     OPERATING_FREQ = 30 # [Hz]
 
     MAX_STEER_PERCENT = 80 # [%]
-    MAX_VELOCITY_PERCENT = 400 #[%]
+    MAX_VELOCITY_PERCENT = 600 #[%]
 
     MAX_VELOCITY = 4 #[m/s]
 
