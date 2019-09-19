@@ -16,7 +16,7 @@ The python application requires numpy, matplotlib and demjson. Install them if y
 
 Futhermore we recommend installing [nodemon](https://www.npmjs.com/package/nodemon) which simplifies debugging when you're testing out your applications.
 
-	npm install -g nodemon
+	sudo npm install -g nodemon
 
 Now clone the git repository
 
@@ -36,12 +36,10 @@ to install all dependencies. Compile and link the ROS libraries
 	source devel/setup.bash
 	rospack profile
 
-To make sure the libraries are linked in the future, also call
+To avoid having to source the setup file in the future, also call
 
-	echo "source <path-to-svea-starter>/devel/setup.bash" >> ~/.bashrc
+	echo "source $PWD/devel/setup.bash" >> ~/.bashrc
 	source ~/.bashrc
-
-where you need to replace "`<path-to-svea-starter>`" with the file path to wherever you cloned "svea_starter". For example, the full path might look like "/home/user/sml_summerproject/svea_starter/devel/setup.bash".
 
 Finally you have to install all node.js app dependencies. Go into the folder called "myapp" and run
 
@@ -86,12 +84,10 @@ to install all dependencies. Compile and link the ROS libraries
 	source devel/setup.bash
 	rospack profile
 
-To make sure the libraries are linked in the future, also call
+	To avoid having to source the setup file in the future, also call
 
-	echo "source <path-to-svea-starter>/devel/setup.bash" >> ~/.bashrc
-	source ~/.bashrc
-
-where you need to replace "`<path-to-svea-starter>`" with the file path to wherever you cloned "svea_starter". For example, the full path might look like "/home/nvidia/sml_summerproject/svea_starter/devel/setup.bash".
+		echo "source $PWD/devel/setup.bash" >> ~/.bashrc
+		source ~/.bashrc
 
 For questions or problems related to the steering of the vehicle see [SVEA-Arduino repo](https://github.com/KTH-SML/SVEA-Arduino)
 
@@ -107,7 +103,9 @@ For questions or problems related to the zed camera see [zed git repo](https://g
 ## Configuring the Bash Scripts
 The SVEA vehicle executes the python code saved to the host computer when a bash script is run.
 The script copies the file containing the python code so that it can be executed on the SVEA car. To be able to access this file the script has to be configured correctly, according to the specifications of the host computer.
+
 On the SVEA vehicle, open the script called 'run_car_script' located in the root of the repository. Locate the variable named 'IP_ADDRESS' and change its value to the ip-address of the host computer.
+
 Also change the variable 'USER' into the user account of the host computer. Do the same for the bash script named 'run_default_script'. This bash file is very similar to the other one, but copies and executes a default python script instead of what the player wrote.
 
 The SVEA vehicle will copy the file using the 'scp' command and thus needs the host computers password. On the SVEA vehicle, go into the folder named 'password' and change the content of 'password.txt' to the password of the host computer.
@@ -128,5 +126,6 @@ To execute 'run_car_script' for example, go to the root of the repository and ru
 
 ## Assembling the Obstacle Course
 The SVEA vehicle is supposed to drive around in a course which resembles the third level of the game. There are props in the Smart Mobility Lab that are meant to be used as boulders and goal. There are also red floor tiles in the lab which can be laid out and put together to resemble the mars surface.
+
 To set it up in the same way please refer to the image below. The units in the image are in meters and the coordinates are in reference to the center of the map. The coordinates refer to the center points of the objects. The entire course is 3x3 meters. There are enough floor tiles in the lab to cover an area of 4x4 meters.
 ![Course Layout](./layout.png)
