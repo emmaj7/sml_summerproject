@@ -93,7 +93,7 @@ To make sure the libraries are linked in the future, also call
 
 where you need to replace "`<path-to-svea-starter>`" with the file path to wherever you cloned "svea_starter". For example, the full path might look like "/home/nvidia/sml_summerproject/svea_starter/devel/setup.bash".
 
-For problems related to the steering of the vehicle see [SVEA-Arduino repo](https://github.com/KTH-SML/SVEA-Arduino)
+For questions or problems related to the steering of the vehicle see [SVEA-Arduino repo](https://github.com/KTH-SML/SVEA-Arduino)
 
 ## Configuring the Zed Camera
 On the SVEA vehicle, go to the folder named 'zed_wrapper' under 'svea_starter/src/zed-ros-wrapper'. Open 'params'.
@@ -102,7 +102,7 @@ In 'common.yaml' do
 In 'zed.yaml' do
  	max_depth: 10.0
 
-For problems related to the zed camera see [zed git repo](https://github.com/stereolabs/zed-ros-wrapper).
+For questions or problems related to the zed camera see [zed git repo](https://github.com/stereolabs/zed-ros-wrapper).
 
 ## Configuring the Bash Scripts
 The SVEA vehicle executes the python code saved to the host computer when a bash script is run.
