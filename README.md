@@ -127,7 +127,6 @@ To execute 'run_car_script' for example, go to the root of the repository and ru
 
 
 ## Assembling the Obstacle Course
-The SVEA vehicle is supposed to drive around in a course which resembles the third level of the game.
-To set it up in the same way
+The SVEA vehicle is supposed to drive around in a course which resembles the third level of the game. There are props in the Smart Mobility Lab that are meant to be used as boulders and goal. There are also red floor tiles in the lab which can be laid out and put together to resemble the mars surface.
+To set it up in the same way please refer to the image below. The units in the image are in meters and the coordinates are in reference to the center of the map. The coordinates refer to the center points of the objects. The entire course is 3x3 meters. There are enough floor tiles in the lab to cover an area of 4x4 meters.
 ![Course Layout](./layout.png)
-Format: ![Alt Text](url)
