@@ -84,10 +84,10 @@ to install all dependencies. Compile and link the ROS libraries
 	source devel/setup.bash
 	rospack profile
 
-	To avoid having to source the setup file in the future, also call
+To avoid having to source the setup file in the future, also call
 
-		echo "source $PWD/devel/setup.bash" >> ~/.bashrc
-		source ~/.bashrc
+	echo "source $PWD/devel/setup.bash" >> ~/.bashrc
+	source ~/.bashrc
 
 For questions or problems related to the steering of the vehicle see [SVEA-Arduino repo](https://github.com/KTH-SML/SVEA-Arduino)
 
